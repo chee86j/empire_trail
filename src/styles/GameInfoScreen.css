@@ -1,0 +1,54 @@
+/* Base styles */
+.gameInfoScreen {
+  color: #fff;
+  background: url("/path-to-your-background-image.jpg") no-repeat center center;
+  background-size: cover;
+  text-align: center;
+  padding: 50px;
+  font-family: "Arial", sans-serif;
+}
+
+.gameInfoScreen h2 {
+  color: #0047ab; /* navy blue */
+  margin-bottom: 20px;
+}
+
+.gameInfoScreen p {
+  color: #000;
+  max-width: 600px;
+  margin: 0 auto 30px;
+}
+
+.startGameButton {
+  background-color: #ffd700; /* gold */
+  color: #0047ab; /* navy blue */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.startGameButton:hover {
+  background-color: #c5a600;
+}
+
+/* Responsive styles for medium-sized devices */
+@media (max-width: 768px) {
+  .gameInfoScreen {
+    padding: 20px;
+  }
+
+  .gameInfoScreen h2 {
+    font-size: 1.5em;
+  }
+
+  .gameInfoScreen p {
+    font-size: 1em;
+  }
+
+  .startGameButton {
+    font-size: 0.9em;
+  }
+}

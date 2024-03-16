@@ -1,29 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
+import "../styles/PlayerSelectScreen.css";
 
 interface Props {
   onSelectProfession: (profession: string) => void;
 }
 
 const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
-  const professions = [
-    "Carpenter",
-    "Banker",
-    "Realtor",
-    "Plumber",
-    "Electrician",
-    "Accountant",
-  ];
+  const [selectedProfession, setSelectedProfession] = useState("");
+
+  const professionDetails = {
+    Carpenter: { bankBalance: 50000, salary: 4000 },
+    Banker: { bankBalance: 80000, salary: 8000 },
+    Realtor: { bankBalance: 30000, salary: 3000 },
+    Plumber: { bankBalance: 70000, salary: 6000 },
+    Electrician: { bankBalance: 80000, salary: 6000 },
+    Accountant: { bankBalance: 40000, salary: 3000 },
+  };
 
   return (
-    <div className="screen">
+    <div className="playerSelectScreen">
       <h2>Select Your Profession</h2>
-      <ul>
-        {professions.map((profession, index) => (
-          <li key={index} onClick={() => onSelectProfession(profession)}>
+      <ul className="professionList">
+        {Object.keys(professionDetails).map((profession, index) => (
+          <li
+            key={index}
+            onClick={() => onSelectProfession(profession)}
+            onMouseEnter={() => setSelectedProfession(profession)}
+            className="professionItem"
+          >
             {profession}
           </li>
         ))}
       </ul>
+      {selectedProfession && (
+        <div className="professionDetails">
+          <p>
+            Bank Balance: ${professionDetails[selectedProfession].bankBalance}
+          </p>
+          <p>
+            Salary: ${professionDetails[selectedProfession].salary} per month
+          </p>
+        </div>
+      )}
     </div>
   );
 };

@@ -29,7 +29,7 @@ const App: React.FC = () => {
     switch (profession) {
       case "Carpenter":
         bankBalance = 50000;
-        salary = 5000;
+        salary = 4000;
         break;
       case "Banker":
         bankBalance = 80000;
@@ -41,15 +41,15 @@ const App: React.FC = () => {
         break;
       case "Plumber":
         bankBalance = 70000;
-        salary = 7000;
+        salary = 6000;
         break;
       case "Electrician":
         bankBalance = 80000;
-        salary = 8000;
+        salary = 6000;
         break;
       case "Accountant":
         bankBalance = 40000;
-        salary = 4000;
+        salary = 3000;
         break;
       default:
         break;
