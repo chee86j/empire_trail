@@ -1,16 +1,37 @@
+// EventScreen.tsx
+
 import React from "react";
-import { Event, events } from "../assets/gameData";
+import { Event } from "../assets/gameData";
 import "../styles/EventScreen.css";
 
 interface Props {
   event: Event | null;
-  onClose: () => void;
+  playerProfession: string;
+  playerBankBalance: number;
+  onClose: (newBankBalance: number) => void; // Callback to update bank balance
 }
 
-const EventScreen: React.FC<Props> = ({ event, onClose }) => {
+const EventScreen: React.FC<Props> = ({
+  event,
+  playerProfession,
+  playerBankBalance,
+  onClose,
+}) => {
   if (!event) {
     return null;
   }
+
+  // Calculate the change in bank balance based on the event's bankBalanceChange
+  const calculateBankBalanceChange = (): number => {
+    return event.bankBalanceChange;
+  };
+
+  // Handle event close
+  const handleEventClose = () => {
+    const bankBalanceChange = calculateBankBalanceChange();
+    const newBankBalance = playerBankBalance + bankBalanceChange;
+    onClose(newBankBalance);
+  };
 
   return (
     <div className="screen">
@@ -18,7 +39,8 @@ const EventScreen: React.FC<Props> = ({ event, onClose }) => {
       <p>
         {event.type}: {event.description}
       </p>
-      <button onClick={onClose}>OK</button>
+      <p>Bank Balance Change: {calculateBankBalanceChange()}</p>
+      <button onClick={handleEventClose}>OK</button>
     </div>
   );
 };

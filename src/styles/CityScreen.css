@@ -1,21 +1,21 @@
 /* Base styles */
-.gameInfoScreen {
+.cityScreen {
   color: #fff;
-  background: url("../assets/infoImage.png") no-repeat;
+  background: url("../assets/cityImage.png") no-repeat;
   background-size: cover;
   text-align: center;
   padding: 50px;
   font-family: "Arial", sans-serif;
 }
 
-.gameInfoScreen h2 {
+.cityScreen h2 {
   color: #0047ab; /* navy blue */
   margin-bottom: 20px;
   font-size: 4.5em;
   font-weight: bolder;
 }
 
-.gameInfoScreen p {
+.cityScreen p {
   color: #fff;
   font-size: 2.5em;
   font-weight: bolder;
@@ -23,7 +23,7 @@
   margin: 0 auto 30px;
 }
 
-.startGameButton {
+.cityScreen button {
   background-color: #ffd700; /* gold */
   color: #0047ab; /* navy blue */
   border: none;
@@ -32,27 +32,28 @@
   font-size: 1em;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin: 10px;
 }
 
-.startGameButton:hover {
+.cityScreen button:hover {
   background-color: #c5a600;
 }
 
 /* Responsive styles for medium-sized devices */
 @media (max-width: 768px) {
-  .gameInfoScreen {
+  .cityScreen {
     padding: 20px;
   }
 
-  .gameInfoScreen h2 {
+  .cityScreen h2 {
     font-size: 1.5em;
   }
 
-  .gameInfoScreen p {
+  .cityScreen p {
     font-size: 1em;
   }
 
-  .startGameButton {
+  .cityScreen button {
     font-size: 0.9em;
   }
 }
