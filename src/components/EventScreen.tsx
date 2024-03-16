@@ -1,5 +1,6 @@
 import React from "react";
 import { Event, events } from "../assets/gameData";
+import "../styles/EventScreen.css";
 
 interface Props {
   event: Event | null;
