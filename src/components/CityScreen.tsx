@@ -21,6 +21,21 @@ const CityScreen: React.FC<Props> = ({
     player?.bankBalance || 0
   );
 
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   const handlePlayerAction = (action: string) => {
     switch (action) {
       case "rest":
@@ -62,10 +77,13 @@ const CityScreen: React.FC<Props> = ({
     setCurrentEvent(null);
   };
 
+  const currentMonthName = months[(currentMonth % 12) - 1];
+
   return (
     <div className="screen">
       <h2>City Name</h2>
-      <p>Current Month: {currentMonth}</p>
+      <p>Months Since Start: {currentMonth}</p>
+      <p>{currentMonthName}</p>
       <p>
         Player Info: {player?.profession}, Bank Balance: ${currentBankBalance},
         Salary: ${player?.salary}
