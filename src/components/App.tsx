@@ -5,8 +5,7 @@ import CityScreen from "./CityScreen";
 import PortfolioScreen from "./PortfolioScreen";
 import DealsScreen from "./DealsScreen";
 import EventScreen from "./EventScreen";
-import { events } from "../assets/gameData";
-
+import { events, investmentProperties } from "../assets/gameData";
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<string>("gameInfo");
   const [player, setPlayer] = useState<{
@@ -15,8 +14,8 @@ const App: React.FC = () => {
     salary: number;
   } | null>(null);
   const [currentMonth, setCurrentMonth] = useState<number>(1);
-  const [portfolio, setPortfolio] = useState<any[]>([]); // Placeholder for portfolio data
-  const [currentEvent, setCurrentEvent] = useState<any>(null); // State to manage current event
+  const [portfolio, setPortfolio] = useState<any[]>([]);
+  const [currentEvent, setCurrentEvent] = useState<any>(null);
 
   const startGame = () => {
     setGameState("playerSelect");
@@ -108,7 +107,10 @@ const App: React.FC = () => {
         />
       )}
       {gameState === "deals" && (
-        <DealsScreen onClose={() => setGameState("city")} />
+        <DealsScreen
+          investmentProperties={investmentProperties}
+          onClose={() => setGameState("city")}
+        />
       )}
       {currentEvent && (
         <EventScreen event={currentEvent} onClose={closeEventScreen} />
