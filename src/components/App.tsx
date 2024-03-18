@@ -6,6 +6,7 @@ import PortfolioScreen from "./PortfolioScreen";
 import DealsScreen from "./DealsScreen";
 import EventScreen from "./EventScreen";
 import { events, investmentProperties } from "../assets/gameData";
+
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<string>("gameInfo");
   const [player, setPlayer] = useState<{
@@ -16,6 +17,7 @@ const App: React.FC = () => {
   const [currentMonth, setCurrentMonth] = useState<number>(1);
   const [portfolio, setPortfolio] = useState<any[]>([]);
   const [currentEvent, setCurrentEvent] = useState<any>(null);
+  const [currentBankBalance, setCurrentBankBalance] = useState<number>(0); // New state for current bank balance
 
   const startGame = () => {
     setGameState("playerSelect");
@@ -54,6 +56,7 @@ const App: React.FC = () => {
         break;
     }
     setPlayer({ profession, bankBalance, salary });
+    setCurrentBankBalance(bankBalance); // Update current bank balance to persist
     setGameState("city");
   };
 
@@ -81,6 +84,18 @@ const App: React.FC = () => {
     setGameState("deals");
   };
 
+  const handlePurchaseProperty = (property) => {
+    if (property.purchaseCost <= currentBankBalance) {
+      setCurrentBankBalance(currentBankBalance - property.purchaseCost);
+      // Add the property to the player's portfolio or perform any other necessary actions
+      // Here you can update the portfolio state or perform any other necessary actions
+      setPortfolio([...portfolio, property]);
+      setGameState("city");
+    } else {
+      alert("Insufficient funds to purchase this property.");
+    }
+  };
+
   const closeEventScreen = () => {
     setCurrentEvent(null);
   };
@@ -98,6 +113,8 @@ const App: React.FC = () => {
           onPlayerAction={handlePlayerAction}
           onViewPortfolio={handleViewPortfolio}
           onFindDeals={handleFindDeals}
+          currentBankBalance={currentBankBalance}
+          setCurrentBankBalance={setCurrentBankBalance}
         />
       )}
       {gameState === "portfolio" && (
@@ -109,6 +126,10 @@ const App: React.FC = () => {
       {gameState === "deals" && (
         <DealsScreen
           investmentProperties={investmentProperties}
+          currentBankBalance={currentBankBalance}
+          onPurchaseProperty={handlePurchaseProperty}
+          portfolio={portfolio}
+          setPortfolio={setPortfolio}
           onClose={() => setGameState("city")}
         />
       )}

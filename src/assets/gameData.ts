@@ -1304,7 +1304,7 @@ export const investmentProperties: InvestmentProperty[] = [
   },
   {
     id: "97",
-    name: "Minimalistic Luxyrt 4BR/2BA Lakehome",
+    name: "Minimalistic 4BR/2BA Lakehome",
     purchaseCost: 157000,
     closingCost: 37000,
     renovationCost: 186000,

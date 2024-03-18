@@ -8,6 +8,8 @@ interface Props {
   currentMonth: number;
   onViewPortfolio: () => void;
   onFindDeals: () => void;
+  currentBankBalance: number;
+  setCurrentBankBalance: (value: number) => void;
 }
 
 const CityScreen: React.FC<Props> = ({
@@ -15,11 +17,10 @@ const CityScreen: React.FC<Props> = ({
   currentMonth,
   onViewPortfolio,
   onFindDeals,
+  currentBankBalance,
+  setCurrentBankBalance,
 }) => {
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
-  const [currentBankBalance, setCurrentBankBalance] = useState<number>(
-    player?.bankBalance || 0
-  );
 
   const months = [
     "January",
@@ -39,13 +40,16 @@ const CityScreen: React.FC<Props> = ({
   const handlePlayerAction = (action: string) => {
     switch (action) {
       case "rest":
+        // Logic for rest action
         // Randomly select an event based on profession probabilities
         const chosenEvent = chooseEvent(player?.profession);
 
         if (chosenEvent) {
           // Update the bank balance based on the chosen event
           const newBankBalance =
-            currentBankBalance + chosenEvent.bankBalanceChange + player?.salary;
+            currentBankBalance +
+            chosenEvent.bankBalanceChange +
+            (player?.salary || 0);
           setCurrentBankBalance(newBankBalance);
 
           // Set the current event
@@ -85,8 +89,9 @@ const CityScreen: React.FC<Props> = ({
       <p>Months Since Start: {currentMonth}</p>
       <p>{currentMonthName}</p>
       <p>
-        Player Info: {player?.profession}, Bank Balance: ${currentBankBalance},
-        Salary: ${player?.salary}
+        Player Info: {player?.profession}, Bank Balance: $
+        {currentBankBalance.toLocaleString()}, Salary: $
+        {player?.salary.toLocaleString()}
       </p>
       <h3>Actions</h3>
       <button onClick={() => handlePlayerAction("travel;")}>Travel</button>

@@ -14,6 +14,9 @@ const DealsScreen: React.FC<Props> = ({
   currentBankBalance,
   onPurchaseProperty,
   onClose,
+  playerProfession,
+  playerBankBalance,
+  playerSalary,
 }) => {
   // to select 5 random properties
   const randomProperties = investmentProperties
@@ -53,6 +56,7 @@ const DealsScreen: React.FC<Props> = ({
 
   return (
     <div className="deals-screen">
+      <p>Bank Balance: ${currentBankBalance.toLocaleString()}</p>
       <h2>Available Investment Properties</h2>
       <table>
         <thead>
