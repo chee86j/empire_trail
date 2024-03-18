@@ -1,21 +1,21 @@
-.screen {
+.eventScreen {
   text-align: center;
-  padding: 20px;
   font-family: "Arial", sans-serif;
 }
 
-.screen h2 {
+.eventScreen h2 {
   color: #0047ab; /* navy blue */
   margin-bottom: 20px;
+  font-size: large;
 }
 
-.screen p {
+.eventScreen p {
   color: #000;
   max-width: 600px;
   margin: 0 auto;
 }
 
-button {
+eventScreen button {
   background-color: #ffd700; /* gold */
   color: #0047ab; /* navy blue */
   border: none;
@@ -26,21 +26,6 @@ button {
   transition: background-color 0.3s;
 }
 
-button:hover {
+eventScreen button:hover {
   background-color: #c5a600;
-}
-
-/* Responsive styles for medium-sized devices */
-@media (max-width: 768px) {
-  .screen {
-    padding: 10px;
-  }
-
-  .screen p {
-    font-size: 0.9em;
-  }
-
-  button {
-    font-size: 0.9em;
-  }
 }

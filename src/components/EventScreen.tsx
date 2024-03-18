@@ -34,7 +34,7 @@ const EventScreen: React.FC<Props> = ({
   };
 
   return (
-    <div className="screen">
+    <div className="Eventscreen">
       <h2>Event</h2>
       <p>
         {event.type}: {event.description}

@@ -13,6 +13,8 @@
   margin-bottom: 20px;
   font-size: 4.5em;
   font-weight: bolder;
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
+    1px 1px 0 #fff;
 }
 
 .gameInfoScreen p {
@@ -21,6 +23,8 @@
   font-weight: bolder;
   max-width: 600px;
   margin: 0 auto 30px;
+  text-shadow: -1px -1px 0 #0047ab, 1px -1px 0 #0047ab, -1px 1px 0 #0047ab,
+    1px 1px 0 #0047ab;
 }
 
 .startGameButton {

@@ -84,20 +84,23 @@ const CityScreen: React.FC<Props> = ({
   const currentMonthName = months[(currentMonth % 12) - 1];
 
   return (
-    <div className="screen">
-      <h2>City Name</h2>
+    <div className="cityScreen">
+      {/* City Name */}
+      <h2>Los Angeles</h2>
       <p>Months Since Start: {currentMonth}</p>
       <p>{currentMonthName}</p>
       <p>
-        Player Info: {player?.profession}, Bank Balance: $
-        {currentBankBalance.toLocaleString()}, Salary: $
+        Player Info: {player?.profession} <br /> Bank Balance: $
+        {currentBankBalance.toLocaleString()} <br /> Salary: $
         {player?.salary.toLocaleString()}
       </p>
       <h3>Actions</h3>
-      <button onClick={() => handlePlayerAction("travel;")}>Travel</button>
-      <button onClick={() => handlePlayerAction("rest")}>Rest</button>
-      <button onClick={onViewPortfolio}>View Portfolio</button>
-      <button onClick={onFindDeals}>Find Deals</button>
+      <div className="cityActions">
+        <button onClick={() => handlePlayerAction("travel;")}>Travel</button>
+        <button onClick={() => handlePlayerAction("rest")}>Rest</button>
+        <button onClick={onViewPortfolio}>View Portfolio</button>
+        <button onClick={onFindDeals}>Find Deals</button>
+      </div>
       {currentEvent && (
         <EventScreen event={currentEvent} onClose={closeEventScreen} />
       )}
