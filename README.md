@@ -29,7 +29,7 @@ Manage resources such as money, food, and supplies to ensure the success of your
 Monthly maintenance costs include property insurance, monthly mortgage, title insurance, utilities, property taxes, etc.
 The game's objective is to build up capital to purchase a skyscraper apartment building in New York City. Bankruptcy results in losing the game.
 
-# echnologies Used
+# Technologies Used
 
 TypeScript: Game logic and functionality are implemented using TypeScript, providing type safety and improved developer experience.
 HTML: Game interface and structure are built using HTML, providing a solid foundation for web-based gaming.
