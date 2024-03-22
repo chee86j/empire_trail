@@ -6,21 +6,37 @@ import "../styles/CityScreen.css";
 interface Props {
   player: { profession: string; bankBalance: number; salary: number } | null;
   currentMonth: number;
+  setCurrentMonth: (value: number) => void;
   onViewPortfolio: () => void;
   onFindDeals: () => void;
   currentBankBalance: number;
   setCurrentBankBalance: (value: number) => void;
 }
 
+const cities = [
+  { name: "Los Angeles" },
+  { name: "Phoenix" },
+  { name: "Dallas" },
+  { name: "St.Louis" },
+  { name: "Chicago" },
+  { name: "Cleveland" },
+  { name: "Pittsburgh" },
+  { name: "Philadelphia" },
+  { name: "New York City" },
+];
+
 const CityScreen: React.FC<Props> = ({
   player,
   currentMonth,
+  setCurrentMonth,
   onViewPortfolio,
   onFindDeals,
   currentBankBalance,
   setCurrentBankBalance,
 }) => {
+  const [currentCityIndex, setCurrentCityIndex] = useState(0);
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
+  const currentCity = cities[currentCityIndex];
 
   const months = [
     "January",
@@ -37,10 +53,16 @@ const CityScreen: React.FC<Props> = ({
     "December",
   ];
 
+  const handleTravel = () => {
+    setCurrentMonth((prevMonth) => prevMonth + 1);
+    setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
+  };
+
   const handlePlayerAction = (action: string) => {
     switch (action) {
       case "rest":
         // Logic for rest action
+        setCurrentMonth((prevMonth) => prevMonth + 1);
         // Randomly select an event based on profession probabilities
         const chosenEvent = chooseEvent(player?.profession);
 
@@ -55,6 +77,12 @@ const CityScreen: React.FC<Props> = ({
           // Set the current event
           setCurrentEvent(chosenEvent);
         }
+        break;
+      case "travel":
+        // Handle travel action
+        setCurrentMonth((prevMonth) => prevMonth + 1);
+        setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
+        handleTravel();
         break;
       default:
         break;
@@ -81,22 +109,25 @@ const CityScreen: React.FC<Props> = ({
     setCurrentEvent(null);
   };
 
+  const initialYear = 2018;
+  const currentYear = initialYear + Math.floor(currentMonth / 12);
   const currentMonthName = months[(currentMonth % 12) - 1];
 
   return (
     <div className="cityScreen">
       {/* City Name */}
-      <h2>Los Angeles</h2>
-      <p>Months Since Start: {currentMonth}</p>
-      <p>{currentMonthName}</p>
-      <p>
-        Player Info: {player?.profession} <br /> Bank Balance: $
-        {currentBankBalance.toLocaleString()} <br /> Salary: $
+      <h2>{currentCity.name}</h2>
+      <p className="cityDate">
+        {currentMonthName} {currentYear}
+      </p>
+      <p className="playerStats">
+        Profession: {player?.profession} <br /> Bank Balance: $
+        {currentBankBalance.toLocaleString()} <br /> Monthly Salary: $
         {player?.salary.toLocaleString()}
       </p>
       <h3>Actions</h3>
       <div className="cityActions">
-        <button onClick={() => handlePlayerAction("travel;")}>Travel</button>
+        <button onClick={() => handlePlayerAction("travel")}>Travel</button>
         <button onClick={() => handlePlayerAction("rest")}>Rest</button>
         <button onClick={onViewPortfolio}>View Portfolio</button>
         <button onClick={onFindDeals}>Find Deals</button>

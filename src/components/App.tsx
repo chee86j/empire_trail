@@ -110,13 +110,14 @@ const App: React.FC = () => {
         <CityScreen
           player={player}
           currentMonth={currentMonth}
-          onPlayerAction={handlePlayerAction}
+          setCurrentMonth={setCurrentMonth}
           onViewPortfolio={handleViewPortfolio}
           onFindDeals={handleFindDeals}
           currentBankBalance={currentBankBalance}
           setCurrentBankBalance={setCurrentBankBalance}
         />
       )}
+
       {gameState === "portfolio" && (
         <PortfolioScreen
           portfolio={portfolio}
