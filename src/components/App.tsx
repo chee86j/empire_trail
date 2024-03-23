@@ -85,8 +85,17 @@ const App: React.FC = () => {
   };
 
   const handlePurchaseProperty = (property) => {
+    /*  When purchased, the property's cost, closing cost, & renovation cost are subtracted 
+    from  player's bank balance. Renovation Cost is put into an escrow account. This game will
+    not be using loans or mortgages for simplicity. This may be added in a future version.
+    */
     if (property.purchaseCost <= currentBankBalance) {
-      setCurrentBankBalance(currentBankBalance - property.purchaseCost);
+      setCurrentBankBalance(
+        currentBankBalance -
+          property.purchaseCost -
+          property.closingCost -
+          property.renovationCost
+      );
       // Add the property to the player's portfolio or perform any other necessary actions
       // Here you can update the portfolio state or perform any other necessary actions
       setPortfolio([...portfolio, property]);
