@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { InvestmentProperty } from "../assets/gameData";
 import "../styles/DealsScreen.css";
 
@@ -7,6 +7,9 @@ interface Props {
   currentBankBalance: number;
   onPurchaseProperty: (property: InvestmentProperty) => void;
   onClose: () => void;
+  player: {
+    bankBalance: number;
+  };
 }
 
 const DealsScreen: React.FC<Props> = ({
@@ -14,14 +17,25 @@ const DealsScreen: React.FC<Props> = ({
   currentBankBalance,
   onPurchaseProperty,
   onClose,
-  playerProfession,
-  playerBankBalance,
-  playerSalary,
 }) => {
-  // to select 5 random properties
-  const randomProperties = investmentProperties
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 5);
+  const [randomProperties, setRandomProperties] = useState<
+    InvestmentProperty[]
+  >([]);
+
+  useEffect(() => {
+    const generateRandomProperties = () => {
+      const randomProps = investmentProperties
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 5);
+      setRandomProperties(randomProps);
+    };
+
+    generateRandomProperties();
+
+    return () => {
+      // Cleanup logic if needed
+    };
+  }, [investmentProperties]);
 
   const handlePurchase = (property: InvestmentProperty) => {
     if (property.purchaseCost <= currentBankBalance) {
@@ -32,7 +46,6 @@ const DealsScreen: React.FC<Props> = ({
     }
   };
 
-  // to calculate ROI (Return On Investment)
   const calculateROI = (property: InvestmentProperty): string => {
     const totalInvestment =
       property.purchaseCost + property.closingCost + property.renovationCost;
@@ -40,19 +53,6 @@ const DealsScreen: React.FC<Props> = ({
     const roiPercentage = (netProfit / totalInvestment) * 100;
     return roiPercentage.toFixed(2) + "%";
   };
-
-  /*
-  Very Bad ROI: Typically, a negative ROI, indicating a loss. This could be any 
-  negative percentage. 
-
-  Bad ROI: Slightly negative to just breakeven, usually 0% to a few percent positive. 
-  
-  Average ROI: Generally aligns with market averages, around 6% to 10%. 
-  
-  Good ROI: Above-average returns, often seen as between 10% to 15%. 
-  
-  Great ROI: Exceptionally high returns, typically over 15%.
-  */
 
   return (
     <div className="deals-screen">

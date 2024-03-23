@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Event, events } from "../assets/gameData";
 import EventScreen from "./EventScreen";
 import "../styles/CityScreen.css";
+import { InvestmentProperty } from "../assets/gameData";
 
 interface Props {
   player: { profession: string; bankBalance: number; salary: number } | null;
@@ -11,6 +12,7 @@ interface Props {
   onFindDeals: () => void;
   currentBankBalance: number;
   setCurrentBankBalance: (value: number) => void;
+  setInvestmentProperties: (properties: InvestmentProperty[]) => void;
 }
 
 const cities = [
@@ -54,7 +56,7 @@ const CityScreen: React.FC<Props> = ({
   ];
 
   const handleTravel = () => {
-    setCurrentMonth((prevMonth) => prevMonth + 1);
+    setCurrentMonth((prevMonth: number) => prevMonth + 1);
     setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
   };
 
@@ -109,7 +111,7 @@ const CityScreen: React.FC<Props> = ({
     setCurrentEvent(null);
   };
 
-  const initialYear = 2018;
+  const initialYear = 2008;
   const currentYear = initialYear + Math.floor(currentMonth / 12);
   const currentMonthName = months[(currentMonth % 12) - 1];
 
@@ -133,7 +135,12 @@ const CityScreen: React.FC<Props> = ({
         <button onClick={onFindDeals}>Find Deals</button>
       </div>
       {currentEvent && (
-        <EventScreen event={currentEvent} onClose={closeEventScreen} />
+        <EventScreen
+          event={currentEvent}
+          onClose={closeEventScreen}
+          playerProfession={player?.profession || ""}
+          playerBankBalance={currentBankBalance}
+        />
       )}
     </div>
   );
