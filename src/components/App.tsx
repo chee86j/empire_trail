@@ -85,6 +85,17 @@ const App: React.FC = () => {
   };
 
   const handlePurchaseProperty = (property) => {
+    const currentDate = new Date();
+    const purchaseMonth = currentDate.getMonth() + 1;
+    const purchaseYear = currentDate.getFullYear();
+
+    // Add purchase month and year to the property object
+    const propertyWithPurchaseDate: InvestmentProperty = {
+      ...property,
+      purchaseMonth,
+      purchaseYear,
+    };
+
     /*  When purchased, the property's cost, closing cost, & renovation cost are subtracted 
     from  player's bank balance. Renovation Cost is put into an escrow account. This game will
     not be using loans or mortgages for simplicity. This may be added in a future version.
@@ -98,7 +109,7 @@ const App: React.FC = () => {
       );
       // Add the property to the player's portfolio or perform any other necessary actions
       // Here you can update the portfolio state or perform any other necessary actions
-      setPortfolio([...portfolio, property]);
+      setPortfolio([...portfolio, propertyWithPurchaseDate]);
       setGameState("city");
     } else {
       alert("Insufficient funds to purchase this property.");

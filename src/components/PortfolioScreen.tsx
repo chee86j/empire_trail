@@ -1,5 +1,20 @@
+import React from "react";
+
+interface InvestmentProperty {
+  id: string;
+  name: string;
+  purchaseCost: number;
+  closingCost: number;
+  renovationCost: number;
+  renovationTime: number;
+  arvRentalIncome: number;
+  arvSalePrice: number;
+  purchaseMonth: number;
+  purchaseYear: number;
+}
+
 interface Props {
-  portfolio: any[];
+  portfolio: InvestmentProperty[];
   onClose: () => void;
 }
 
@@ -11,6 +26,8 @@ const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
         <thead>
           <tr>
             <th>Name</th>
+            <th>Purchase Month</th>
+            <th>Purchase Year</th>
             <th>Purchase Cost</th>
             <th>Closing Cost</th>
             <th>Renovation Cost</th>
@@ -23,6 +40,8 @@ const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
           {portfolio.map((property, index) => (
             <tr key={index}>
               <td>{property.name}</td>
+              <td>{property.purchaseMonth}</td>
+              <td>{property.purchaseYear}</td>
               <td>${property.purchaseCost.toLocaleString()}</td>
               <td>${property.closingCost.toLocaleString()}</td>
               <td>${property.renovationCost.toLocaleString()}</td>
