@@ -85,39 +85,33 @@ const App: React.FC = () => {
   };
 
   const handlePurchaseProperty = (property) => {
-    const currentDate = new Date();
-    const purchaseMonth = currentDate.getMonth() + 1;
-    const purchaseYear = currentDate.getFullYear();
-
-    // Add purchase month and year to the property object
-    const propertyWithPurchaseDate: InvestmentProperty = {
-      ...property,
-      purchaseMonth,
-      purchaseYear,
-    };
-
-    /*  When purchased, the property's cost, closing cost, & renovation cost are subtracted 
-    from  player's bank balance. Renovation Cost is put into an escrow account. This game will
-    not be using loans or mortgages for simplicity. This may be added in a future version.
-    */
-    if (property.purchaseCost <= currentBankBalance) {
-      setCurrentBankBalance(
+    // Check if the property can be purchased with the current bank balance
+    if (
+      property.purchaseCost + property.closingCost + property.renovationCost <=
+      currentBankBalance
+    ) {
+      // Calculate the new bank balance after the purchase
+      const newBankBalance =
         currentBankBalance -
-          property.purchaseCost -
-          property.closingCost -
-          property.renovationCost
-      );
-      // Add the property to the player's portfolio or perform any other necessary actions
-      // Here you can update the portfolio state or perform any other necessary actions
-      setPortfolio([...portfolio, propertyWithPurchaseDate]);
+        property.purchaseCost -
+        property.closingCost -
+        property.renovationCost;
+
+      // Add purchase month to property object
+      const propertyWithPurchaseMonth: InvestmentProperty = {
+        ...property,
+        purchaseMonth: currentMonth, // Do not change currentMonth
+      };
+
+      // Update the bank balance and portfolio
+      setCurrentBankBalance(newBankBalance);
+      setPortfolio([...portfolio, propertyWithPurchaseMonth]);
+
+      // Do not update currentMonth here
       setGameState("city");
     } else {
       alert("Insufficient funds to purchase this property.");
     }
-  };
-
-  const closeEventScreen = () => {
-    setCurrentEvent(null);
   };
 
   return (
@@ -141,6 +135,7 @@ const App: React.FC = () => {
       {gameState === "portfolio" && (
         <PortfolioScreen
           portfolio={portfolio}
+          currentMonth={currentMonth}
           onClose={() => setGameState("city")}
         />
       )}
@@ -151,6 +146,7 @@ const App: React.FC = () => {
           onPurchaseProperty={handlePurchaseProperty}
           portfolio={portfolio}
           setPortfolio={setPortfolio}
+          currentMonth={currentMonth}
           onClose={() => setGameState("city")}
         />
       )}

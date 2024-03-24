@@ -11,6 +11,8 @@ export interface InvestmentProperty {
   id: string;
   name: string;
   purchaseCost: number;
+  purchaseMonth: number;
+  purchaseYear: number;
   closingCost: number;
   renovationCost: number;
   renovationTime: number;

@@ -1,27 +1,19 @@
 import React, { useState } from "react";
 import DiceRollModal from "./DiceRollModal";
 import "../styles//PortfolioScreen.css";
-import { InvestmentProperty, Event } from "../assets/gameData";
-
-interface InvestmentProperty {
-  id: string;
-  name: string;
-  purchaseCost: number;
-  closingCost: number;
-  renovationCost: number;
-  renovationTime: number;
-  arvRentalIncome: number;
-  arvSalePrice: number;
-  purchaseMonth: number;
-  purchaseYear: number;
-}
+import { InvestmentProperty } from "../assets/gameData";
 
 interface Props {
   portfolio: InvestmentProperty[];
+  currentMonth: number;
   onClose: () => void;
 }
 
-const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
+const PortfolioScreen: React.FC<Props> = ({
+  portfolio,
+  currentMonth,
+  onClose,
+}) => {
   const [selectedProperty, setSelectedProperty] =
     useState<InvestmentProperty | null>(null);
   const [action, setAction] = useState<"Rent" | "Sale">("Rent");
@@ -45,8 +37,7 @@ const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
         <thead>
           <tr>
             <th>Name</th>
-            <th>Purchase Month</th>
-            <th>Purchase Year</th>
+            <th>Purchase Date</th>
             <th>Purchase Cost</th>
             <th>Closing Cost</th>
             <th>Renovation Cost</th>
@@ -62,7 +53,6 @@ const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
             <tr key={index}>
               <td>{property.name}</td>
               <td>{property.purchaseMonth}</td>
-              <td>{property.purchaseYear}</td>
               <td>${property.purchaseCost.toLocaleString()}</td>
               <td>${property.closingCost.toLocaleString()}</td>
               <td>${property.renovationCost.toLocaleString()}</td>
@@ -72,12 +62,21 @@ const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
               <td>${property.arvSalePrice.toLocaleString()}</td>
               <td>
                 <div className="button-container">
-                  <button onClick={() => handleActionClick(property, "Rent")}>
-                    Rent
-                  </button>
-                  <button onClick={() => handleActionClick(property, "Sale")}>
-                    Sale
-                  </button>
+                  {/* Enable the "Rent" button if enough time has passed since purchase */}
+                  {currentMonth >=
+                    property.purchaseMonth + property.renovationTime && (
+                    <button onClick={() => handleActionClick(property, "Rent")}>
+                      Rent
+                    </button>
+                  )}
+
+                  {/* Enable the "Sale" button if enough time has passed since purchase */}
+                  {currentMonth >=
+                    property.purchaseMonth + property.renovationTime && (
+                    <button onClick={() => handleActionClick(property, "Sale")}>
+                      Sale
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>

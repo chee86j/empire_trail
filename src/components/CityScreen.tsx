@@ -78,12 +78,14 @@ const CityScreen: React.FC<Props> = ({
 
           // Set the current event
           setCurrentEvent(chosenEvent);
+          console.log(`Current Month Since Start: ${currentMonth}`);
         }
         break;
       case "travel":
         // Handle travel action
         setCurrentMonth((prevMonth) => prevMonth + 1);
         setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
+        console.log(`Current Month Since Start: ${currentMonth}`);
         handleTravel();
         break;
       default:
@@ -112,7 +114,7 @@ const CityScreen: React.FC<Props> = ({
   };
 
   const initialYear = 2008;
-  const currentYear = initialYear + Math.floor(currentMonth / 12);
+  const currentYear = initialYear + Math.floor((currentMonth - 1) / 12);
   const currentMonthName = months[(currentMonth % 12) - 1];
 
   return (
