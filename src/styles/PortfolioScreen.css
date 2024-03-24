@@ -1,0 +1,20 @@
+/* Add this CSS to your stylesheet */
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px; /* Adjust the margin as needed */
+}
+
+.button-container button {
+  padding: 10px 20px;
+  background-color: #007bff; /* Change the background color as needed */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+  background-color: #0056b3; /* Change the hover background color as needed */
+}

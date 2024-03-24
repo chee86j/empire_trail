@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import DiceRollModal from "./DiceRollModal";
+import "../styles//PortfolioScreen.css";
+import { InvestmentProperty, Event } from "../assets/gameData";
 
 interface InvestmentProperty {
   id: string;
@@ -19,6 +22,22 @@ interface Props {
 }
 
 const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
+  const [selectedProperty, setSelectedProperty] =
+    useState<InvestmentProperty | null>(null);
+  const [action, setAction] = useState<"Rent" | "Sale">("Rent");
+
+  const handleActionClick = (
+    property: InvestmentProperty,
+    selectedAction: "Rent" | "Sale"
+  ) => {
+    setSelectedProperty(property);
+    setAction(selectedAction);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProperty(null);
+  };
+
   return (
     <div className="screen">
       <h2>Portfolio</h2>
@@ -33,7 +52,9 @@ const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
             <th>Renovation Cost</th>
             <th>Rehab Time</th>
             <th>ARV Rental Income</th>
+            <th>Monthly Expenses</th>
             <th>ARV Sale Price</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -47,12 +68,26 @@ const PortfolioScreen: React.FC<Props> = ({ portfolio, onClose }) => {
               <td>${property.renovationCost.toLocaleString()}</td>
               <td>{property.renovationTime} months</td>
               <td>${property.arvRentalIncome.toLocaleString()}</td>
+              <td>${property.monthlyExpenses.toLocaleString()}</td>
               <td>${property.arvSalePrice.toLocaleString()}</td>
+              <td>
+                <div className="button-container">
+                  <button onClick={() => handleActionClick(property, "Rent")}>
+                    Rent
+                  </button>
+                  <button onClick={() => handleActionClick(property, "Sale")}>
+                    Sale
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
       <button onClick={onClose}>Close</button>
+      {selectedProperty && (
+        <DiceRollModal onClose={handleCloseModal} action={action} />
+      )}
     </div>
   );
 };
