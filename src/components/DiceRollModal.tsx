@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import ReactDice, { ReactDiceRef } from "react-dice-complete";
+import "../styles/DiceRollModal.css";
 
 interface Props {
   onClose: () => void;
@@ -19,10 +20,21 @@ const DiceRollModal: React.FC<Props> = ({ onClose, action }) => {
   };
 
   return (
-    <div className="modal">
-      <div className="modal-content">
+    <div className="dice-modal">
+      <div className="dice-modal-content">
         <h2>Roll the Dice for {action}</h2>
-        <ReactDice numDice={2} ref={reactDice} rollDone={rollDone} />
+        <ReactDice
+          numDice={2}
+          ref={reactDice}
+          rollDone={rollDone}
+          faceColor="#F8F8F8"
+          dotColor="#003366"
+          dieSize={60}
+          outline
+          outlineColor="#000000"
+          defaultRoll={6}
+          rollTime={2}
+        />
         <button onClick={rollAll}>Roll</button>
         <button onClick={onClose}>Close</button>
       </div>
