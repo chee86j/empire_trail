@@ -28,29 +28,26 @@ const PortfolioScreen: React.FC<Props> = ({
   const [lastRoll, setLastRoll] = useState<number>(0);
 
   const handlePropertySale = (property: InvestmentProperty) => {
-    // Log values for debugging
-    console.log("Current Bank Balance:", currentBankBalance);
-    console.log("Property Sale Price:", property.arvSalePrice);
-
-    // Ensure both currentBankBalance and property.arvSalePrice are numbers
-    const salePrice = Number(property.arvSalePrice) || 0;
-    const newBankBalance = Number(currentBankBalance) + salePrice;
-
-    setCurrentBankBalance(newBankBalance);
     const updatedPortfolio = portfolio.filter((p) => p.id !== property.id);
     setPortfolio(updatedPortfolio);
+
+    const newBankBalance = currentBankBalance + property.arvSalePrice;
+    setCurrentBankBalance(newBankBalance);
 
     console.log(`${property.name} was sold for ${property.arvSalePrice}!`);
   };
 
   useEffect(() => {
-    if (rollCount === 3) {
+    if ([1, 2, 3, 4, 6, 8, 10, 12].includes(lastRoll)) {
+      console.log("Try again");
+      // If it's an unsuccessful roll, just log and do nothing else
+    } else if ([5, 7, 9, 11].includes(lastRoll) && selectedProperty) {
+      // Successful roll, handle property sale
+      handlePropertySale(selectedProperty);
       setShowDiceModal(false);
-    } else if (rollCount > 0 && [5, 7, 9, 11].includes(lastRoll)) {
-      if (selectedProperty) {
-        handlePropertySale(selectedProperty);
-        setShowDiceModal(false);
-      }
+    } else if (rollCount === 3) {
+      // Reached maximum rolls without success, just close the modal
+      setShowDiceModal(false);
     }
   }, [rollCount, lastRoll, selectedProperty]);
 
@@ -107,15 +104,12 @@ const PortfolioScreen: React.FC<Props> = ({
               <td>${property.arvSalePrice.toLocaleString()}</td>
               <td>
                 <div className="button-container">
-                  {/* Enable the "Rent" button if enough time has passed since purchase */}
                   {currentMonth >=
                     property.purchaseMonth + property.renovationTime && (
                     <button onClick={() => handleActionClick(property, "Rent")}>
                       Rent
                     </button>
                   )}
-
-                  {/* Enable the "Sale" button if enough time has passed since purchase */}
                   {currentMonth >=
                     property.purchaseMonth + property.renovationTime && (
                     <button onClick={() => handleActionClick(property, "Sale")}>
