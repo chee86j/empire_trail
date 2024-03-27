@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DiceRollModal from "./DiceRollModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/PortfolioScreen.css";
 import { InvestmentProperty } from "../assets/gameData";
 
@@ -34,19 +36,32 @@ const PortfolioScreen: React.FC<Props> = ({
     const newBankBalance = currentBankBalance + property.arvSalePrice;
     setCurrentBankBalance(newBankBalance);
 
-    console.log(`${property.name} was sold for ${property.arvSalePrice}!`);
+    console.log(
+      `${
+        property.name
+      } was sold for $${property.arvSalePrice.toLocaleString()}!`
+    );
+    toast.success(
+      `${
+        property.name
+      } was sold for $${property.arvSalePrice.toLocaleString()}!`
+    );
+    toast.success(`New bank balance: $${newBankBalance.toLocaleString()}`);
+    console.log(`New bank balance: $${newBankBalance.toLocaleString()}`);
   };
 
   useEffect(() => {
-    if ([1, 2, 3, 4, 6, 8, 10, 12].includes(lastRoll)) {
-      console.log("Try again");
+    if ([1, 2, 4, 6, 8, 10, 12].includes(lastRoll)) {
+      toast.info("Roll A Prime Number!");
       // If it's an unsuccessful roll, just log and do nothing else
-    } else if ([5, 7, 9, 11].includes(lastRoll) && selectedProperty) {
+    } else if ([3, 5, 7, 9, 11].includes(lastRoll) && selectedProperty) {
       // Successful roll, handle property sale
+      toast.success("Property Sold Successfully!");
       handlePropertySale(selectedProperty);
       setShowDiceModal(false);
     } else if (rollCount === 3) {
       // Reached maximum rolls without success, just close the modal
+      toast.info("Maximum rolls reached");
       setShowDiceModal(false);
     }
   }, [rollCount, lastRoll, selectedProperty]);
@@ -74,6 +89,7 @@ const PortfolioScreen: React.FC<Props> = ({
 
   return (
     <div className="screen">
+      <ToastContainer />
       <h2>Portfolio</h2>
       <table>
         <thead>

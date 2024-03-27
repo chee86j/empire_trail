@@ -2,6 +2,8 @@
 
 import React from "react";
 import { Event } from "../assets/gameData";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/EventScreen.css";
 
 interface Props {
@@ -23,7 +25,9 @@ const EventScreen: React.FC<Props> = ({
 
   // Calculate the change in bank balance based on the event's bankBalanceChange
   const calculateBankBalanceChange = (): number => {
-    return event.bankBalanceChange;
+    const bankBalanceChange = event.bankBalanceChange;
+    toast.info(`Bank Balance Change: $${bankBalanceChange.toLocaleString()}`);
+    return bankBalanceChange;
   };
 
   // Handle event close
@@ -35,11 +39,14 @@ const EventScreen: React.FC<Props> = ({
 
   return (
     <div className="Eventscreen">
+      <ToastContainer />
       <h2>Event</h2>
       <p>
         {event.type}: {event.description}
       </p>
-      <p>Bank Balance Change: {calculateBankBalanceChange()}</p>
+      <p>
+        Bank Balance Change: ${calculateBankBalanceChange().toLocaleString()}
+      </p>
       <button onClick={handleEventClose}>OK</button>
     </div>
   );

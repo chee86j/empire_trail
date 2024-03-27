@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Event, events } from "../assets/gameData";
 import EventScreen from "./EventScreen";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/CityScreen.css";
 import { InvestmentProperty } from "../assets/gameData";
 
@@ -58,6 +60,7 @@ const CityScreen: React.FC<Props> = ({
   const handleTravel = () => {
     setCurrentMonth((prevMonth: number) => prevMonth + 1);
     setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
+    toast.success(`Traveling to ${cities[currentCityIndex].name}`);
   };
 
   const handlePlayerAction = (action: string) => {
@@ -119,6 +122,7 @@ const CityScreen: React.FC<Props> = ({
 
   return (
     <div className="cityScreen">
+      <ToastContainer />
       {/* City Name */}
       <h2>{currentCity.name}</h2>
       <p className="cityDate">
