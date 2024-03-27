@@ -1,22 +1,33 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ReactDice, { ReactDiceRef } from "react-dice-complete";
 import "../styles/DiceRollModal.css";
 
 interface Props {
   onClose: () => void;
   action: "Rent" | "Sale";
+  onRoll: (rollValue: number) => void;
+  maxRolls: number;
 }
 
-const DiceRollModal: React.FC<Props> = ({ onClose, action }) => {
+const DiceRollModal: React.FC<Props> = ({
+  onClose,
+  action,
+  onRoll,
+  maxRolls,
+}) => {
   const reactDice = useRef<ReactDiceRef>(null);
+  const [currentRollCount, setCurrentRollCount] = useState(0);
 
   const rollDone = (totalValue: number, values: number[]) => {
-    console.log("individual die values array:", values);
-    console.log("total dice value:", totalValue);
+    onRoll(totalValue);
+    console.log(`Total value: ${totalValue}, Values: ${values}`);
+    setCurrentRollCount((prev) => prev + 1);
   };
 
   const rollAll = () => {
-    reactDice.current?.rollAll();
+    if (currentRollCount < maxRolls) {
+      reactDice.current?.rollAll();
+    }
   };
 
   return (

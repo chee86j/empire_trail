@@ -137,6 +137,9 @@ const App: React.FC = () => {
           portfolio={portfolio}
           currentMonth={currentMonth}
           onClose={() => setGameState("city")}
+          setPortfolio={setPortfolio}
+          currentBankBalance={currentBankBalance}
+          setCurrentBankBalance={setCurrentBankBalance}
         />
       )}
       {gameState === "deals" && (

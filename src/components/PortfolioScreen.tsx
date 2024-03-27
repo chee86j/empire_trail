@@ -1,22 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DiceRollModal from "./DiceRollModal";
-import "../styles//PortfolioScreen.css";
+import "../styles/PortfolioScreen.css";
 import { InvestmentProperty } from "../assets/gameData";
 
 interface Props {
   portfolio: InvestmentProperty[];
+  currentBankBalance: number;
   currentMonth: number;
   onClose: () => void;
+  setPortfolio: (portfolio: InvestmentProperty[]) => void;
+  setCurrentBankBalance: (balance: number) => void;
 }
 
 const PortfolioScreen: React.FC<Props> = ({
   portfolio,
+  currentBankBalance,
   currentMonth,
   onClose,
+  setPortfolio,
+  setCurrentBankBalance,
 }) => {
   const [selectedProperty, setSelectedProperty] =
     useState<InvestmentProperty | null>(null);
   const [action, setAction] = useState<"Rent" | "Sale">("Rent");
+  const [showDiceModal, setShowDiceModal] = useState<boolean>(false);
+  const [rollCount, setRollCount] = useState(0);
+  const [lastRoll, setLastRoll] = useState<number>(0);
+
+  const handlePropertySale = (property: InvestmentProperty) => {
+    // Log values for debugging
+    console.log("Current Bank Balance:", currentBankBalance);
+    console.log("Property Sale Price:", property.arvSalePrice);
+
+    // Ensure both currentBankBalance and property.arvSalePrice are numbers
+    const salePrice = Number(property.arvSalePrice) || 0;
+    const newBankBalance = Number(currentBankBalance) + salePrice;
+
+    setCurrentBankBalance(newBankBalance);
+    const updatedPortfolio = portfolio.filter((p) => p.id !== property.id);
+    setPortfolio(updatedPortfolio);
+
+    console.log(`${property.name} was sold for ${property.arvSalePrice}!`);
+  };
+
+  useEffect(() => {
+    if (rollCount === 3) {
+      setShowDiceModal(false);
+    } else if (rollCount > 0 && [5, 7, 9, 11].includes(lastRoll)) {
+      if (selectedProperty) {
+        handlePropertySale(selectedProperty);
+        setShowDiceModal(false);
+      }
+    }
+  }, [rollCount, lastRoll, selectedProperty]);
 
   const handleActionClick = (
     property: InvestmentProperty,
@@ -24,10 +60,19 @@ const PortfolioScreen: React.FC<Props> = ({
   ) => {
     setSelectedProperty(property);
     setAction(selectedAction);
+    setShowDiceModal(true);
+    setRollCount(0);
+    setLastRoll(0);
+  };
+
+  const handleDiceRoll = (rollValue: number) => {
+    setLastRoll(rollValue);
+    setRollCount((prev) => prev + 1);
   };
 
   const handleCloseModal = () => {
     setSelectedProperty(null);
+    setShowDiceModal(false);
   };
 
   return (
@@ -85,7 +130,13 @@ const PortfolioScreen: React.FC<Props> = ({
       </table>
       <button onClick={onClose}>Close</button>
       {selectedProperty && (
-        <DiceRollModal onClose={handleCloseModal} action={action} />
+        <DiceRollModal
+          onClose={handleCloseModal}
+          action={action}
+          onRoll={handleDiceRoll}
+          isOpen={showDiceModal}
+          maxRolls={3}
+        />
       )}
     </div>
   );
