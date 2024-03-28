@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DiceRollModal from "./DiceRollModal";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/PortfolioScreen.css";
 import { InvestmentProperty } from "../assets/gameData";
@@ -65,21 +65,25 @@ const PortfolioScreen: React.FC<Props> = ({
   useEffect(() => {
     if ([1, 2, 4, 6, 8, 10, 12].includes(lastRoll)) {
       toast.info("Roll A Prime Number!");
+      console.log("Success! Rolled A Prime Number!");
       // If it's an unsuccessful roll, just log and do nothing else
     } else if ([3, 5, 7, 9, 11].includes(lastRoll) && selectedProperty) {
       // Successful roll
       if (action === "Sale") {
         toast.success("Property Sold Successfully!");
+        console.log("Property Sold Successfully!");
         handlePropertySale(selectedProperty);
         setShowDiceModal(false);
       } else if (action === "Rent") {
         toast.success("Property Rented Successfully!");
+        console.log("Property Rented Successfully!");
         handlePropertyRent(selectedProperty);
         setShowDiceModal(false);
       }
     } else if (rollCount === 3) {
       // Reached maximum rolls without success, just close the modal
       toast.info("Maximum rolls reached");
+      console.log("Maximum Rolls Reached");
       setShowDiceModal(false);
     }
   }, [rollCount, lastRoll, selectedProperty, action]);
@@ -107,7 +111,6 @@ const PortfolioScreen: React.FC<Props> = ({
 
   return (
     <div className="screen">
-      <ToastContainer />
       <h2>Portfolio</h2>
       <table>
         <thead>

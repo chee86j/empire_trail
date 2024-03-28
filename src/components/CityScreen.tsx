@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Event, events } from "../assets/gameData";
 import EventScreen from "./EventScreen";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/CityScreen.css";
 import { InvestmentProperty } from "../assets/gameData";
@@ -63,6 +63,7 @@ const CityScreen: React.FC<Props> = ({
     setCurrentMonth((prevMonth: number) => prevMonth + 1);
     setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
     toast.success(`Traveling to ${cities[currentCityIndex].name}`);
+    console.log(`Current Month Since Start: ${currentMonth}`);
   };
 
   const addRentalIncome = () => {
@@ -76,7 +77,11 @@ const CityScreen: React.FC<Props> = ({
     if (totalRentalIncome > 0) {
       const newBankBalance = currentBankBalance + totalRentalIncome;
       setCurrentBankBalance(newBankBalance);
-      toast.info(`Received rental income: $${totalRentalIncome}`);
+      toast.info(`Received Rental Income: $${totalRentalIncome}`);
+      console.log(
+        "Received Rental Income:",
+        totalRentalIncome.toLocaleString()
+      );
     }
   };
 
@@ -140,7 +145,6 @@ const CityScreen: React.FC<Props> = ({
 
   return (
     <div className="cityScreen">
-      <ToastContainer />
       {/* City Name */}
       <h2>{currentCity.name}</h2>
       <p className="cityDate">
