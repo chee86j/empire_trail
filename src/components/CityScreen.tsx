@@ -11,6 +11,7 @@ interface Props {
   currentMonth: number;
   setCurrentMonth: (value: number) => void;
   onViewPortfolio: () => void;
+  portfolio: InvestmentProperty[];
   onFindDeals: () => void;
   currentBankBalance: number;
   setCurrentBankBalance: (value: number) => void;
@@ -34,6 +35,7 @@ const CityScreen: React.FC<Props> = ({
   currentMonth,
   setCurrentMonth,
   onViewPortfolio,
+  portfolio,
   onFindDeals,
   currentBankBalance,
   setCurrentBankBalance,
@@ -63,6 +65,21 @@ const CityScreen: React.FC<Props> = ({
     toast.success(`Traveling to ${cities[currentCityIndex].name}`);
   };
 
+  const addRentalIncome = () => {
+    let totalRentalIncome = 0;
+    portfolio.forEach((property) => {
+      if (property.isRented) {
+        totalRentalIncome += property.arvRentalIncome;
+      }
+    });
+
+    if (totalRentalIncome > 0) {
+      const newBankBalance = currentBankBalance + totalRentalIncome;
+      setCurrentBankBalance(newBankBalance);
+      toast.info(`Received rental income: $${totalRentalIncome}`);
+    }
+  };
+
   const handlePlayerAction = (action: string) => {
     switch (action) {
       case "rest":
@@ -70,7 +87,7 @@ const CityScreen: React.FC<Props> = ({
         setCurrentMonth((prevMonth) => prevMonth + 1);
         // Randomly select an event based on profession probabilities
         const chosenEvent = chooseEvent(player?.profession);
-
+        addRentalIncome();
         if (chosenEvent) {
           // Update the bank balance based on the chosen event
           const newBankBalance =
@@ -88,6 +105,7 @@ const CityScreen: React.FC<Props> = ({
         // Handle travel action
         setCurrentMonth((prevMonth) => prevMonth + 1);
         setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
+        addRentalIncome();
         console.log(`Current Month Since Start: ${currentMonth}`);
         handleTravel();
         break;

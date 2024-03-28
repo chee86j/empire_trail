@@ -17,6 +17,7 @@ export interface InvestmentProperty {
   renovationCost: number;
   renovationTime: number;
   arvRentalIncome: number;
+  isRented: boolean;
   monthlyExpenses: number;
   arvSalePrice: number;
 }
@@ -245,6 +246,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2000,
     monthlyExpenses: 1800,
     arvSalePrice: 365000,
+    isRented: false,
   },
   {
     id: "2",
@@ -256,6 +258,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1500,
     monthlyExpenses: 1400,
     arvSalePrice: 275000,
+    isRented: false,
   },
   {
     id: "3",
@@ -267,6 +270,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1800,
     monthlyExpenses: 1600,
     arvSalePrice: 380000,
+    isRented: false,
   },
   {
     id: "4",
@@ -278,6 +282,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1700,
     monthlyExpenses: 1500,
     arvSalePrice: 325000,
+    isRented: false,
   },
   {
     id: "5",
@@ -289,8 +294,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1900,
     monthlyExpenses: 1700,
     arvSalePrice: 345000,
+    isRented: false,
   },
-
   {
     id: "6",
     name: "Basic Suburban Apartment",
@@ -301,6 +306,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2200,
     monthlyExpenses: 2000,
     arvSalePrice: 525000,
+    isRented: false,
   },
   {
     id: "7",
@@ -312,6 +318,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2400,
     monthlyExpenses: 2200,
     arvSalePrice: 575000,
+    isRented: false,
   },
   {
     id: "8",
@@ -323,6 +330,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2500,
     monthlyExpenses: 2300,
     arvSalePrice: 625000,
+    isRented: false,
   },
   {
     id: "9",
@@ -334,6 +342,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2300,
     monthlyExpenses: 2100,
     arvSalePrice: 575000,
+    isRented: false,
   },
   {
     id: "10",
@@ -345,8 +354,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2100,
     monthlyExpenses: 1900,
     arvSalePrice: 550000,
+    isRented: false,
   },
-
   {
     id: "11",
     name: "Modern Suburban Apartment Complex",
@@ -357,6 +366,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2800,
     monthlyExpenses: 2600,
     arvSalePrice: 775000,
+    isRented: false,
   },
   {
     id: "12",
@@ -368,6 +378,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3000,
     monthlyExpenses: 2800,
     arvSalePrice: 825000,
+    isRented: false,
   },
   {
     id: "13",
@@ -379,6 +390,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3200,
     monthlyExpenses: 3000,
     arvSalePrice: 875000,
+    isRented: false,
   },
   {
     id: "14",
@@ -390,6 +402,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2900,
     monthlyExpenses: 2700,
     arvSalePrice: 800000,
+    isRented: false,
   },
   {
     id: "15",
@@ -401,8 +414,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2700,
     monthlyExpenses: 2500,
     arvSalePrice: 775000,
+    isRented: false,
   },
-
   {
     id: "16",
     name: "Modern Townhome",
@@ -413,6 +426,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3200,
     monthlyExpenses: 2800,
     arvSalePrice: 850000,
+    isRented: false,
   },
   {
     id: "17",
@@ -424,6 +438,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3500,
     monthlyExpenses: 3200,
     arvSalePrice: 1000000,
+    isRented: false,
   },
   {
     id: "18",
@@ -435,6 +450,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3800,
     monthlyExpenses: 3500,
     arvSalePrice: 1100000,
+    isRented: false,
   },
   {
     id: "19",
@@ -446,6 +462,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3300,
     monthlyExpenses: 3000,
     arvSalePrice: 950000,
+    isRented: false,
   },
   {
     id: "20",
@@ -457,8 +474,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3100,
     monthlyExpenses: 2900,
     arvSalePrice: 900000,
+    isRented: false,
   },
-
   {
     id: "21",
     name: "Luxury Lakeside Mansion",
@@ -469,6 +486,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4500,
     monthlyExpenses: 4000,
     arvSalePrice: 1500000,
+    isRented: false,
   },
   {
     id: "22",
@@ -480,6 +498,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5000,
     monthlyExpenses: 4500,
     arvSalePrice: 1700000,
+    isRented: false,
   },
   {
     id: "23",
@@ -491,6 +510,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5500,
     monthlyExpenses: 5000,
     arvSalePrice: 1580000,
+    isRented: false,
   },
   {
     id: "24",
@@ -502,6 +522,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4800,
     monthlyExpenses: 4300,
     arvSalePrice: 1200000,
+    isRented: false,
   },
   {
     id: "25",
@@ -513,8 +534,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5100,
     monthlyExpenses: 4600,
     arvSalePrice: 1500000,
+    isRented: false,
   },
-
   {
     id: "26",
     name: "Neglected Downtown Apartment",
@@ -525,6 +546,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1500,
     monthlyExpenses: 1400,
     arvSalePrice: 560000,
+    isRented: false,
   },
   {
     id: "27",
@@ -536,6 +558,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1600,
     monthlyExpenses: 1500,
     arvSalePrice: 490000,
+    isRented: false,
   },
   {
     id: "28",
@@ -547,6 +570,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1700,
     monthlyExpenses: 1600,
     arvSalePrice: 400000,
+    isRented: false,
   },
   {
     id: "29",
@@ -558,6 +582,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1400,
     monthlyExpenses: 1300,
     arvSalePrice: 430000,
+    isRented: false,
   },
   {
     id: "30",
@@ -569,8 +594,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1800,
     monthlyExpenses: 1700,
     arvSalePrice: 380000,
+    isRented: false,
   },
-
   {
     id: "31",
     name: "Basic Urban Condo",
@@ -581,6 +606,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2300,
     monthlyExpenses: 2100,
     arvSalePrice: 550000,
+    isRented: false,
   },
   {
     id: "32",
@@ -592,6 +618,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2500,
     monthlyExpenses: 2300,
     arvSalePrice: 600000,
+    isRented: false,
   },
   {
     id: "33",
@@ -603,6 +630,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2700,
     monthlyExpenses: 2500,
     arvSalePrice: 650000,
+    isRented: false,
   },
   {
     id: "34",
@@ -614,6 +642,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2200,
     monthlyExpenses: 2000,
     arvSalePrice: 530000,
+    isRented: false,
   },
   {
     id: "35",
@@ -625,8 +654,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2400,
     monthlyExpenses: 2200,
     arvSalePrice: 580000,
+    isRented: false,
   },
-
   {
     id: "36",
     name: "Renovated Urban Apartment",
@@ -637,6 +666,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3000,
     monthlyExpenses: 2800,
     arvSalePrice: 720000,
+    isRented: false,
   },
   {
     id: "37",
@@ -648,6 +678,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3200,
     monthlyExpenses: 3000,
     arvSalePrice: 770000,
+    isRented: false,
   },
   {
     id: "38",
@@ -659,6 +690,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3400,
     monthlyExpenses: 3200,
     arvSalePrice: 820000,
+    isRented: false,
   },
   {
     id: "39",
@@ -670,6 +702,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2800,
     monthlyExpenses: 2600,
     arvSalePrice: 680000,
+    isRented: false,
   },
   {
     id: "40",
@@ -681,8 +714,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3000,
     monthlyExpenses: 2800,
     arvSalePrice: 700000,
+    isRented: false,
   },
-
   {
     id: "41",
     name: "Luxury Lakeside Retreat",
@@ -693,6 +726,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4000,
     monthlyExpenses: 3600,
     arvSalePrice: 1300000,
+    isRented: false,
   },
   {
     id: "42",
@@ -704,6 +738,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4200,
     monthlyExpenses: 3800,
     arvSalePrice: 1400000,
+    isRented: false,
   },
   {
     id: "43",
@@ -715,6 +750,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4400,
     monthlyExpenses: 4000,
     arvSalePrice: 1500000,
+    isRented: false,
   },
   {
     id: "44",
@@ -726,6 +762,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3800,
     monthlyExpenses: 3400,
     arvSalePrice: 1100000,
+    isRented: false,
   },
   {
     id: "45",
@@ -737,8 +774,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4000,
     monthlyExpenses: 3600,
     arvSalePrice: 1200000,
+    isRented: false,
   },
-
   {
     id: "46",
     name: "Grand Lakeside Mansion",
@@ -749,6 +786,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 6000,
     monthlyExpenses: 5200,
     arvSalePrice: 2000000,
+    isRented: false,
   },
   {
     id: "47",
@@ -760,6 +798,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7000,
     monthlyExpenses: 6000,
     arvSalePrice: 2500000,
+    isRented: false,
   },
   {
     id: "48",
@@ -771,6 +810,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 8000,
     monthlyExpenses: 7000,
     arvSalePrice: 2700000,
+    isRented: false,
   },
   {
     id: "49",
@@ -782,6 +822,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 9000,
     monthlyExpenses: 8000,
     arvSalePrice: 3000000,
+    isRented: false,
   },
   {
     id: "50",
@@ -793,8 +834,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 6500,
     monthlyExpenses: 5500,
     arvSalePrice: 2200000,
+    isRented: false,
   },
-
   {
     id: "51",
     name: "Extravagant Suburban Mansion",
@@ -805,6 +846,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5200,
     monthlyExpenses: 4700,
     arvSalePrice: 900000,
+    isRented: false,
   },
   {
     id: "52",
@@ -816,6 +858,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5400,
     monthlyExpenses: 4900,
     arvSalePrice: 950000,
+    isRented: false,
   },
   {
     id: "53",
@@ -827,6 +870,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4800,
     monthlyExpenses: 4300,
     arvSalePrice: 830000,
+    isRented: false,
   },
   {
     id: "54",
@@ -838,6 +882,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5000,
     monthlyExpenses: 4500,
     arvSalePrice: 870000,
+    isRented: false,
   },
   {
     id: "55",
@@ -849,6 +894,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5200,
     monthlyExpenses: 4700,
     arvSalePrice: 920000,
+    isRented: false,
   },
   {
     id: "56",
@@ -860,6 +906,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4600,
     monthlyExpenses: 4100,
     arvSalePrice: 810000,
+    isRented: false,
   },
   {
     id: "57",
@@ -871,6 +918,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5000,
     monthlyExpenses: 4500,
     arvSalePrice: 850000,
+    isRented: false,
   },
   {
     id: "58",
@@ -882,6 +930,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 5200,
     monthlyExpenses: 4700,
     arvSalePrice: 900000,
+    isRented: false,
   },
   {
     id: "59",
@@ -893,8 +942,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4800,
     monthlyExpenses: 4300,
     arvSalePrice: 790000,
+    isRented: false,
   },
-
   {
     id: "60",
     name: "Elite Urban Penthouse",
@@ -905,6 +954,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7000,
     monthlyExpenses: 6000,
     arvSalePrice: 1100000,
+    isRented: false,
   },
   {
     id: "61",
@@ -916,6 +966,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7200,
     monthlyExpenses: 6200,
     arvSalePrice: 1150000,
+    isRented: false,
   },
   {
     id: "62",
@@ -927,6 +978,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7400,
     monthlyExpenses: 6400,
     arvSalePrice: 2205000,
+    isRented: false,
   },
   {
     id: "63",
@@ -938,6 +990,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 6800,
     monthlyExpenses: 5800,
     arvSalePrice: 1060000,
+    isRented: false,
   },
   {
     id: "64",
@@ -949,6 +1002,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7000,
     monthlyExpenses: 6000,
     arvSalePrice: 1100000,
+    isRented: false,
   },
   {
     id: "65",
@@ -960,6 +1014,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7200,
     monthlyExpenses: 6200,
     arvSalePrice: 1150000,
+    isRented: false,
   },
   {
     id: "66",
@@ -971,6 +1026,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7000,
     monthlyExpenses: 6000,
     arvSalePrice: 1100000,
+    isRented: false,
   },
   {
     id: "67",
@@ -982,6 +1038,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7200,
     monthlyExpenses: 6200,
     arvSalePrice: 1150000,
+    isRented: false,
   },
   {
     id: "68",
@@ -993,6 +1050,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 7400,
     monthlyExpenses: 6400,
     arvSalePrice: 1200000,
+    isRented: false,
   },
   {
     id: "69",
@@ -1004,6 +1062,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 6800,
     monthlyExpenses: 5800,
     arvSalePrice: 1060000,
+    isRented: false,
   },
   {
     id: "70",
@@ -1015,8 +1074,8 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 6800,
     monthlyExpenses: 5800,
     arvSalePrice: 1260000,
+    isRented: false,
   },
-
   {
     id: "71",
     name: "Uptown Apartment",
@@ -1027,6 +1086,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1800,
     monthlyExpenses: 1600,
     arvSalePrice: 200000,
+    isRented: false,
   },
   {
     id: "72",
@@ -1038,6 +1098,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2000,
     monthlyExpenses: 1800,
     arvSalePrice: 220000,
+    isRented: false,
   },
   {
     id: "73",
@@ -1049,6 +1110,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1700,
     monthlyExpenses: 1500,
     arvSalePrice: 295000,
+    isRented: false,
   },
   {
     id: "74",
@@ -1060,6 +1122,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1900,
     monthlyExpenses: 1700,
     arvSalePrice: 210000,
+    isRented: false,
   },
   {
     id: "75",
@@ -1071,6 +1134,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1600,
     monthlyExpenses: 1400,
     arvSalePrice: 180000,
+    isRented: false,
   },
   {
     id: "76",
@@ -1082,6 +1146,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1750,
     monthlyExpenses: 1550,
     arvSalePrice: 195000,
+    isRented: false,
   },
   {
     id: "77",
@@ -1093,6 +1158,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1950,
     monthlyExpenses: 1750,
     arvSalePrice: 215000,
+    isRented: false,
   },
   {
     id: "78",
@@ -1104,6 +1170,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2100,
     monthlyExpenses: 1900,
     arvSalePrice: 230000,
+    isRented: false,
   },
   {
     id: "79",
@@ -1127,6 +1194,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2400,
     monthlyExpenses: 2200,
     arvSalePrice: 320000,
+    isRented: false,
   },
   {
     id: "81",
@@ -1138,6 +1206,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2800,
     monthlyExpenses: 2600,
     arvSalePrice: 370000,
+    isRented: false,
   },
   {
     id: "82",
@@ -1149,6 +1218,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3200,
     monthlyExpenses: 3000,
     arvSalePrice: 420000,
+    isRented: false,
   },
   {
     id: "83",
@@ -1160,6 +1230,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2560,
     monthlyExpenses: 2400,
     arvSalePrice: 340000,
+    isRented: false,
   },
   {
     id: "84",
@@ -1171,6 +1242,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3040,
     monthlyExpenses: 2800,
     arvSalePrice: 400000,
+    isRented: false,
   },
   {
     id: "85",
@@ -1182,6 +1254,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3600,
     monthlyExpenses: 3400,
     arvSalePrice: 470000,
+    isRented: false,
   },
   {
     id: "86",
@@ -1193,6 +1266,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2640,
     monthlyExpenses: 2500,
     arvSalePrice: 350000,
+    isRented: false,
   },
   {
     id: "87",
@@ -1204,6 +1278,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2960,
     monthlyExpenses: 2700,
     arvSalePrice: 390000,
+    isRented: false,
   },
   {
     id: "88",
@@ -1215,6 +1290,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3360,
     monthlyExpenses: 3100,
     arvSalePrice: 440000,
+    isRented: false,
   },
   {
     id: "89",
@@ -1226,6 +1302,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 2960,
     monthlyExpenses: 2700,
     arvSalePrice: 390000,
+    isRented: false,
   },
   {
     id: "90",
@@ -1237,6 +1314,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3360,
     monthlyExpenses: 3100,
     arvSalePrice: 540000,
+    isRented: false,
   },
   {
     id: "91",
@@ -1248,6 +1326,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3960,
     monthlyExpenses: 3100,
     arvSalePrice: 640000,
+    isRented: false,
   },
   {
     id: "92",
@@ -1259,6 +1338,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4000,
     monthlyExpenses: 3100,
     arvSalePrice: 520000,
+    isRented: false,
   },
   {
     id: "93",
@@ -1270,6 +1350,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4000,
     monthlyExpenses: 3100,
     arvSalePrice: 105000,
+    isRented: false,
   },
   {
     id: "94",
@@ -1281,6 +1362,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3300,
     monthlyExpenses: 3100,
     arvSalePrice: 280000,
+    isRented: false,
   },
   {
     id: "95",
@@ -1292,6 +1374,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3600,
     monthlyExpenses: 3100,
     arvSalePrice: 515000,
+    isRented: false,
   },
   {
     id: "96",
@@ -1303,6 +1386,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 6800,
     monthlyExpenses: 3100,
     arvSalePrice: 1527000,
+    isRented: false,
   },
   {
     id: "97",
@@ -1326,6 +1410,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 4000,
     monthlyExpenses: 3100,
     arvSalePrice: 105000,
+    isRented: false,
   },
   {
     id: "99",
@@ -1337,6 +1422,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3300,
     monthlyExpenses: 3100,
     arvSalePrice: 280000,
+    isRented: false,
   },
   {
     id: "100",
@@ -1348,5 +1434,6 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 3600,
     monthlyExpenses: 3100,
     arvSalePrice: 4300000,
+    isRented: false,
   },
 ];

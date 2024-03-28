@@ -29,6 +29,18 @@ const PortfolioScreen: React.FC<Props> = ({
   const [rollCount, setRollCount] = useState(0);
   const [lastRoll, setLastRoll] = useState<number>(0);
 
+  const handlePropertyRent = (property: InvestmentProperty) => {
+    // Mark the property as rented
+    const updatedProperty = { ...property, isRented: true };
+    const updatedPortfolio = portfolio.map((p) =>
+      p.id === property.id ? updatedProperty : p
+    );
+    setPortfolio(updatedPortfolio);
+
+    // No immediate bank balance change on renting
+    toast.success(`${property.name} has been successfully rented out!`);
+  };
+
   const handlePropertySale = (property: InvestmentProperty) => {
     const updatedPortfolio = portfolio.filter((p) => p.id !== property.id);
     setPortfolio(updatedPortfolio);
@@ -55,16 +67,22 @@ const PortfolioScreen: React.FC<Props> = ({
       toast.info("Roll A Prime Number!");
       // If it's an unsuccessful roll, just log and do nothing else
     } else if ([3, 5, 7, 9, 11].includes(lastRoll) && selectedProperty) {
-      // Successful roll, handle property sale
-      toast.success("Property Sold Successfully!");
-      handlePropertySale(selectedProperty);
-      setShowDiceModal(false);
+      // Successful roll
+      if (action === "Sale") {
+        toast.success("Property Sold Successfully!");
+        handlePropertySale(selectedProperty);
+        setShowDiceModal(false);
+      } else if (action === "Rent") {
+        toast.success("Property Rented Successfully!");
+        handlePropertyRent(selectedProperty);
+        setShowDiceModal(false);
+      }
     } else if (rollCount === 3) {
       // Reached maximum rolls without success, just close the modal
       toast.info("Maximum rolls reached");
       setShowDiceModal(false);
     }
-  }, [rollCount, lastRoll, selectedProperty]);
+  }, [rollCount, lastRoll, selectedProperty, action]);
 
   const handleActionClick = (
     property: InvestmentProperty,
@@ -101,6 +119,7 @@ const PortfolioScreen: React.FC<Props> = ({
             <th>Renovation Cost</th>
             <th>Rehab Time</th>
             <th>ARV Rental Income</th>
+            <th>Rental Status</th>
             <th>Monthly Expenses</th>
             <th>ARV Sale Price</th>
             <th>Action</th>
@@ -116,6 +135,7 @@ const PortfolioScreen: React.FC<Props> = ({
               <td>${property.renovationCost.toLocaleString()}</td>
               <td>{property.renovationTime} months</td>
               <td>${property.arvRentalIncome.toLocaleString()}</td>
+              <td>{property.isRented ? "Rented" : "Vacant"}</td>
               <td>${property.monthlyExpenses.toLocaleString()}</td>
               <td>${property.arvSalePrice.toLocaleString()}</td>
               <td>

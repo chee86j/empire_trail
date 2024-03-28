@@ -6,6 +6,8 @@ import PortfolioScreen from "./PortfolioScreen";
 import DealsScreen from "./DealsScreen";
 import EventScreen from "./EventScreen";
 import { events, investmentProperties } from "../assets/gameData";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<string>("gameInfo");
@@ -116,6 +118,7 @@ const App: React.FC = () => {
 
   return (
     <div className="game-container">
+      <ToastContainer />
       {gameState === "gameInfo" && <GameInfoScreen onStartGame={startGame} />}
       {gameState === "playerSelect" && (
         <PlayerSelectScreen onSelectProfession={selectProfession} />
@@ -126,6 +129,7 @@ const App: React.FC = () => {
           currentMonth={currentMonth}
           setCurrentMonth={setCurrentMonth}
           onViewPortfolio={handleViewPortfolio}
+          portfolio={portfolio}
           onFindDeals={handleFindDeals}
           currentBankBalance={currentBankBalance}
           setCurrentBankBalance={setCurrentBankBalance}
