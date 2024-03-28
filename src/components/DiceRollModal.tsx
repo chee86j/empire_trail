@@ -17,8 +17,15 @@ const DiceRollModal: React.FC<Props> = ({
 }) => {
   const reactDice = useRef<ReactDiceRef>(null);
   const [currentRollCount, setCurrentRollCount] = useState(0);
+  const [isFirstRoll, setIsFirstRoll] = useState(true); // state for ignoring the first roll
 
   const rollDone = (totalValue: number, values: number[]) => {
+    if (isFirstRoll) {
+      setIsFirstRoll(false);
+      return;
+    }
+
+    // Rest of the logic for subsequent rolls
     onRoll(totalValue);
     console.log(`Total value: ${totalValue}, Values: ${values}`);
     setCurrentRollCount((prev) => prev + 1);

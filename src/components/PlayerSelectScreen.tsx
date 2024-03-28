@@ -35,10 +35,13 @@ const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
       {selectedProfession && (
         <div className="professionDetails">
           <p>
-            Bank Balance: ${professionDetails[selectedProfession].bankBalance}
+            Bank Balance: $
+            {professionDetails[selectedProfession].bankBalance.toLocaleString()}
           </p>
           <p>
-            Salary: ${professionDetails[selectedProfession].salary} per month
+            Salary: $
+            {professionDetails[selectedProfession].salary.toLocaleString()} per
+            month
           </p>
         </div>
       )}
