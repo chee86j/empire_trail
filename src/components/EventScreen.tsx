@@ -1,6 +1,6 @@
 import React from "react";
 import { Event } from "../assets/gameData";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/EventScreen.css";
 
@@ -37,7 +37,6 @@ const EventScreen: React.FC<Props> = ({
 
   return (
     <div className="Eventscreen">
-      <ToastContainer />
       <h2>Event</h2>
       <p>
         {event.type}: {event.description}

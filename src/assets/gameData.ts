@@ -167,7 +167,7 @@ export const events: Event[] = [
     type: "Bad",
     description:
       "Freezing weather has bursted one of the old uninsulated pipes. You have to pay $3,500 to repair the damage.",
-    bankBalanceChange: -15000,
+    bankBalanceChange: -3500,
     professionProbabilities: {
       Carpenter: 20,
       Banker: 30,
