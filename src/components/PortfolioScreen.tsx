@@ -64,8 +64,8 @@ const PortfolioScreen: React.FC<Props> = ({
 
   useEffect(() => {
     if ([1, 2, 4, 6, 8, 10, 12].includes(lastRoll)) {
-      toast.info("Roll A Prime Number!");
-      console.log("Success! Rolled A Prime Number!");
+      toast.error("Roll Again!");
+      console.log("Roll Again!");
       // If it's an unsuccessful roll, just log and do nothing else
     } else if ([3, 5, 7, 9, 11].includes(lastRoll) && selectedProperty) {
       // Successful roll

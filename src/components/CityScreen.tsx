@@ -118,6 +118,9 @@ const CityScreen: React.FC<Props> = ({
         toast.info(
           `New Balance: $${newBankBalance.toLocaleString()} = $${initialBankBalance.toLocaleString()} + Salary: $${salary.toLocaleString()} + Rent: $${totalRentalIncome.toLocaleString()} + Event: $${eventImpact.toLocaleString()}`
         );
+        console.log(
+          `Bank($${newBankBalance.toLocaleString()}) = $${initialBankBalance.toLocaleString()} + Sal($${salary.toLocaleString()}) + Rent($${totalRentalIncome.toLocaleString()}) + Evt($${eventImpact.toLocaleString()})`
+        );
 
         if (chosenEvent) {
           setCurrentEvent(chosenEvent);

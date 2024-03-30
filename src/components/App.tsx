@@ -6,7 +6,7 @@ import PortfolioScreen from "./PortfolioScreen";
 import DealsScreen from "./DealsScreen";
 import EventScreen from "./EventScreen";
 import { events, investmentProperties } from "../assets/gameData";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const App: React.FC = () => {
@@ -112,13 +112,13 @@ const App: React.FC = () => {
       // Do not update currentMonth here
       setGameState("city");
     } else {
-      alert("Insufficient funds to purchase this property.");
+      toast.error("Insufficient funds to purchase this property.");
     }
   };
 
   return (
     <div className="game-container">
-      <ToastContainer autoClose={5000} />
+      <ToastContainer position="top-left" autoClose={5000} />
       {gameState === "gameInfo" && <GameInfoScreen onStartGame={startGame} />}
       {gameState === "playerSelect" && (
         <PlayerSelectScreen onSelectProfession={selectProfession} />

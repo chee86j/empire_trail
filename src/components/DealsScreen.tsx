@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { InvestmentProperty } from "../assets/gameData";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/DealsScreen.css";
 
 interface Props {
@@ -42,7 +44,7 @@ const DealsScreen: React.FC<Props> = ({
       onPurchaseProperty(property);
       onClose();
     } else {
-      alert("Insufficient funds to purchase this property.");
+      toast.error("Insufficient funds to purchase this property.");
     }
   };
 
