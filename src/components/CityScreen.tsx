@@ -88,33 +88,46 @@ const CityScreen: React.FC<Props> = ({
   const handlePlayerAction = (action: string) => {
     switch (action) {
       case "rest":
-        // Logic for rest action
+      case "travel":
+        const initialBankBalance = currentBankBalance;
+
+        // Increment month
         setCurrentMonth((prevMonth) => prevMonth + 1);
+
+        // Adding salary
+        const salary = player?.salary || 0;
+
+        // Adding rental income
+        let totalRentalIncome = 0;
+        portfolio.forEach((property) => {
+          if (property.isRented) {
+            totalRentalIncome += property.arvRentalIncome;
+          }
+        });
+
         // Randomly select an event based on profession probabilities
         const chosenEvent = chooseEvent(player?.profession);
-        addRentalIncome();
-        if (chosenEvent) {
-          // Update the bank balance based on the chosen event
-          const newBankBalance =
-            currentBankBalance +
-            chosenEvent.bankBalanceChange +
-            (player?.salary || 0);
-          setCurrentBankBalance(newBankBalance);
+        const eventImpact = chosenEvent ? chosenEvent.bankBalanceChange : 0;
 
-          // Set the current event
+        // Update bank balance
+        const newBankBalance =
+          initialBankBalance + salary + totalRentalIncome + eventImpact;
+        setCurrentBankBalance(newBankBalance);
+
+        // Show toast with details
+        toast.info(
+          `New Balance: $${newBankBalance.toLocaleString()} = $${initialBankBalance.toLocaleString()} + Salary: $${salary.toLocaleString()} + Rent: $${totalRentalIncome.toLocaleString()} + Event: $${eventImpact.toLocaleString()}`
+        );
+
+        if (chosenEvent) {
           setCurrentEvent(chosenEvent);
-          console.log(`Current Month Since Start: ${currentMonth}`);
         }
-        break;
-      case "travel":
-        // Handle travel action
-        setCurrentMonth((prevMonth) => prevMonth + 1);
-        setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
-        addRentalIncome();
-        console.log(`Current Month Since Start: ${currentMonth}`);
-        handleTravel();
-        break;
-      default:
+
+        if (action === "travel") {
+          setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
+          toast.success(`Traveling to ${cities[currentCityIndex].name}`);
+        }
+
         break;
     }
   };

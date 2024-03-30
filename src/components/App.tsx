@@ -118,7 +118,7 @@ const App: React.FC = () => {
 
   return (
     <div className="game-container">
-      <ToastContainer />
+      <ToastContainer autoClose={5000} />
       {gameState === "gameInfo" && <GameInfoScreen onStartGame={startGame} />}
       {gameState === "playerSelect" && (
         <PlayerSelectScreen onSelectProfession={selectProfession} />
