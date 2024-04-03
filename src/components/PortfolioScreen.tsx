@@ -122,9 +122,9 @@ const PortfolioScreen: React.FC<Props> = ({
             <th>Renovation Cost</th>
             <th>Rehab Time</th>
             <th>ARV Rental Income</th>
-            <th>Rental Status</th>
             <th>Monthly Expenses</th>
             <th>ARV Sale Price</th>
+            <th>Rental Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -138,9 +138,9 @@ const PortfolioScreen: React.FC<Props> = ({
               <td>${property.renovationCost.toLocaleString()}</td>
               <td>{property.renovationTime} months</td>
               <td>${property.arvRentalIncome.toLocaleString()}</td>
-              <td>{property.isRented ? "Rented" : "Vacant"}</td>
               <td>${property.monthlyExpenses.toLocaleString()}</td>
               <td>${property.arvSalePrice.toLocaleString()}</td>
+              <td>{property.isRented ? "Rented" : "Vacant"}</td>
               <td>
                 <div className="button-container">
                   {currentMonth >=

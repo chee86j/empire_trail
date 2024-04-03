@@ -69,6 +69,7 @@ const DealsScreen: React.FC<Props> = ({
             <th>Renovation Cost</th>
             <th>Renovation Time</th>
             <th>ARV Rental Income</th>
+            <th>Monthly Expenses</th>
             <th>ARV Sale Price</th>
             <th>ROI (%)</th>
             <th>Actions</th>
@@ -83,6 +84,7 @@ const DealsScreen: React.FC<Props> = ({
               <td>${property.renovationCost.toLocaleString()}</td>
               <td>{property.renovationTime} months</td>
               <td>${property.arvRentalIncome.toLocaleString()}</td>
+              <td>${property.monthlyExpenses.toLocaleString()}</td>
               <td>${property.arvSalePrice.toLocaleString()}</td>
               <td>{calculateROI(property)}</td>
               <td>
