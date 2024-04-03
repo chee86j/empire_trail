@@ -101,7 +101,8 @@ const CityScreen: React.FC<Props> = ({
         let totalRentalIncome = 0;
         portfolio.forEach((property) => {
           if (property.isRented) {
-            totalRentalIncome += property.arvRentalIncome;
+            totalRentalIncome +=
+              property.arvRentalIncome - property.monthlyExpenses;
           }
         });
 
