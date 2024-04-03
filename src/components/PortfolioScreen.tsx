@@ -112,55 +112,61 @@ const PortfolioScreen: React.FC<Props> = ({
   return (
     <div className="screen">
       <h2>Portfolio</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Purchase Date</th>
-            <th>Purchase Cost</th>
-            <th>Closing Cost</th>
-            <th>Renovation Cost</th>
-            <th>Rehab Time</th>
-            <th>ARV Rental Income</th>
-            <th>Monthly Expenses</th>
-            <th>ARV Sale Price</th>
-            <th>Rental Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {portfolio.map((property, index) => (
-            <tr key={index}>
-              <td>{property.name}</td>
-              <td>{property.purchaseMonth}</td>
-              <td>${property.purchaseCost.toLocaleString()}</td>
-              <td>${property.closingCost.toLocaleString()}</td>
-              <td>${property.renovationCost.toLocaleString()}</td>
-              <td>{property.renovationTime} months</td>
-              <td>${property.arvRentalIncome.toLocaleString()}</td>
-              <td>${property.monthlyExpenses.toLocaleString()}</td>
-              <td>${property.arvSalePrice.toLocaleString()}</td>
-              <td>{property.isRented ? "Rented" : "Vacant"}</td>
-              <td>
-                <div className="button-container">
-                  {currentMonth >=
-                    property.purchaseMonth + property.renovationTime && (
-                    <button onClick={() => handleActionClick(property, "Rent")}>
-                      Rent
-                    </button>
-                  )}
-                  {currentMonth >=
-                    property.purchaseMonth + property.renovationTime && (
-                    <button onClick={() => handleActionClick(property, "Sale")}>
-                      Sale
-                    </button>
-                  )}
-                </div>
-              </td>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Purchase Date</th>
+              <th>Purchase Cost</th>
+              <th>Closing Cost</th>
+              <th>Renovation Cost</th>
+              <th>Rehab Time</th>
+              <th>ARV Rental Income</th>
+              <th>Monthly Expenses</th>
+              <th>ARV Sale Price</th>
+              <th>Rental Status</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {portfolio.map((property, index) => (
+              <tr key={index}>
+                <td>{property.name}</td>
+                <td>{property.purchaseMonth}</td>
+                <td>${property.purchaseCost.toLocaleString()}</td>
+                <td>${property.closingCost.toLocaleString()}</td>
+                <td>${property.renovationCost.toLocaleString()}</td>
+                <td>{property.renovationTime} months</td>
+                <td>${property.arvRentalIncome.toLocaleString()}</td>
+                <td>${property.monthlyExpenses.toLocaleString()}</td>
+                <td>${property.arvSalePrice.toLocaleString()}</td>
+                <td>{property.isRented ? "Rented" : "Vacant"}</td>
+                <td>
+                  <div className="button-container">
+                    {currentMonth >=
+                      property.purchaseMonth + property.renovationTime && (
+                      <button
+                        onClick={() => handleActionClick(property, "Rent")}
+                      >
+                        Rent
+                      </button>
+                    )}
+                    {currentMonth >=
+                      property.purchaseMonth + property.renovationTime && (
+                      <button
+                        onClick={() => handleActionClick(property, "Sale")}
+                      >
+                        Sale
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <button onClick={onClose}>Close</button>
       {selectedProperty && (
         <DiceRollModal

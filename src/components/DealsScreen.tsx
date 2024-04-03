@@ -60,42 +60,44 @@ const DealsScreen: React.FC<Props> = ({
     <div className="deals-screen">
       <p>Bank Balance: ${currentBankBalance.toLocaleString()}</p>
       <h2>Available Investment Properties</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Purchase Cost</th>
-            <th>Closing Cost</th>
-            <th>Renovation Cost</th>
-            <th>Renovation Time</th>
-            <th>ARV Rental Income</th>
-            <th>Monthly Expenses</th>
-            <th>ARV Sale Price</th>
-            <th>ROI (%)</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {randomProperties.map((property) => (
-            <tr key={property.id}>
-              <td>{property.name}</td>
-              <td>${property.purchaseCost.toLocaleString()}</td>
-              <td>${property.closingCost.toLocaleString()}</td>
-              <td>${property.renovationCost.toLocaleString()}</td>
-              <td>{property.renovationTime} months</td>
-              <td>${property.arvRentalIncome.toLocaleString()}</td>
-              <td>${property.monthlyExpenses.toLocaleString()}</td>
-              <td>${property.arvSalePrice.toLocaleString()}</td>
-              <td>{calculateROI(property)}</td>
-              <td>
-                <button onClick={() => handlePurchase(property)}>
-                  Purchase
-                </button>
-              </td>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Purchase Cost</th>
+              <th>Closing Cost</th>
+              <th>Renovation Cost</th>
+              <th>Renovation Time</th>
+              <th>ARV Rental Income</th>
+              <th>Monthly Expenses</th>
+              <th>ARV Sale Price</th>
+              <th>ROI (%)</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {randomProperties.map((property) => (
+              <tr key={property.id}>
+                <td>{property.name}</td>
+                <td>${property.purchaseCost.toLocaleString()}</td>
+                <td>${property.closingCost.toLocaleString()}</td>
+                <td>${property.renovationCost.toLocaleString()}</td>
+                <td>{property.renovationTime} months</td>
+                <td>${property.arvRentalIncome.toLocaleString()}</td>
+                <td>${property.monthlyExpenses.toLocaleString()}</td>
+                <td>${property.arvSalePrice.toLocaleString()}</td>
+                <td>{calculateROI(property)}</td>
+                <td>
+                  <button onClick={() => handlePurchase(property)}>
+                    Purchase
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <button onClick={onClose}>Close</button>
     </div>
   );
