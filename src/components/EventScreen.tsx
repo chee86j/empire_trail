@@ -6,14 +6,12 @@ import "../styles/EventScreen.css";
 
 interface Props {
   event: Event | null;
-  playerProfession: string;
   playerBankBalance: number;
   onClose: (newBankBalance: number) => void;
 }
 
 const EventScreen: React.FC<Props> = ({
   event,
-  playerProfession,
   playerBankBalance,
   onClose,
 }) => {

@@ -36,11 +36,11 @@ const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
         <div className="professionDetails">
           <p>
             Bank Balance: $
-            {professionDetails[selectedProfession].bankBalance.toLocaleString()}
+            {professionDetails[selectedProfession as keyof typeof professionDetails].bankBalance.toLocaleString()}
           </p>
           <p>
             Salary: $
-            {professionDetails[selectedProfession].salary.toLocaleString()} per
+            {professionDetails[selectedProfession as keyof typeof professionDetails].salary.toLocaleString()} per
             month
           </p>
         </div>

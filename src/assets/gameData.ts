@@ -247,6 +247,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1200,
     arvSalePrice: 365000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "2",
@@ -259,6 +261,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 800,
     arvSalePrice: 275000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "3",
@@ -271,6 +275,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1600,
     arvSalePrice: 380000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "4",
@@ -283,6 +289,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1500,
     arvSalePrice: 325000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "5",
@@ -295,6 +303,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1700,
     arvSalePrice: 345000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "6",
@@ -307,6 +317,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2000,
     arvSalePrice: 525000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "7",
@@ -319,6 +331,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1800,
     arvSalePrice: 575000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "8",
@@ -331,6 +345,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1300,
     arvSalePrice: 625000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "9",
@@ -343,6 +359,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2100,
     arvSalePrice: 575000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "10",
@@ -355,6 +373,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1900,
     arvSalePrice: 550000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "11",
@@ -367,6 +387,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1600,
     arvSalePrice: 775000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "12",
@@ -379,6 +401,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2800,
     arvSalePrice: 825000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "13",
@@ -391,6 +415,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3000,
     arvSalePrice: 875000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "14",
@@ -403,6 +429,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2700,
     arvSalePrice: 800000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "15",
@@ -415,6 +443,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2500,
     arvSalePrice: 775000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "16",
@@ -427,6 +457,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2800,
     arvSalePrice: 850000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "17",
@@ -439,6 +471,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3200,
     arvSalePrice: 1000000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "18",
@@ -451,6 +485,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3500,
     arvSalePrice: 1100000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "19",
@@ -463,6 +499,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3000,
     arvSalePrice: 950000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "20",
@@ -475,6 +513,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1900,
     arvSalePrice: 900000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "21",
@@ -487,6 +527,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2500,
     arvSalePrice: 1500000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "22",
@@ -499,6 +541,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4500,
     arvSalePrice: 1700000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "23",
@@ -511,6 +555,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 5000,
     arvSalePrice: 1580000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "24",
@@ -523,6 +569,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3400,
     arvSalePrice: 1200000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "25",
@@ -535,6 +583,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4600,
     arvSalePrice: 1500000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "26",
@@ -547,6 +597,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1000,
     arvSalePrice: 560000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "27",
@@ -559,6 +611,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1500,
     arvSalePrice: 490000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "28",
@@ -571,6 +625,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1100,
     arvSalePrice: 400000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "29",
@@ -583,6 +639,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1300,
     arvSalePrice: 430000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "30",
@@ -595,6 +653,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1700,
     arvSalePrice: 380000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "31",
@@ -607,6 +667,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2100,
     arvSalePrice: 550000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "32",
@@ -619,6 +681,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1300,
     arvSalePrice: 600000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "33",
@@ -631,6 +695,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2500,
     arvSalePrice: 650000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "34",
@@ -643,6 +709,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1000,
     arvSalePrice: 530000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "35",
@@ -655,6 +723,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2200,
     arvSalePrice: 580000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "36",
@@ -667,6 +737,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2800,
     arvSalePrice: 720000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "37",
@@ -679,6 +751,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2300,
     arvSalePrice: 770000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "38",
@@ -691,6 +765,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3200,
     arvSalePrice: 820000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "39",
@@ -703,6 +779,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2600,
     arvSalePrice: 680000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "40",
@@ -715,6 +793,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2800,
     arvSalePrice: 700000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "41",
@@ -727,6 +807,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3600,
     arvSalePrice: 1300000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "42",
@@ -739,6 +821,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2800,
     arvSalePrice: 1400000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "43",
@@ -751,6 +835,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2000,
     arvSalePrice: 1500000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "44",
@@ -763,6 +849,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3000,
     arvSalePrice: 1100000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "45",
@@ -775,6 +863,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3600,
     arvSalePrice: 1200000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "46",
@@ -787,6 +877,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 5200,
     arvSalePrice: 2000000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "47",
@@ -799,6 +891,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3000,
     arvSalePrice: 2500000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "48",
@@ -811,6 +905,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3000,
     arvSalePrice: 2700000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "49",
@@ -823,6 +919,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4000,
     arvSalePrice: 3000000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "50",
@@ -835,6 +933,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3500,
     arvSalePrice: 2200000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "51",
@@ -847,6 +947,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2700,
     arvSalePrice: 900000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "52",
@@ -859,6 +961,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4200,
     arvSalePrice: 950000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "53",
@@ -871,6 +975,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4300,
     arvSalePrice: 830000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "54",
@@ -883,6 +989,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2400,
     arvSalePrice: 870000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "55",
@@ -895,6 +1003,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3700,
     arvSalePrice: 920000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "56",
@@ -907,6 +1017,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4100,
     arvSalePrice: 810000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "57",
@@ -919,6 +1031,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4500,
     arvSalePrice: 850000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "58",
@@ -931,6 +1045,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4700,
     arvSalePrice: 900000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "59",
@@ -943,6 +1059,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 4300,
     arvSalePrice: 790000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "60",
@@ -955,6 +1073,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 6000,
     arvSalePrice: 1100000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "61",
@@ -967,6 +1087,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3200,
     arvSalePrice: 1150000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "62",
@@ -979,6 +1101,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3400,
     arvSalePrice: 2205000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "63",
@@ -991,6 +1115,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 5800,
     arvSalePrice: 1060000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "64",
@@ -1003,6 +1129,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2000,
     arvSalePrice: 1100000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "65",
@@ -1015,6 +1143,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 6200,
     arvSalePrice: 1150000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "66",
@@ -1027,6 +1157,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3500,
     arvSalePrice: 1100000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "67",
@@ -1039,6 +1171,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 6200,
     arvSalePrice: 1150000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "68",
@@ -1051,6 +1185,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 6400,
     arvSalePrice: 1200000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "69",
@@ -1063,6 +1199,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 5800,
     arvSalePrice: 1060000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "70",
@@ -1075,6 +1213,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3800,
     arvSalePrice: 1260000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "71",
@@ -1087,6 +1227,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1600,
     arvSalePrice: 200000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "72",
@@ -1099,6 +1241,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1200,
     arvSalePrice: 220000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "73",
@@ -1111,6 +1255,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1500,
     arvSalePrice: 295000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "74",
@@ -1123,6 +1269,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1700,
     arvSalePrice: 210000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "75",
@@ -1135,6 +1283,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1400,
     arvSalePrice: 180000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "76",
@@ -1147,6 +1297,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1550,
     arvSalePrice: 195000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "77",
@@ -1159,6 +1311,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1750,
     arvSalePrice: 215000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "78",
@@ -1171,6 +1325,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1500,
     arvSalePrice: 230000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "79",
@@ -1183,6 +1339,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1500,
     arvSalePrice: 190000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
 
   {
@@ -1196,6 +1354,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2200,
     arvSalePrice: 320000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "81",
@@ -1208,6 +1368,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2600,
     arvSalePrice: 370000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "82",
@@ -1220,6 +1382,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2300,
     arvSalePrice: 420000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "83",
@@ -1232,6 +1396,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1400,
     arvSalePrice: 340000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "84",
@@ -1244,6 +1410,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2800,
     arvSalePrice: 400000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "85",
@@ -1256,6 +1424,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3400,
     arvSalePrice: 470000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "86",
@@ -1268,6 +1438,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2500,
     arvSalePrice: 350000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "87",
@@ -1280,6 +1452,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2700,
     arvSalePrice: 390000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "88",
@@ -1292,6 +1466,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 440000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "89",
@@ -1304,6 +1480,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2700,
     arvSalePrice: 390000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "90",
@@ -1316,6 +1494,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 540000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "91",
@@ -1328,6 +1508,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 640000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "92",
@@ -1340,6 +1522,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 520000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "93",
@@ -1352,6 +1536,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 105000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "94",
@@ -1364,6 +1550,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 280000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "95",
@@ -1376,6 +1564,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 515000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "96",
@@ -1388,6 +1578,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3600,
     arvSalePrice: 1527000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "97",
@@ -1400,6 +1592,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 530000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
 
   {
@@ -1413,6 +1607,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 1900,
     arvSalePrice: 105000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "99",
@@ -1425,6 +1621,8 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 3100,
     arvSalePrice: 280000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
   {
     id: "100",
@@ -1437,5 +1635,7 @@ export const investmentProperties: InvestmentProperty[] = [
     monthlyExpenses: 2300,
     arvSalePrice: 4300000,
     isRented: false,
+    purchaseMonth: undefined,
+    purchaseYear: undefined,
   },
 ];
