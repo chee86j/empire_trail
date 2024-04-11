@@ -11,8 +11,6 @@ export interface InvestmentProperty {
   id: string;
   name: string;
   purchaseCost: number;
-  purchaseMonth: number;
-  purchaseYear: number;
   closingCost: number;
   renovationCost: number;
   renovationTime: number;
@@ -20,6 +18,8 @@ export interface InvestmentProperty {
   isRented: boolean;
   monthlyExpenses: number;
   arvSalePrice: number;
+  purchaseMonth?: number;
+  purchaseYear?: number;
 }
 
 export const events: Event[] = [
@@ -1182,6 +1182,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 1700,
     monthlyExpenses: 1500,
     arvSalePrice: 190000,
+    isRented: false,
   },
 
   {
@@ -1398,6 +1399,7 @@ export const investmentProperties: InvestmentProperty[] = [
     arvRentalIncome: 6800,
     monthlyExpenses: 3100,
     arvSalePrice: 530000,
+    isRented: false,
   },
 
   {
