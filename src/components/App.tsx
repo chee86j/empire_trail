@@ -5,28 +5,37 @@ import CityScreen from "./CityScreen";
 import PortfolioScreen from "./PortfolioScreen";
 import DealsScreen from "./DealsScreen";
 import EventScreen from "./EventScreen";
-import { events, investmentProperties } from "../assets/gameData";
+import { investmentProperties, cities } from "../assets/gameData";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  Player,
+  Event,
+  InvestmentProperty,
+  GameState,
+  Profession,
+  City,
+} from "../types";
 
 const App: React.FC = () => {
   // State declarations using useState
-  const [gameState, setGameState] = useState<string>("gameInfo");
+  const [gameState, setGameState] = useState<GameState>("gameInfo");
   const [player, setPlayer] = useState<Player | null>(null);
   const [currentMonth, setCurrentMonth] = useState<number>(1);
   const [portfolio, setPortfolio] = useState<InvestmentProperty[]>([]);
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
   const [currentBankBalance, setCurrentBankBalance] = useState<number>(0);
+  const [currentCity, setCurrentCity] = useState<City>(cities[0]);
 
   // Function to start the game
   const startGame = () => setGameState("playerSelect");
 
   // Function to select profession and initialize player state
-  const selectProfession = (profession: string) => {
+  const selectProfession = (profession: Profession) => {
     // Logic to determine bank balance and salary based on selected profession
     const { bankBalance, salary } = getProfessionStats(profession);
     // Set player state and current bank balance
-    setPlayer({ profession, bankBalance, salary });
+    setPlayer({ profession, bankBalance, salary, location: currentCity });
     setCurrentBankBalance(bankBalance);
     // Update game state
     setGameState("city");
@@ -56,30 +65,11 @@ const App: React.FC = () => {
     }
   };
 
-  // Function to handle player actions
-  const handlePlayerAction = (action: string) => {
-    switch (action) {
-      case "travel":
-        // Logic for travel action
-        break;
-      case "rest":
-        handleRestAction();
-        break;
-      default:
-        break;
-    }
-  };
-
-  // Function to handle rest action
-  const handleRestAction = () => {
-    // Randomly select an event
-    const randomEvent = events[Math.floor(Math.random() * events.length)];
-    // Update current event state
-    setCurrentEvent(randomEvent);
-  };
-
   // Function to close event screen
-  const closeEventScreen = () => setCurrentEvent(null);
+  const closeEventScreen = (newBankBalance: number) => {
+    setCurrentEvent(null);
+    setCurrentBankBalance(newBankBalance);
+  };
 
   // Function to handle viewing portfolio
   const handleViewPortfolio = () => setGameState("portfolio");
@@ -100,6 +90,7 @@ const App: React.FC = () => {
       const propertyWithPurchaseMonth = {
         ...property,
         purchaseMonth: currentMonth,
+        location: currentCity,
       };
       // Update bank balance and portfolio state
       setCurrentBankBalance(newBankBalance);
@@ -132,6 +123,9 @@ const App: React.FC = () => {
           onFindDeals={handleFindDeals}
           currentBankBalance={currentBankBalance}
           setCurrentBankBalance={setCurrentBankBalance}
+          currentCity={currentCity}
+          setCurrentCity={setCurrentCity}
+          cities={cities}
         />
       )}
       {gameState === "portfolio" && (
@@ -157,7 +151,11 @@ const App: React.FC = () => {
       )}
       {/* Conditional rendering for current event */}
       {currentEvent && (
-        <EventScreen event={currentEvent} onClose={closeEventScreen} />
+        <EventScreen
+          event={currentEvent}
+          onClose={closeEventScreen}
+          playerBankBalance={currentBankBalance}
+        />
       )}
     </div>
   );

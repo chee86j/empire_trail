@@ -1,8 +1,8 @@
 import React from "react";
-import { Event } from "../assets/gameData";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/EventScreen.css";
+import { Event } from "../types";
 
 interface Props {
   event: Event | null;
@@ -34,7 +34,7 @@ const EventScreen: React.FC<Props> = ({
   };
 
   return (
-    <div className="Eventscreen">
+    <div className="eventScreen">
       <h2>Event</h2>
       <p>
         {event.type}: {event.description}

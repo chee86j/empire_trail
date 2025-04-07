@@ -1,26 +1,4 @@
-export interface Event {
-  type: "Very Good" | "Good" | "Neutral" | "Bad" | "Very Bad";
-  description: string;
-  bankBalanceChange: number;
-  professionProbabilities?: {
-    [profession: string]: number;
-  };
-}
-
-export interface InvestmentProperty {
-  id: string;
-  name: string;
-  purchaseCost: number;
-  closingCost: number;
-  renovationCost: number;
-  renovationTime: number;
-  arvRentalIncome: number;
-  isRented: boolean;
-  monthlyExpenses: number;
-  arvSalePrice: number;
-  purchaseMonth?: number;
-  purchaseYear?: number;
-}
+import { Event, InvestmentProperty, City } from "../types";
 
 export const events: Event[] = [
   {
@@ -1637,5 +1615,52 @@ export const investmentProperties: InvestmentProperty[] = [
     isRented: false,
     purchaseMonth: undefined,
     purchaseYear: undefined,
+  },
+];
+
+export const cities: City[] = [
+  {
+    name: "Los Angeles",
+    description:
+      "The City of Angels, known for its Mediterranean climate and diverse culture.",
+  },
+  {
+    name: "Phoenix",
+    description:
+      "The Valley of the Sun, with a hot desert climate and rapid growth.",
+  },
+  {
+    name: "Dallas",
+    description:
+      "A modern metropolis in north Texas, known for its vibrant economy.",
+  },
+  {
+    name: "St.Louis",
+    description:
+      "Gateway to the West, with historic architecture and cultural attractions.",
+  },
+  {
+    name: "Chicago",
+    description:
+      "The Windy City, known for its bold architecture and vibrant arts scene.",
+  },
+  {
+    name: "Cleveland",
+    description:
+      "The Forest City, located on the shores of Lake Erie with a rich industrial history.",
+  },
+  {
+    name: "Pittsburgh",
+    description:
+      "The Steel City, known for its bridges, sports teams, and industrial heritage.",
+  },
+  {
+    name: "Philadelphia",
+    description: "The City of Brotherly Love, rich in history and culture.",
+  },
+  {
+    name: "New York City",
+    description:
+      "The Big Apple, a global center for finance, culture, and entertainment.",
   },
 ];

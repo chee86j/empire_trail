@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { InvestmentProperty } from "../assets/gameData";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/DealsScreen.css";
+import { InvestmentProperty } from "../types";
 
 interface Props {
   investmentProperties: InvestmentProperty[];
   currentBankBalance: number;
   onPurchaseProperty: (property: InvestmentProperty) => void;
   onClose: () => void;
-  player: {
-    bankBalance: number;
-  };
+  portfolio: InvestmentProperty[];
+  setPortfolio: React.Dispatch<React.SetStateAction<InvestmentProperty[]>>;
+  currentMonth: number;
 }
 
 const DealsScreen: React.FC<Props> = ({
@@ -40,7 +40,9 @@ const DealsScreen: React.FC<Props> = ({
   }, [investmentProperties]);
 
   const handlePurchase = (property: InvestmentProperty) => {
-    if (property.purchaseCost <= currentBankBalance) {
+    const totalCost =
+      property.purchaseCost + property.closingCost + property.renovationCost;
+    if (totalCost <= currentBankBalance) {
       onPurchaseProperty(property);
       onClose();
     } else {

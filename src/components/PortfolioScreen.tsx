@@ -3,7 +3,7 @@ import DiceRollModal from "./DiceRollModal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/PortfolioScreen.css";
-import { InvestmentProperty } from "../assets/gameData";
+import { InvestmentProperty } from "../types";
 
 interface Props {
   portfolio: InvestmentProperty[];
@@ -109,6 +109,14 @@ const PortfolioScreen: React.FC<Props> = ({
     setShowDiceModal(false);
   };
 
+  // Helper function to check if a property is ready for action
+  const isPropertyReady = (property: InvestmentProperty): boolean => {
+    return (
+      typeof property.purchaseMonth === "number" &&
+      currentMonth >= property.purchaseMonth + property.renovationTime
+    );
+  };
+
   return (
     <div className="screen">
       <h2>Portfolio</h2>
@@ -133,7 +141,7 @@ const PortfolioScreen: React.FC<Props> = ({
             {portfolio.map((property, index) => (
               <tr key={index}>
                 <td>{property.name}</td>
-                <td>{property.purchaseMonth}</td>
+                <td>{property.purchaseMonth || "N/A"}</td>
                 <td>${property.purchaseCost.toLocaleString()}</td>
                 <td>${property.closingCost.toLocaleString()}</td>
                 <td>${property.renovationCost.toLocaleString()}</td>
@@ -144,16 +152,14 @@ const PortfolioScreen: React.FC<Props> = ({
                 <td>{property.isRented ? "Rented" : "Vacant"}</td>
                 <td>
                   <div className="button-container">
-                    {currentMonth >=
-                      property.purchaseMonth + property.renovationTime && (
+                    {isPropertyReady(property) && !property.isRented && (
                       <button
                         onClick={() => handleActionClick(property, "Rent")}
                       >
                         Rent
                       </button>
                     )}
-                    {currentMonth >=
-                      property.purchaseMonth + property.renovationTime && (
+                    {isPropertyReady(property) && (
                       <button
                         onClick={() => handleActionClick(property, "Sale")}
                       >
@@ -168,12 +174,11 @@ const PortfolioScreen: React.FC<Props> = ({
         </table>
       </div>
       <button onClick={onClose}>Close</button>
-      {selectedProperty && (
+      {showDiceModal && selectedProperty && (
         <DiceRollModal
           onClose={handleCloseModal}
           action={action}
           onRoll={handleDiceRoll}
-          isOpen={showDiceModal}
           maxRolls={3}
         />
       )}

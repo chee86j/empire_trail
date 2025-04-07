@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { Event, events } from "../assets/gameData";
+import { events } from "../assets/gameData";
 import EventScreen from "./EventScreen";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/CityScreen.css";
-import { InvestmentProperty } from "../assets/gameData";
+import {
+  Player,
+  InvestmentProperty,
+  City,
+  PlayerAction,
+  Event,
+} from "../types";
 
 interface Props {
-  player: { profession: string; bankBalance: number; salary: number } | null;
+  player: Player | null;
   currentMonth: number;
   setCurrentMonth: (value: number) => void;
   onViewPortfolio: () => void;
@@ -15,20 +21,10 @@ interface Props {
   onFindDeals: () => void;
   currentBankBalance: number;
   setCurrentBankBalance: (value: number) => void;
-  setInvestmentProperties: (properties: InvestmentProperty[]) => void;
+  currentCity: City;
+  setCurrentCity: (city: City) => void;
+  cities: City[];
 }
-
-const cities = [
-  { name: "Los Angeles" },
-  { name: "Phoenix" },
-  { name: "Dallas" },
-  { name: "St.Louis" },
-  { name: "Chicago" },
-  { name: "Cleveland" },
-  { name: "Pittsburgh" },
-  { name: "Philadelphia" },
-  { name: "New York City" },
-];
 
 const CityScreen: React.FC<Props> = ({
   player,
@@ -39,10 +35,14 @@ const CityScreen: React.FC<Props> = ({
   onFindDeals,
   currentBankBalance,
   setCurrentBankBalance,
+  currentCity,
+  setCurrentCity,
+  cities,
 }) => {
-  const [currentCityIndex, setCurrentCityIndex] = useState(0);
+  const [currentCityIndex, setCurrentCityIndex] = useState(
+    cities.findIndex((city) => city.name === currentCity.name)
+  );
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
-  const currentCity = cities[currentCityIndex];
 
   const months = [
     "January",
@@ -59,40 +59,14 @@ const CityScreen: React.FC<Props> = ({
     "December",
   ];
 
-  const handleTravel = () => {
-    setCurrentMonth((prevMonth: number) => prevMonth + 1);
-    setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
-    toast.success(`Traveling to ${cities[currentCityIndex].name}`);
-    console.log(`Current Month Since Start: ${currentMonth}`);
-  };
-
-  const addRentalIncome = () => {
-    let totalRentalIncome = 0;
-    portfolio.forEach((property) => {
-      if (property.isRented) {
-        totalRentalIncome += property.arvRentalIncome;
-      }
-    });
-
-    if (totalRentalIncome > 0) {
-      const newBankBalance = currentBankBalance + totalRentalIncome;
-      setCurrentBankBalance(newBankBalance);
-      toast.info(`Received Rental Income: $${totalRentalIncome}`);
-      console.log(
-        "Received Rental Income:",
-        totalRentalIncome.toLocaleString()
-      );
-    }
-  };
-
-  const handlePlayerAction = (action: string) => {
+  const handlePlayerAction = (action: PlayerAction) => {
     switch (action) {
       case "rest":
-      case "travel":
+      case "travel": {
         const initialBankBalance = currentBankBalance;
 
         // Increment month
-        setCurrentMonth((prevMonth) => prevMonth + 1);
+        setCurrentMonth(currentMonth + 1);
 
         // Adding salary
         const salary = player?.salary || 0;
@@ -128,17 +102,21 @@ const CityScreen: React.FC<Props> = ({
         }
 
         if (action === "travel") {
-          setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
-          toast.success(`Traveling to ${cities[currentCityIndex].name}`);
+          const newIndex = (currentCityIndex + 1) % cities.length;
+          setCurrentCityIndex(newIndex);
+          setCurrentCity(cities[newIndex]);
+          toast.success(`Traveling to ${cities[newIndex].name}`);
         }
-
+        break;
+      }
+      default:
         break;
     }
   };
 
   // Function to choose an event based on profession probabilities
   const chooseEvent = (profession: string | undefined): Event | undefined => {
-    if (!profession) return;
+    if (!profession) return undefined;
 
     // Filter events based on profession probabilities
     const professionEvents = events.filter((event) => {
@@ -147,6 +125,8 @@ const CityScreen: React.FC<Props> = ({
     });
 
     // Choose a random event from filtered events
+    if (professionEvents.length === 0) return undefined;
+
     return professionEvents[
       Math.floor(Math.random() * professionEvents.length)
     ];
@@ -183,7 +163,6 @@ const CityScreen: React.FC<Props> = ({
         <EventScreen
           event={currentEvent}
           onClose={closeEventScreen}
-          playerProfession={player?.profession || ""}
           playerBankBalance={currentBankBalance}
         />
       )}
