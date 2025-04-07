@@ -1,8 +1,126 @@
+/* Base styles (mobile-first) */
 #root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Responsive container */
+.game-container {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Card components */
+.card {
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive grid system */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Buttons and interactive elements */
+.button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+  margin: 0.5rem auto;
+  border-radius: 8px;
+  touch-action: manipulation;
+}
+
+/* Modal responsiveness */
+.modal {
+  width: 90%;
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+/* Typography */
+h1 {
+  font-size: 1.8rem;
+}
+h2 {
+  font-size: 1.5rem;
+}
+h3 {
+  font-size: 1.2rem;
+}
+p {
+  font-size: 1rem;
+}
+
+/* Tablet breakpoint */
+@media (min-width: 768px) {
+  #root {
+    padding: 1.5rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .button {
+    width: auto;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+  h2 {
+    font-size: 1.8rem;
+  }
+  h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1024px) {
+  #root {
+    padding: 2rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .wide-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .button:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 .logo {
@@ -31,10 +149,6 @@
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
-}
-
-.card {
-  padding: 2em;
 }
 
 .read-the-docs {
