@@ -28,6 +28,60 @@ const PortfolioScreen: React.FC<Props> = ({
   const [showDiceModal, setShowDiceModal] = useState<boolean>(false);
   const [rollCount, setRollCount] = useState(0);
   const [lastRoll, setLastRoll] = useState<number>(0);
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0);
+
+  // Keyboard shortcuts handler
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle key presses when not typing in input fields
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (event.key) {
+        case 'ArrowUp':
+          event.preventDefault();
+          setSelectedRowIndex(prev => 
+            prev > 0 ? prev - 1 : portfolio.length - 1
+          );
+          break;
+        case 'ArrowDown':
+          event.preventDefault();
+          setSelectedRowIndex(prev => 
+            prev < portfolio.length - 1 ? prev + 1 : 0
+          );
+          break;
+        case 'r':
+        case 'R':
+          event.preventDefault();
+          if (portfolio[selectedRowIndex] && isPropertyReady(portfolio[selectedRowIndex])) {
+            handleActionClick(portfolio[selectedRowIndex], "Rent");
+          }
+          break;
+        case 's':
+        case 'S':
+          event.preventDefault();
+          if (portfolio[selectedRowIndex] && isPropertyReady(portfolio[selectedRowIndex])) {
+            handleActionClick(portfolio[selectedRowIndex], "Sale");
+          }
+          break;
+        case 'Escape':
+          event.preventDefault();
+          onClose();
+          break;
+        default:
+          break;
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [selectedRowIndex, portfolio, onClose]);
 
   const handlePropertyRent = (property: InvestmentProperty) => {
     // Mark the property as rented
@@ -99,6 +153,10 @@ const PortfolioScreen: React.FC<Props> = ({
     setLastRoll(0);
   };
 
+  const handleRowClick = (index: number) => {
+    setSelectedRowIndex(index);
+  };
+
   const handleDiceRoll = (rollValue: number) => {
     setLastRoll(rollValue);
     setRollCount((prev) => prev + 1);
@@ -120,6 +178,9 @@ const PortfolioScreen: React.FC<Props> = ({
   return (
     <div className="screen">
       <h2>Portfolio</h2>
+      <p className="keyboardHelp">
+        💡 Use ↑↓ arrow keys to navigate, R to rent, S to sell, ESC to close
+      </p>
       <div className="table-container">
         <table>
           <thead>
@@ -139,7 +200,11 @@ const PortfolioScreen: React.FC<Props> = ({
           </thead>
           <tbody>
             {portfolio.map((property, index) => (
-              <tr key={index}>
+              <tr 
+                key={index}
+                className={index === selectedRowIndex ? 'selected-row' : ''}
+                onClick={() => handleRowClick(index)}
+              >
                 <td>{property.name}</td>
                 <td>{property.purchaseMonth || "N/A"}</td>
                 <td>${property.purchaseCost.toLocaleString()}</td>
@@ -154,16 +219,24 @@ const PortfolioScreen: React.FC<Props> = ({
                   <div className="button-container">
                     {isPropertyReady(property) && !property.isRented && (
                       <button
-                        onClick={() => handleActionClick(property, "Rent")}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleActionClick(property, "Rent");
+                        }}
+                        className={index === selectedRowIndex ? 'selected-button' : ''}
                       >
-                        Rent
+                        Rent (R)
                       </button>
                     )}
                     {isPropertyReady(property) && (
                       <button
-                        onClick={() => handleActionClick(property, "Sale")}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleActionClick(property, "Sale");
+                        }}
+                        className={index === selectedRowIndex ? 'selected-button' : ''}
                       >
-                        Sale
+                        Sale (S)
                       </button>
                     )}
                   </div>
@@ -173,7 +246,7 @@ const PortfolioScreen: React.FC<Props> = ({
           </tbody>
         </table>
       </div>
-      <button onClick={onClose}>Close</button>
+      <button onClick={onClose}>Close (ESC)</button>
       {showDiceModal && selectedProperty && (
         <DiceRollModal
           onClose={handleCloseModal}

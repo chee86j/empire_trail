@@ -23,6 +23,7 @@ const DealsScreen: React.FC<Props> = ({
   const [randomProperties, setRandomProperties] = useState<
     InvestmentProperty[]
   >([]);
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0);
 
   useEffect(() => {
     const generateRandomProperties = () => {
@@ -30,6 +31,7 @@ const DealsScreen: React.FC<Props> = ({
         .sort(() => Math.random() - 0.5)
         .slice(0, 5);
       setRandomProperties(randomProps);
+      setSelectedRowIndex(0); // Reset selection when properties change
     };
 
     generateRandomProperties();
@@ -38,6 +40,52 @@ const DealsScreen: React.FC<Props> = ({
       // Cleanup logic if needed
     };
   }, [investmentProperties]);
+
+  // Keyboard navigation handler
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle key presses when not typing in input fields
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (event.key) {
+        case 'ArrowUp':
+          event.preventDefault();
+          setSelectedRowIndex(prev => 
+            prev > 0 ? prev - 1 : randomProperties.length - 1
+          );
+          break;
+        case 'ArrowDown':
+          event.preventDefault();
+          setSelectedRowIndex(prev => 
+            prev < randomProperties.length - 1 ? prev + 1 : 0
+          );
+          break;
+        case 'p':
+        case 'P':
+          event.preventDefault();
+          if (randomProperties[selectedRowIndex]) {
+            handlePurchase(randomProperties[selectedRowIndex]);
+          }
+          break;
+        case 'Escape':
+          event.preventDefault();
+          onClose();
+          break;
+        default:
+          break;
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [selectedRowIndex, randomProperties, onClose]);
 
   const handlePurchase = (property: InvestmentProperty) => {
     const totalCost =
@@ -58,10 +106,17 @@ const DealsScreen: React.FC<Props> = ({
     return roiPercentage.toFixed(2) + "%";
   };
 
+  const handleRowClick = (index: number) => {
+    setSelectedRowIndex(index);
+  };
+
   return (
     <div className="deals-screen">
       <p>Bank Balance: ${currentBankBalance.toLocaleString()}</p>
       <h2>Available Investment Properties</h2>
+      <p className="keyboardHelp">
+        💡 Use ↑↓ arrow keys to navigate, P to purchase, ESC to close
+      </p>
       <div className="table-container">
         <table>
           <thead>
@@ -79,8 +134,12 @@ const DealsScreen: React.FC<Props> = ({
             </tr>
           </thead>
           <tbody>
-            {randomProperties.map((property) => (
-              <tr key={property.id}>
+            {randomProperties.map((property, index) => (
+              <tr 
+                key={property.id}
+                className={index === selectedRowIndex ? 'selected-row' : ''}
+                onClick={() => handleRowClick(index)}
+              >
                 <td>{property.name}</td>
                 <td>${property.purchaseCost.toLocaleString()}</td>
                 <td>${property.closingCost.toLocaleString()}</td>
@@ -91,8 +150,14 @@ const DealsScreen: React.FC<Props> = ({
                 <td>${property.arvSalePrice.toLocaleString()}</td>
                 <td>{calculateROI(property)}</td>
                 <td>
-                  <button onClick={() => handlePurchase(property)}>
-                    Purchase
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePurchase(property);
+                    }}
+                    className={index === selectedRowIndex ? 'selected-button' : ''}
+                  >
+                    Purchase (P)
                   </button>
                 </td>
               </tr>
@@ -100,7 +165,7 @@ const DealsScreen: React.FC<Props> = ({
           </tbody>
         </table>
       </div>
-      <button onClick={onClose}>Close</button>
+      <button onClick={onClose}>Close (ESC)</button>
     </div>
   );
 };

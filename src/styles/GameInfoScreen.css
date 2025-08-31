@@ -27,6 +27,37 @@
     1px 1px 0 #0047ab;
 }
 
+/* Keyboard help text styling */
+.keyboardHelp {
+  color: #ffd700 !important;
+  font-size: 1em !important;
+  background-color: rgba(0, 71, 171, 0.8) !important;
+  border: 2px solid #ffd700;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 15px auto;
+  width: auto;
+  max-width: 400px;
+  font-weight: bold;
+  text-shadow: none;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
 .startGameButton {
   background-color: #ffd700; /* gold */
   color: #0047ab; /* navy blue */
@@ -58,5 +89,11 @@
 
   .startGameButton {
     font-size: 0.9em;
+  }
+
+  .keyboardHelp {
+    font-size: 0.8em !important;
+    max-width: 90%;
+    padding: 6px 12px;
   }
 }

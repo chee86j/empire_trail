@@ -15,7 +15,20 @@
   margin: 0 auto;
 }
 
-eventScreen button {
+/* Keyboard help text styling */
+.keyboardHelp {
+  color: #1976d2;
+  font-size: 0.9em;
+  background-color: #e3f2fd;
+  border: 1px solid #2196f3;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 10px 0 20px 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.eventScreen button {
   background-color: #ffd700; /* gold */
   color: #0047ab; /* navy blue */
   border: none;

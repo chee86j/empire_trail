@@ -32,6 +32,31 @@ tr:hover {
   background-color: #f2f2f2;
 }
 
+/* Selected row styling */
+.selected-row {
+  background-color: #e3f2fd !important;
+  border-left: 4px solid #2196f3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.selected-row:hover {
+  background-color: #bbdefb !important;
+}
+
+/* Keyboard help text styling */
+.keyboardHelp {
+  color: #1976d2;
+  font-size: 0.9em;
+  background-color: #e3f2fd;
+  border: 1px solid #2196f3;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 10px 0 20px 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Enhanced button styling */
 button {
   background-color: #007bff;
   color: #fff;
@@ -39,11 +64,37 @@ button {
   padding: 10px 16px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 button:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Selected button styling */
+.selected-button {
+  background-color: #28a745 !important;
+  border: 2px solid #20c997;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3);
+}
+
+.selected-button:hover {
+  background-color: #218838 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.4);
+}
+
+/* Row click cursor */
+tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: #f8f9fa;
 }
 
 @media (max-width: 768px) {
@@ -63,5 +114,11 @@ button:hover {
 
   button {
     padding: 8px 12px;
+  }
+
+  .keyboardHelp {
+    font-size: 0.8em;
+    padding: 6px 10px;
+    margin: 8px 0 15px 0;
   }
 }

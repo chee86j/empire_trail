@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GameInfoScreen from "./GameInfoScreen";
 import PlayerSelectScreen from "./PlayerSelectScreen";
 import CityScreen from "./CityScreen";
@@ -26,6 +26,45 @@ const App: React.FC = () => {
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
   const [currentBankBalance, setCurrentBankBalance] = useState<number>(0);
   const [currentCity, setCurrentCity] = useState<City>(cities[0]);
+  const [showHelp, setShowHelp] = useState<boolean>(false);
+
+  // Global keyboard shortcuts handler
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle key presses when not typing in input fields
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (event.key) {
+        case 'F1':
+          event.preventDefault();
+          setShowHelp(prev => !prev);
+          break;
+        case 'Escape':
+          event.preventDefault();
+          // Go back to previous screen or main menu
+          if (gameState === "portfolio" || gameState === "deals") {
+            setGameState("city");
+          } else if (gameState === "city" && player) {
+            setGameState("playerSelect");
+          } else if (gameState === "playerSelect") {
+            setGameState("gameInfo");
+          }
+          break;
+        default:
+          break;
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [gameState, player]);
 
   // Function to start the game
   const startGame = () => setGameState("playerSelect");
@@ -108,6 +147,49 @@ const App: React.FC = () => {
     <div className="game-container">
       {/* Render ToastContainer for displaying notifications */}
       <ToastContainer position="top-left" autoClose={5000} />
+      
+      {/* Help Modal */}
+      {showHelp && (
+        <div className="help-modal">
+          <div className="help-modal-content">
+            <h2>🎮 Keyboard Shortcuts</h2>
+            <div className="help-sections">
+              <div className="help-section">
+                <h3>🌆 City Screen</h3>
+                <p><strong>T</strong> - Travel to next city</p>
+                <p><strong>R</strong> - Rest (advance month)</p>
+                <p><strong>V</strong> - View Portfolio</p>
+                <p><strong>F</strong> - Find Deals</p>
+              </div>
+              <div className="help-section">
+                <h3>🏠 Deals Screen</h3>
+                <p><strong>↑/↓</strong> - Navigate properties</p>
+                <p><strong>P</strong> - Purchase selected property</p>
+                <p><strong>ESC</strong> - Close deals screen</p>
+              </div>
+              <div className="help-section">
+                <h3>📊 Portfolio Screen</h3>
+                <p><strong>↑/↓</strong> - Navigate properties</p>
+                <p><strong>R</strong> - Rent selected property</p>
+                <p><strong>S</strong> - Sell selected property</p>
+                <p><strong>ESC</strong> - Close portfolio</p>
+              </div>
+              <div className="help-section">
+                <h3>🎲 Dice Rolling</h3>
+                <p><strong>Space/Enter/R</strong> - Roll dice</p>
+                <p><strong>ESC</strong> - Close modal</p>
+              </div>
+              <div className="help-section">
+                <h3>🔧 Global Shortcuts</h3>
+                <p><strong>F1</strong> - Show/hide this help</p>
+                <p><strong>ESC</strong> - Go back/close</p>
+              </div>
+            </div>
+            <button onClick={() => setShowHelp(false)}>Close Help (ESC)</button>
+          </div>
+        </div>
+      )}
+      
       {/* Conditional rendering based on game state */}
       {gameState === "gameInfo" && <GameInfoScreen onStartGame={startGame} />}
       {gameState === "playerSelect" && (

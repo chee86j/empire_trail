@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ReactDice, { ReactDiceRef } from "react-dice-complete";
 import "../styles/DiceRollModal.css";
 
@@ -18,6 +18,47 @@ const DiceRollModal: React.FC<Props> = ({
   const reactDice = useRef<ReactDiceRef>(null);
   const [currentRollCount, setCurrentRollCount] = useState(0);
   const [isFirstRoll, setIsFirstRoll] = useState(true); // state for ignoring the first roll
+
+  // Keyboard shortcuts handler
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle key presses when not typing in input fields
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (event.key) {
+        case ' ':
+        case 'Enter':
+          event.preventDefault();
+          if (currentRollCount < maxRolls) {
+            rollAll();
+          }
+          break;
+        case 'r':
+        case 'R':
+          event.preventDefault();
+          if (currentRollCount < maxRolls) {
+            rollAll();
+          }
+          break;
+        case 'Escape':
+          event.preventDefault();
+          onClose();
+          break;
+        default:
+          break;
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [currentRollCount, maxRolls, onClose]);
 
   const rollDone = (totalValue: number, values: number[]) => {
     if (isFirstRoll) {
@@ -41,6 +82,9 @@ const DiceRollModal: React.FC<Props> = ({
     <div className="dice-modal">
       <div className="dice-modal-content">
         <h2>Roll the Dice for {action}</h2>
+        <p className="keyboardHelp">
+          💡 Press Space/Enter or R to roll, ESC to close
+        </p>
         <ReactDice
           numDice={2}
           ref={reactDice}
@@ -53,8 +97,8 @@ const DiceRollModal: React.FC<Props> = ({
           defaultRoll={6}
           rollTime={2}
         />
-        <button onClick={rollAll}>Roll</button>
-        <button onClick={onClose}>Close</button>
+        <button onClick={rollAll}>Roll (Space/Enter/R)</button>
+        <button onClick={onClose}>Close (ESC)</button>
       </div>
     </div>
   );

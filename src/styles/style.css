@@ -1,0 +1,152 @@
+/* Help Modal Styles */
+.help-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.help-modal-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 2px solid #ffd700;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.help-modal-content h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 2.5em;
+  color: #ffd700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.help-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.help-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.help-section h3 {
+  color: #ffd700;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+  text-align: center;
+}
+
+.help-section p {
+  margin: 8px 0;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+.help-section strong {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.help-modal-content button {
+  background: linear-gradient(45deg, #ffd700, #ffed4e);
+  color: #333;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.help-modal-content button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+
+.help-modal-content button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .help-modal-content {
+    margin: 20px;
+    padding: 20px;
+    max-height: 90vh;
+  }
+  
+  .help-modal-content h2 {
+    font-size: 2em;
+  }
+  
+  .help-sections {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .help-section {
+    padding: 15px;
+  }
+  
+  .help-section h3 {
+    font-size: 1.2em;
+  }
+  
+  .help-section p {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .help-modal-content {
+    padding: 15px;
+    margin: 10px;
+  }
+  
+  .help-modal-content h2 {
+    font-size: 1.8em;
+  }
+  
+  .help-sections {
+    gap: 10px;
+  }
+  
+  .help-section {
+    padding: 12px;
+  }
+}

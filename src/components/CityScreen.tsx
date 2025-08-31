@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { events } from "../assets/gameData";
 import EventScreen from "./EventScreen";
 import { toast } from "react-toastify";
@@ -132,6 +132,45 @@ const CityScreen: React.FC<Props> = ({
     ];
   };
 
+  // Keyboard shortcuts handler
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle key presses when not typing in input fields
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (event.key.toLowerCase()) {
+        case 't':
+          event.preventDefault();
+          handlePlayerAction("travel");
+          break;
+        case 'r':
+          event.preventDefault();
+          handlePlayerAction("rest");
+          break;
+        case 'v':
+          event.preventDefault();
+          onViewPortfolio();
+          break;
+        case 'f':
+          event.preventDefault();
+          onFindDeals();
+          break;
+        default:
+          break;
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [currentBankBalance, currentMonth, currentCityIndex, cities, player?.profession, portfolio]);
+
   const closeEventScreen = () => {
     setCurrentEvent(null);
   };
@@ -154,11 +193,14 @@ const CityScreen: React.FC<Props> = ({
       </p>
       <h3>Actions</h3>
       <div className="cityActions">
-        <button onClick={() => handlePlayerAction("travel")}>Travel</button>
-        <button onClick={() => handlePlayerAction("rest")}>Rest</button>
-        <button onClick={onViewPortfolio}>View Portfolio</button>
-        <button onClick={onFindDeals}>Find Deals</button>
+        <button onClick={() => handlePlayerAction("travel")}>Travel (T)</button>
+        <button onClick={() => handlePlayerAction("rest")}>Rest (R)</button>
+        <button onClick={onViewPortfolio}>View Portfolio (V)</button>
+        <button onClick={onFindDeals}>Find Deals (F)</button>
       </div>
+      <p className="keyboardHelp">
+        💡 Use keyboard shortcuts: T, R, V, F for faster navigation
+      </p>
       {currentEvent && (
         <EventScreen
           event={currentEvent}

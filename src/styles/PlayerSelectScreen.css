@@ -40,6 +40,77 @@
   font-size: 1rem;
 }
 
+/* Selected profession styling */
+.selected-profession {
+  background-color: rgba(255, 215, 0, 0.8) !important;
+  border: 3px solid #ffd700;
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.selected-profession:hover {
+  background-color: rgba(255, 215, 0, 0.9) !important;
+  transform: scale(1.15);
+}
+
+/* Keyboard help text styling */
+.keyboardHelp {
+  color: #ffd700;
+  font-size: 0.9em;
+  background-color: rgba(0, 71, 171, 0.9);
+  border: 2px solid #ffd700;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 15px auto;
+  width: 60vw;
+  box-sizing: border-box;
+  font-weight: bold;
+  text-shadow: none;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+/* Confirm button styling */
+.confirmButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+  border: 2px solid #20c997;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.confirmButton:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.confirmButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .professionDetails {
   margin-top: 20px;
   padding: 10px;
@@ -61,6 +132,17 @@
   }
 
   .professionDetails {
+    font-size: 0.9em;
+  }
+
+  .keyboardHelp {
+    font-size: 0.8em;
+    width: 80vw;
+    padding: 6px 12px;
+  }
+
+  .confirmButton {
+    padding: 10px 20px;
     font-size: 0.9em;
   }
 }

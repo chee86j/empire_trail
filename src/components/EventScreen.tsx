@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/EventScreen.css";
@@ -33,16 +33,48 @@ const EventScreen: React.FC<Props> = ({
     onClose(newBankBalance);
   };
 
+  // Keyboard shortcuts handler
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle key presses when not typing in input fields
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (event.key) {
+        case ' ':
+        case 'Enter':
+        case 'Escape':
+          event.preventDefault();
+          handleEventClose();
+          break;
+        default:
+          break;
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleEventClose]);
+
   return (
     <div className="eventScreen">
       <h2>Event</h2>
+      <p className="keyboardHelp">
+        💡 Press Space, Enter, or ESC to continue
+      </p>
       <p>
         {event.type}: {event.description}
       </p>
       <p>
         Bank Balance Change: ${calculateBankBalanceChange().toLocaleString()}
       </p>
-      <button onClick={handleEventClose}>OK</button>
+      <button onClick={handleEventClose}>OK (Space/Enter/ESC)</button>
     </div>
   );
 };
