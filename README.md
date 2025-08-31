@@ -1,64 +1,246 @@
-# Empire Trail
+Empire Trail
 
-# Overview
+A React + TypeScript, Vite-powered strategy game where you grow wealth by traveling city-to-city, buying distressed properties, renovating, renting, and selling — all while reacting to random life events.
 
-Empire Trail is a modern twist on the classic Oregon Trail game, where players embark on a journey starting on the west coast in Los Angeles and ending on the east coast in New York City. Along the way, players will stop by major cities, managing their resources and making strategic real estate investments to build recurring income. The ultimate goal is to accumulate enough wealth to purchase an entire apartment skyscraper building in Manhattan, New York, without going bankrupt.
 
-# Features
+---
 
-# Journey Across America
+✨ Features
 
-Travel from Los Angeles to New York City, encountering various challenges and opportunities along the way.
+Player professions with different starting cash & salaries
 
-# Real Estate Investments
+City travel loop with month & year progression (starting 2008)
 
-Choose real estate investments in each city, with options to earn rental income or profit from immediate sales.
+Deals marketplace with ROI calculation
 
-<!-- Resource Management
-Manage resources such as money, food, and supplies to ensure the success of your journey. -->
+Portfolio management (rent/sell actions gated by rehab time)
 
-# Player Actions
+Random events that affect your bank balance
 
-1. Travel: Move to the next city (with animated plane travel).
-2. Rest: Pass one month with a sleep animation.
-3. View Portfolio: Access a screen displaying all owned properties and their details.
-4. Find Deals: Browse available properties for purchase.
+Dice-based outcomes via react-dice-complete
 
-# Note
+Toasts & notifications with react-toastify
 
-Monthly maintenance costs include property insurance, monthly mortgage, title insurance, utilities, property taxes, etc.
-The game's objective is to build up capital to purchase a skyscraper apartment building in New York City. Bankruptcy results in losing the game.
+Responsive UI: improved layouts for medium and small screens
 
-# Technologies Used
 
-TypeScript: Game logic and functionality are implemented using TypeScript, providing type safety and improved developer experience.
-HTML: Game interface and structure are built using HTML, providing a solid foundation for web-based gaming.
-Vanilla CSS: Styling is done using Vanilla CSS, ensuring simplicity and flexibility in design.
 
-# Local Storage:
+---
 
-Game progress and real estate investments are stored locally using the browser's built-in Local Storage API, eliminating the need for a database.
+🧰 Tech Stack
 
-# Route and Major Cities
+UI: React 18, TypeScript, Vite
 
-The game's route from Los Angeles to New York City includes stops at major cities across the United States, such as:
+UX: react-toastify, custom CSS
 
-Los Angeles, CA
-Phoenix, AZ
-Dallas, TX
-St. Louis, MO
-Chicago, IL
-Cleveland, OH
-Pittsburgh, PA
-Philadelphia, PA
-New York City, NY
+Game UI: react-dice-complete
 
-# Getting Started
 
-To play the game locally, follow these steps:
 
-1. Clone this repository to your local machine.
-2. Open the project directory in your preferred code editor.
-3. Navigate to the src directory and open index.html in a web browser.
-4. Start your journey from Los Angeles and begin making real estate investments.
-5. Manage your resources wisely and progress towards your goal of owning an apartment building in Manhattan.
+---
+
+🚀 Getting Started
+
+Prerequisites
+
+Node.js 18+
+
+npm 9+
+
+
+Install
+
+npm ci
+
+Run (dev)
+
+npm run dev
+
+Vite will print a local URL (usually http://localhost:5173).
+
+Build (production)
+
+npm run build
+
+Preview the production build locally
+
+npm run preview
+
+
+---
+
+☁️ Deploying to Railway
+
+Recommended settings:
+
+Install Command: npm ci
+
+Build Command: npm run build
+
+Start Command: npm run preview -- --host --port $PORT
+
+
+> vite preview serves the built app. The --host and --port $PORT flags ensure Railway binds to the right interface and port.
+
+
+
+No environment variables are required.
+
+
+---
+
+🗂️ Project Structure (high level)
+
+src/
+  assets/
+    gameData.ts          # Core data & interfaces (InvestmentProperty, events, properties)
+  components/
+    App.tsx              # Main state & screen routing
+    CityScreen.tsx       # Travel, events, dates, stats
+    DealsScreen.tsx      # Property marketplace + ROI calc
+    PortfolioScreen.tsx  # Owned properties; rent/sell via dice modal
+    DiceRollModal.tsx    # Dice roll overlay (success/fail gating)
+    EventScreen.tsx      # Random event details
+    GameInfoScreen.tsx   # Intro / start
+    PlayerSelectScreen.tsx # Pick a profession
+  styles/
+    *.css                # Responsive styles
+
+
+---
+
+🧮 Core Types
+
+export interface InvestmentProperty {
+  id: string;
+  name: string;
+  purchaseCost: number;
+  closingCost: number;
+  renovationCost: number;
+  renovationTime: number;       // in months
+  arvRentalIncome: number;      // monthly rent after repair
+  monthlyExpenses: number;      // taxes, maintenance, etc.
+  arvSalePrice: number;
+  isRented: boolean;
+
+  // These remain *empty* on seed data, set later when purchased
+  purchaseMonth?: number;       // set when the player buys the property
+  purchaseYear?: number;        // (optional) derived from the starting year + months progressed
+}
+
+> Seeded properties in gameData.ts intentionally omit purchaseMonth/purchaseYear. Components should defensively handle undefined (e.g., treat missing purchaseMonth as 0 when gating actions).
+
+
+
+
+---
+
+🕹️ Gameplay Notes
+
+Travel / Rest: advance the month and progress time-bound actions (e.g., rehab time).
+
+Events: selected based on profession-weighted probabilities and can change your bank balance.
+
+Deals: choose a property if you have enough cash (purchase + closing + renovation).
+
+Portfolio: after rehab time, you can Rent (mark isRented: true) or Sell (bank proceeds and remove from portfolio).
+
+Dice rolls: success is decided by roll parity/sets; feedback shown via toasts.
+
+
+
+---
+
+📱 Responsive Design
+
+Medium screens (769–1024px): tables become horizontally scrollable with table-container, font sizes scale down slightly, buttons stack when needed.
+
+Small screens (≤768px): tighter spacing, single-column button groups, shortened number formatting possible (e.g., $20K).
+
+Buttons in table cells use a .button-container with wrapping and consistent gaps for touch ergonomics.
+
+
+
+---
+
+🔔 Toasts & Error Handling
+
+A single <ToastContainer /> is mounted once at the root (in App.tsx).
+
+Avoid placing additional containers in child screens to prevent react-toastify runtime errors.
+
+If you previously saw “Cannot set properties of undefined (setting 'toggle')”, ensure:
+
+Only one <ToastContainer /> exists.
+
+You’re on a recent react-toastify version (v10+ recommended).
+
+
+
+
+---
+
+🧩 Common Fixes / Tips
+
+TypeScript errors for missing purchaseMonth/purchaseYear: keep them optional in the interface and only set them on purchase. Components should guard with ?? 0 when comparing.
+
+Props mismatches: ensure each screen’s props match their TypeScript interfaces (e.g., remove unused props like setInvestmentProperties if no longer required).
+
+Strict typing: prefer typing portfolio as InvestmentProperty[] instead of any[].
+
+
+
+---
+
+🛣️ Roadmap Ideas
+
+Animated city transitions (slide/fade)
+
+Dice roll micro-interaction (scale/bounce)
+
+Event card motion (spring-in/out)
+
+Confetti on big wins (e.g., selling above ARV)
+
+Sound feedback (toggleable in settings)
+
+Save/load game state (localStorage)
+
+
+
+---
+
+🤝 Contributing
+
+1. Fork the repo
+
+
+2. Create a feature branch: git checkout -b feat/your-idea
+
+
+3. Commit your changes: git commit -m "feat: add your idea"
+
+
+4. Push and open a PR
+
+
+
+
+---
+
+📝 License
+
+MIT — see LICENSE (or update to your preferred license).
+
+
+---
+
+🙌 Acknowledgements
+
+Dice UI by react-dice-complete
+
+Toast notifications by react-toastify
+
+Built with React + Vite + TypeScript
+
+
