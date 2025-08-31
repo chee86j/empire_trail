@@ -143,3 +143,21 @@ export type PlayerAction =
   | "viewPortfolio"
   | "findDeals"
   | "purchaseProperty";
+
+/**
+ * Interface for SaveGame class
+ * Represents a saved game with metadata and complete game state
+ */
+export interface SaveGame {
+  id: string;
+  name: string;
+  timestamp: number;
+  player: Player | null;
+  currentMonth: number;
+  portfolio: InvestmentProperty[];
+  currentEvent: Event | null;
+  currentBankBalance: number;
+  currentCity: City;
+  gameState: GameState;
+  version: string;
+}

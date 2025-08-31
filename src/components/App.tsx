@@ -5,7 +5,9 @@ import CityScreen from "./CityScreen";
 import PortfolioScreen from "./PortfolioScreen";
 import DealsScreen from "./DealsScreen";
 import EventScreen from "./EventScreen";
+import SaveLoadModal from "./SaveLoadModal";
 import { investmentProperties, cities } from "../assets/gameData";
+import { SaveSystem } from "../services/saveSystem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -15,6 +17,7 @@ import {
   GameState,
   Profession,
   City,
+  SaveGame,
 } from "../types";
 
 const App: React.FC = () => {
@@ -27,6 +30,43 @@ const App: React.FC = () => {
   const [currentBankBalance, setCurrentBankBalance] = useState<number>(0);
   const [currentCity, setCurrentCity] = useState<City>(cities[0]);
   const [showHelp, setShowHelp] = useState<boolean>(false);
+  const [showSaveLoadModal, setShowSaveLoadModal] = useState<boolean>(false);
+
+  // Load saved game on startup
+  useEffect(() => {
+    const autoSave = SaveSystem.loadAutoSave();
+    if (autoSave && window.confirm('Auto-save found! Would you like to continue your last game?')) {
+      loadGameFromSave(autoSave);
+    }
+  }, []);
+
+  // Auto-save game state when important changes occur
+  useEffect(() => {
+    if (player && gameState !== "gameInfo" && gameState !== "playerSelect") {
+      SaveSystem.autoSave({
+        player,
+        currentMonth,
+        portfolio,
+        currentEvent,
+        currentBankBalance,
+        currentCity,
+        gameState,
+      });
+    }
+  }, [player, currentMonth, portfolio, currentEvent, currentBankBalance, currentCity, gameState]);
+
+  // Function to load game from save data
+  const loadGameFromSave = (saveGame: SaveGame) => {
+    setPlayer(saveGame.player);
+    setCurrentMonth(saveGame.currentMonth);
+    setPortfolio(saveGame.portfolio);
+    setCurrentEvent(saveGame.currentEvent);
+    setCurrentBankBalance(saveGame.currentBankBalance);
+    setCurrentCity(saveGame.currentCity);
+    setGameState(saveGame.gameState);
+    
+    toast.success(`Game loaded: ${saveGame.name}`);
+  };
 
   // Global keyboard shortcuts handler
   useEffect(() => {
@@ -40,6 +80,12 @@ const App: React.FC = () => {
         case 'F1':
           event.preventDefault();
           setShowHelp(prev => !prev);
+          break;
+        case 'F5':
+          event.preventDefault();
+          if (player && gameState !== "gameInfo" && gameState !== "playerSelect") {
+            setShowSaveLoadModal(true);
+          }
           break;
         case 'Escape':
           event.preventDefault();
@@ -182,6 +228,7 @@ const App: React.FC = () => {
               <div className="help-section">
                 <h3>🔧 Global Shortcuts</h3>
                 <p><strong>F1</strong> - Show/hide this help</p>
+                <p><strong>F5</strong> - Save/Load Game</p>
                 <p><strong>ESC</strong> - Go back/close</p>
               </div>
             </div>
@@ -189,6 +236,22 @@ const App: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Save/Load Modal */}
+      <SaveLoadModal
+        isOpen={showSaveLoadModal}
+        onClose={() => setShowSaveLoadModal(false)}
+        onLoadGame={loadGameFromSave}
+        currentGameState={{
+          player,
+          currentMonth,
+          portfolio,
+          currentEvent,
+          currentBankBalance,
+          currentCity,
+          gameState,
+        }}
+      />
       
       {/* Conditional rendering based on game state */}
       {gameState === "gameInfo" && <GameInfoScreen onStartGame={startGame} />}
@@ -208,6 +271,7 @@ const App: React.FC = () => {
           currentCity={currentCity}
           setCurrentCity={setCurrentCity}
           cities={cities}
+          onSaveLoad={() => setShowSaveLoadModal(true)}
         />
       )}
       {gameState === "portfolio" && (

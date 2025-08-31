@@ -91,6 +91,30 @@
   }
 }
 
+.save-load-button {
+  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px rgba(155, 89, 182, 0.3);
+}
+
+.save-load-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(155, 89, 182, 0.4);
+  background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%);
+}
+
+.save-load-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(155, 89, 182, 0.3);
+}
+
 /* Responsive styles for medium-sized devices */
 @media (max-width: 768px) {
   .cityScreen {

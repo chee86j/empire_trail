@@ -24,6 +24,7 @@ interface Props {
   currentCity: City;
   setCurrentCity: (city: City) => void;
   cities: City[];
+  onSaveLoad: () => void;
 }
 
 const CityScreen: React.FC<Props> = ({
@@ -38,6 +39,7 @@ const CityScreen: React.FC<Props> = ({
   currentCity,
   setCurrentCity,
   cities,
+  onSaveLoad,
 }) => {
   const [currentCityIndex, setCurrentCityIndex] = useState(
     cities.findIndex((city) => city.name === currentCity.name)
@@ -197,6 +199,7 @@ const CityScreen: React.FC<Props> = ({
         <button onClick={() => handlePlayerAction("rest")}>Rest (R)</button>
         <button onClick={onViewPortfolio}>View Portfolio (V)</button>
         <button onClick={onFindDeals}>Find Deals (F)</button>
+        <button onClick={onSaveLoad} className="save-load-button">💾 Save/Load (F5)</button>
       </div>
       <p className="keyboardHelp">
         💡 Use keyboard shortcuts: T, R, V, F for faster navigation
