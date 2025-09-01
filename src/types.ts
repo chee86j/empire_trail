@@ -8,7 +8,7 @@
  * Represents a player in the game with their profession, bank balance, and salary
  */
 export interface Player {
-  profession: string;
+  profession: Profession;
   bankBalance: number;
   salary: number;
   location?: City; // Current location of the player

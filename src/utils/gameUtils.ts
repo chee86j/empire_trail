@@ -45,9 +45,13 @@ export const isPropertyReadyForAction = (property: InvestmentProperty, currentMo
 export const chooseRandomEvent = (events: Event[], profession?: Profession): Event | null => {
   if (!profession || events.length === 0) return null;
   
-  const professionEvents = events.filter(event => 
-    !event.profession || event.profession === profession
-  );
+  // Filter events based on profession probabilities if they exist
+  const professionEvents = events.filter(event => {
+    if (!event.professionProbabilities) return true; // Include events without profession restrictions
+    
+    const probability = event.professionProbabilities[profession] || 0;
+    return Math.random() * 100 < probability;
+  });
   
   if (professionEvents.length === 0) return null;
   

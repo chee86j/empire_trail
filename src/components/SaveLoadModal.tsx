@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SaveSystem } from '../services/saveSystem';
-import { SaveGame } from '../types';
+import { SaveGame, Player, InvestmentProperty, Event, City, GameState } from '../types';
 import { toast } from 'react-toastify';
 import '../styles/SaveLoadModal.css';
 
@@ -9,13 +9,13 @@ interface SaveLoadModalProps {
   onClose: () => void;
   onLoadGame: (saveGame: SaveGame) => void;
   currentGameState: {
-    player: any;
+    player: Player | null;
     currentMonth: number;
-    portfolio: any[];
-    currentEvent: any;
+    portfolio: InvestmentProperty[];
+    currentEvent: Event | null;
     currentBankBalance: number;
-    currentCity: any;
-    gameState: string;
+    currentCity: City;
+    gameState: GameState;
   };
 }
 
@@ -28,7 +28,7 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
   const [activeTab, setActiveTab] = useState<'save' | 'load'>('save');
   const [saveSlots, setSaveSlots] = useState<Record<string, any>>({});
   const [newSaveName, setNewSaveName] = useState('');
-  const [selectedSlot, setSelectedSlot] = useState<string>('');
+
 
   useEffect(() => {
     if (isOpen) {
@@ -91,9 +91,7 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
     return date.toLocaleString();
   };
 
-  const getSlotDisplayName = (slotId: string) => {
-    return slotId.replace('slot_', 'Save Slot ');
-  };
+
 
   if (!isOpen) return null;
 
@@ -116,7 +114,7 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
             className={`tab-button ${activeTab === 'load' ? 'active' : ''}`}
             onClick={() => setActiveTab('load')}
           >
-            📂 Load Game
+                         Load Game
           </button>
         </div>
 
