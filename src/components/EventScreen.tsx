@@ -65,9 +65,9 @@ const EventScreen: React.FC<Props> = ({
   return (
     <div className="eventScreen">
       <h2>Event</h2>
-      <p className="keyboardHelp">
-        💡 Press Space, Enter, or ESC to continue
-      </p>
+             <p className="keyboardHelp">
+         Tip: Press Space, Enter, or ESC to continue
+       </p>
       <p>
         {event.type}: {event.description}
       </p>

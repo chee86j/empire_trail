@@ -37,9 +37,9 @@ const GameInfoScreen: React.FC<Props> = ({ onStartGame }) => {
   return (
     <div className="gameInfoScreen">
       <h2>Welcome to Empire Trail</h2>
-      <p className="keyboardHelp">
-        💡 Press Space or Enter to start the game
-      </p>
+             <p className="keyboardHelp">
+         Tip: Press Space or Enter to start the game
+       </p>
       <p>
         Embark on a journey across America, make strategic real estate
         investments, and build your wealth!

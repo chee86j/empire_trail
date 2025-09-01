@@ -4,6 +4,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/PortfolioScreen.css";
 import { InvestmentProperty } from "../types";
+import { DICE_ROLL_SUCCESS_VALUES, DICE_ROLL_FAILURE_VALUES, MAX_DICE_ROLLS } from "../constants/gameConstants";
+import { isPropertyReadyForAction } from "../utils/gameUtils";
+import { logger } from "../services/logger";
 
 interface Props {
   portfolio: InvestmentProperty[];
@@ -51,20 +54,20 @@ const PortfolioScreen: React.FC<Props> = ({
             prev < portfolio.length - 1 ? prev + 1 : 0
           );
           break;
-        case 'r':
-        case 'R':
-          event.preventDefault();
-          if (portfolio[selectedRowIndex] && isPropertyReady(portfolio[selectedRowIndex])) {
-            handleActionClick(portfolio[selectedRowIndex], "Rent");
-          }
-          break;
-        case 's':
-        case 'S':
-          event.preventDefault();
-          if (portfolio[selectedRowIndex] && isPropertyReady(portfolio[selectedRowIndex])) {
-            handleActionClick(portfolio[selectedRowIndex], "Sale");
-          }
-          break;
+                 case 'r':
+         case 'R':
+           event.preventDefault();
+           if (portfolio[selectedRowIndex] && isPropertyReadyForAction(portfolio[selectedRowIndex], currentMonth)) {
+             handleActionClick(portfolio[selectedRowIndex], "Rent");
+           }
+           break;
+         case 's':
+         case 'S':
+           event.preventDefault();
+           if (portfolio[selectedRowIndex] && isPropertyReadyForAction(portfolio[selectedRowIndex], currentMonth)) {
+             handleActionClick(portfolio[selectedRowIndex], "Sale");
+           }
+           break;
         case 'Escape':
           event.preventDefault();
           onClose();
@@ -102,45 +105,36 @@ const PortfolioScreen: React.FC<Props> = ({
     const newBankBalance = currentBankBalance + property.arvSalePrice;
     setCurrentBankBalance(newBankBalance);
 
-    console.log(
-      `${
-        property.name
-      } was sold for $${property.arvSalePrice.toLocaleString()}!`
-    );
-    toast.success(
-      `${
-        property.name
-      } was sold for $${property.arvSalePrice.toLocaleString()}!`
-    );
-    toast.success(`New bank balance: $${newBankBalance.toLocaleString()}`);
-    console.log(`New bank balance: $${newBankBalance.toLocaleString()}`);
+         logger.gameAction(`Property sold: ${property.name}`, `for $${property.arvSalePrice.toLocaleString()}`);
+     toast.success(
+       `${
+         property.name
+       } was sold for $${property.arvSalePrice.toLocaleString()}!`
+     );
+     toast.success(`New bank balance: $${newBankBalance.toLocaleString()}`);
   };
 
-  useEffect(() => {
-    if ([1, 2, 4, 6, 8, 10, 12].includes(lastRoll)) {
-      toast.error("Roll Again!");
-      console.log("Roll Again!");
-      // If it's an unsuccessful roll, just log and do nothing else
-    } else if ([3, 5, 7, 9, 11].includes(lastRoll) && selectedProperty) {
-      // Successful roll
-      if (action === "Sale") {
-        toast.success("Property Sold Successfully!");
-        console.log("Property Sold Successfully!");
-        handlePropertySale(selectedProperty);
-        setShowDiceModal(false);
-      } else if (action === "Rent") {
-        toast.success("Property Rented Successfully!");
-        console.log("Property Rented Successfully!");
-        handlePropertyRent(selectedProperty);
-        setShowDiceModal(false);
-      }
-    } else if (rollCount === 3) {
-      // Reached maximum rolls without success, just close the modal
-      toast.info("Maximum rolls reached");
-      console.log("Maximum Rolls Reached");
-      setShowDiceModal(false);
-    }
-  }, [rollCount, lastRoll, selectedProperty, action]);
+     useEffect(() => {
+     if (DICE_ROLL_FAILURE_VALUES.includes(lastRoll)) {
+       toast.error("Roll Again!");
+       // If it's an unsuccessful roll, just log and do nothing else
+     } else if (DICE_ROLL_SUCCESS_VALUES.includes(lastRoll) && selectedProperty) {
+       // Successful roll
+       if (action === "Sale") {
+         toast.success("Property Sold Successfully!");
+         handlePropertySale(selectedProperty);
+         setShowDiceModal(false);
+       } else if (action === "Rent") {
+         toast.success("Property Rented Successfully!");
+         handlePropertyRent(selectedProperty);
+         setShowDiceModal(false);
+       }
+     } else if (rollCount === MAX_DICE_ROLLS) {
+       // Reached maximum rolls without success, just close the modal
+       toast.info("Maximum rolls reached");
+       setShowDiceModal(false);
+     }
+   }, [rollCount, lastRoll, selectedProperty, action]);
 
   const handleActionClick = (
     property: InvestmentProperty,
@@ -167,20 +161,14 @@ const PortfolioScreen: React.FC<Props> = ({
     setShowDiceModal(false);
   };
 
-  // Helper function to check if a property is ready for action
-  const isPropertyReady = (property: InvestmentProperty): boolean => {
-    return (
-      typeof property.purchaseMonth === "number" &&
-      currentMonth >= property.purchaseMonth + property.renovationTime
-    );
-  };
+  
 
   return (
     <div className="screen">
       <h2>Portfolio</h2>
-      <p className="keyboardHelp">
-        💡 Use ↑↓ arrow keys to navigate, R to rent, S to sell, ESC to close
-      </p>
+             <p className="keyboardHelp">
+         Tip: Use ↑↓ arrow keys to navigate, R to rent, S to sell, ESC to close
+       </p>
       <div className="table-container">
         <table>
           <thead>
@@ -217,28 +205,28 @@ const PortfolioScreen: React.FC<Props> = ({
                 <td>{property.isRented ? "Rented" : "Vacant"}</td>
                 <td>
                   <div className="button-container">
-                    {isPropertyReady(property) && !property.isRented && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleActionClick(property, "Rent");
-                        }}
-                        className={index === selectedRowIndex ? 'selected-button' : ''}
-                      >
-                        Rent (R)
-                      </button>
-                    )}
-                    {isPropertyReady(property) && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleActionClick(property, "Sale");
-                        }}
-                        className={index === selectedRowIndex ? 'selected-button' : ''}
-                      >
-                        Sale (S)
-                      </button>
-                    )}
+                                         {isPropertyReadyForAction(property, currentMonth) && !property.isRented && (
+                       <button
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           handleActionClick(property, "Rent");
+                         }}
+                         className={index === selectedRowIndex ? 'selected-button' : ''}
+                       >
+                         Rent (R)
+                       </button>
+                     )}
+                     {isPropertyReadyForAction(property, currentMonth) && (
+                       <button
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           handleActionClick(property, "Sale");
+                         }}
+                         className={index === selectedRowIndex ? 'selected-button' : ''}
+                       >
+                         Sale (S)
+                       </button>
+                       )}
                   </div>
                 </td>
               </tr>

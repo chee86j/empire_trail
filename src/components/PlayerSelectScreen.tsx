@@ -91,9 +91,9 @@ const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
   return (
     <div className="playerSelectScreen">
       <h2>Select Your Profession</h2>
-      <p className="keyboardHelp">
-        💡 Use ↑↓ arrow keys to navigate, 1-6 for quick selection, Enter/Space to confirm
-      </p>
+             <p className="keyboardHelp">
+         Tip: Use ↑↓ arrow keys to navigate, 1-6 for quick selection, Enter/Space to confirm
+       </p>
       <ul className="professionList">
         {professions.map((profession, index) => (
           <li

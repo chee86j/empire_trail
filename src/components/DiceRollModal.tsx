@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import ReactDice, { ReactDiceRef } from "react-dice-complete";
 import "../styles/DiceRollModal.css";
+import { logger } from "../services/logger";
 
 interface Props {
   onClose: () => void;
@@ -68,7 +69,7 @@ const DiceRollModal: React.FC<Props> = ({
 
     // Rest of the logic for subsequent rolls
     onRoll(totalValue);
-    console.log(`Total value: ${totalValue}, Values: ${values}`);
+    logger.gameAction(`Dice roll: ${totalValue}`, `Values: ${values.join(', ')}`);
     setCurrentRollCount((prev) => prev + 1);
   };
 
@@ -82,9 +83,9 @@ const DiceRollModal: React.FC<Props> = ({
     <div className="dice-modal">
       <div className="dice-modal-content">
         <h2>Roll the Dice for {action}</h2>
-        <p className="keyboardHelp">
-          💡 Press Space/Enter or R to roll, ESC to close
-        </p>
+                       <p className="keyboardHelp">
+         Tip: Press Space/Enter or R to roll, ESC to close
+       </p>
         <ReactDice
           numDice={2}
           ref={reactDice}

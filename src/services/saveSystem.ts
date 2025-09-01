@@ -1,18 +1,13 @@
 import { SaveGame, Player, InvestmentProperty, Event, City, GameState } from '../types';
+import { SAVE_SYSTEM_VERSION, MAX_SAVE_SLOTS, STORAGE_KEYS } from '../constants/gameConstants';
+import { logger } from './logger';
 
-const SAVE_SYSTEM_VERSION = '1.0.0';
-const AUTO_SAVE_KEY = 'empire_trail_auto_save';
-const SAVE_SLOTS_KEY = 'empire_trail_save_slots';
-const MAX_SAVE_SLOTS = 5;
+/* Save System Service
 
-/**
- * Save System Service
- * Handles all save/load operations for the Empire Trail game
- */
+Handles all save/load operations for the Empire Trail game
+*/
 export class SaveSystem {
-  /**
-   * Save the current game state to a specific slot
-   */
+  /* Save the current game state to a specific slot */
   static saveGame(
     slotId: string,
     gameName: string,
@@ -40,12 +35,12 @@ export class SaveSystem {
       saveSlots[slotId] = saveGame;
       
       // Update localStorage
-      localStorage.setItem(SAVE_SLOTS_KEY, JSON.stringify(saveSlots));
+      localStorage.setItem(STORAGE_KEYS.SAVE_SLOTS, JSON.stringify(saveSlots));
       
-      console.log(`💾 Game saved to slot ${slotId}: ${gameName}`);
+      logger.saveOperation(`Game saved`, slotId);
       return true;
     } catch (error) {
-      console.error('❌ Error saving game:', error);
+      logger.errorOperation('saving game', error);
       return false;
     }
   }
@@ -59,19 +54,19 @@ export class SaveSystem {
       const saveGame = saveSlots[slotId];
       
       if (!saveGame) {
-        console.log(`📁 No save found in slot ${slotId}`);
+        logger.info(`No save found in slot ${slotId}`);
         return null;
       }
 
       // Validate save version compatibility
       if (saveGame.version !== SAVE_SYSTEM_VERSION) {
-        console.warn(`⚠️ Save version mismatch: ${saveGame.version} vs ${SAVE_SYSTEM_VERSION}`);
+        logger.warn(`Save version mismatch: ${saveGame.version} vs ${SAVE_SYSTEM_VERSION}`);
       }
 
-      console.log(`📂 Game loaded from slot ${slotId}: ${saveGame.name}`);
+      logger.loadOperation(`Game loaded from slot`, slotId);
       return saveGame;
     } catch (error) {
-      console.error('❌ Error loading game:', error);
+      logger.errorOperation('loading game', error);
       return null;
     }
   }
@@ -97,11 +92,11 @@ export class SaveSystem {
         ...gameState
       };
 
-      localStorage.setItem(AUTO_SAVE_KEY, JSON.stringify(autoSave));
-      console.log('🔄 Auto-save completed');
+      localStorage.setItem(STORAGE_KEYS.AUTO_SAVE, JSON.stringify(autoSave));
+      logger.saveOperation('Auto-save completed');
       return true;
     } catch (error) {
-      console.error('❌ Error during auto-save:', error);
+      logger.errorOperation('auto-save', error);
       return false;
     }
   }
@@ -111,7 +106,7 @@ export class SaveSystem {
    */
   static loadAutoSave(): SaveGame | null {
     try {
-      const autoSaveData = localStorage.getItem(AUTO_SAVE_KEY);
+      const autoSaveData = localStorage.getItem(STORAGE_KEYS.AUTO_SAVE);
       if (!autoSaveData) {
         return null;
       }
@@ -120,13 +115,13 @@ export class SaveSystem {
       
       // Validate save version compatibility
       if (autoSave.version !== SAVE_SYSTEM_VERSION) {
-        console.warn(`⚠️ Auto-save version mismatch: ${autoSave.version} vs ${SAVE_SYSTEM_VERSION}`);
+        logger.warn(`Auto-save version mismatch: ${autoSave.version} vs ${SAVE_SYSTEM_VERSION}`);
       }
 
-      console.log('🔄 Auto-save loaded');
+      logger.loadOperation('Auto-save loaded');
       return autoSave;
     } catch (error) {
-      console.error('❌ Error loading auto-save:', error);
+      logger.errorOperation('loading auto-save', error);
       return null;
     }
   }
@@ -136,10 +131,10 @@ export class SaveSystem {
    */
   static getSaveSlots(): Record<string, SaveGame> {
     try {
-      const saveSlotsData = localStorage.getItem(SAVE_SLOTS_KEY);
+      const saveSlotsData = localStorage.getItem(STORAGE_KEYS.SAVE_SLOTS);
       return saveSlotsData ? JSON.parse(saveSlotsData) : {};
     } catch (error) {
-      console.error('❌ Error reading save slots:', error);
+      logger.errorOperation('reading save slots', error);
       return {};
     }
   }
@@ -152,11 +147,11 @@ export class SaveSystem {
       const saveSlots = this.getSaveSlots();
       delete saveSlots[slotId];
       
-      localStorage.setItem(SAVE_SLOTS_KEY, JSON.stringify(saveSlots));
-      console.log(`🗑️ Save slot ${slotId} deleted`);
+      localStorage.setItem(STORAGE_KEYS.SAVE_SLOTS, JSON.stringify(saveSlots));
+      logger.deleteOperation('Save slot deleted', slotId);
       return true;
     } catch (error) {
-      console.error('❌ Error deleting save slot:', error);
+      logger.errorOperation('deleting save slot', error);
       return false;
     }
   }
@@ -208,12 +203,12 @@ export class SaveSystem {
    */
   static clearAllSaves(): boolean {
     try {
-      localStorage.removeItem(AUTO_SAVE_KEY);
-      localStorage.removeItem(SAVE_SLOTS_KEY);
-      console.log('🗑️ All save data cleared');
+      localStorage.removeItem(STORAGE_KEYS.AUTO_SAVE);
+      localStorage.removeItem(STORAGE_KEYS.SAVE_SLOTS);
+      logger.deleteOperation('All save data cleared');
       return true;
     } catch (error) {
-      console.error('❌ Error clearing save data:', error);
+      logger.errorOperation('clearing save data', error);
       return false;
     }
   }
@@ -236,7 +231,7 @@ export class SaveSystem {
       
       return JSON.stringify(exportData, null, 2);
     } catch (error) {
-      console.error('❌ Error exporting save data:', error);
+      console.error('Error exporting save data:', error);
       return null;
     }
   }
@@ -271,12 +266,12 @@ export class SaveSystem {
       // Save to the specified slot
       const saveSlots = this.getSaveSlots();
       saveSlots[slotId] = saveGame;
-      localStorage.setItem(SAVE_SLOTS_KEY, JSON.stringify(saveSlots));
+      localStorage.setItem(STORAGE_KEYS.SAVE_SLOTS, JSON.stringify(saveSlots));
       
-      console.log(`📥 Save data imported to slot ${slotId}`);
+      logger.loadOperation(`Save data imported to slot`, slotId);
       return true;
     } catch (error) {
-      console.error('❌ Error importing save data:', error);
+      logger.errorOperation('importing save data', error);
       return false;
     }
   }
@@ -293,7 +288,7 @@ export class SaveSystem {
     try {
       const saveSlots = this.getSaveSlots();
       const totalSaves = Object.keys(saveSlots).length;
-      const autoSaveExists = !!localStorage.getItem(AUTO_SAVE_KEY);
+      const autoSaveExists = !!localStorage.getItem(STORAGE_KEYS.AUTO_SAVE);
       
       let lastSaveTime: number | null = null;
       if (totalSaves > 0) {
@@ -307,7 +302,7 @@ export class SaveSystem {
         autoSaveExists
       };
     } catch (error) {
-      console.error('❌ Error getting save stats:', error);
+      logger.errorOperation('getting save stats', error);
       return {
         totalSaves: 0,
         totalSlots: MAX_SAVE_SLOTS,

@@ -114,9 +114,9 @@ const DealsScreen: React.FC<Props> = ({
     <div className="deals-screen">
       <p>Bank Balance: ${currentBankBalance.toLocaleString()}</p>
       <h2>Available Investment Properties</h2>
-      <p className="keyboardHelp">
-        💡 Use ↑↓ arrow keys to navigate, P to purchase, ESC to close
-      </p>
+             <p className="keyboardHelp">
+         Tip: Use ↑↓ arrow keys to navigate, P to purchase, ESC to close
+       </p>
       <div className="table-container">
         <table>
           <thead>

@@ -4,6 +4,8 @@ import EventScreen from "./EventScreen";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/CityScreen.css";
+import { calculateTotalRentalIncome, chooseRandomEvent, formatGameDate } from "../utils/gameUtils";
+import { createKeyboardHandler, getCityScreenShortcuts, setupKeyboardListener } from "../utils/keyboardUtils";
 import {
   Player,
   InvestmentProperty,
@@ -46,68 +48,16 @@ const CityScreen: React.FC<Props> = ({
   );
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
 
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+
 
   const handlePlayerAction = (action: PlayerAction) => {
     switch (action) {
       case "rest":
       case "travel": {
-        const initialBankBalance = currentBankBalance;
-
-        // Increment month
-        setCurrentMonth(currentMonth + 1);
-
-        // Adding salary
-        const salary = player?.salary || 0;
-
-        // Adding rental income
-        let totalRentalIncome = 0;
-        portfolio.forEach((property) => {
-          if (property.isRented) {
-            totalRentalIncome +=
-              property.arvRentalIncome - property.monthlyExpenses;
-          }
-        });
-
-        // Randomly select an event based on profession probabilities
-        const chosenEvent = chooseEvent(player?.profession);
-        const eventImpact = chosenEvent ? chosenEvent.bankBalanceChange : 0;
-
-        // Update bank balance
-        const newBankBalance =
-          initialBankBalance + salary + totalRentalIncome + eventImpact;
-        setCurrentBankBalance(newBankBalance);
-
-        // Show toast with details
-        toast.info(
-          `New Balance: $${newBankBalance.toLocaleString()} = $${initialBankBalance.toLocaleString()} + Salary: $${salary.toLocaleString()} + Rent: $${totalRentalIncome.toLocaleString()} + Event: $${eventImpact.toLocaleString()}`
-        );
-        console.log(
-          `Bank($${newBankBalance.toLocaleString()}) = $${initialBankBalance.toLocaleString()} + Sal($${salary.toLocaleString()}) + Rent($${totalRentalIncome.toLocaleString()}) + Evt($${eventImpact.toLocaleString()})`
-        );
-
-        if (chosenEvent) {
-          setCurrentEvent(chosenEvent);
-        }
-
+        handleMonthAdvance();
+        
         if (action === "travel") {
-          const newIndex = (currentCityIndex + 1) % cities.length;
-          setCurrentCityIndex(newIndex);
-          setCurrentCity(cities[newIndex]);
-          toast.success(`Traveling to ${cities[newIndex].name}`);
+          handleTravel();
         }
         break;
       }
@@ -116,77 +66,63 @@ const CityScreen: React.FC<Props> = ({
     }
   };
 
-  // Function to choose an event based on profession probabilities
-  const chooseEvent = (profession: string | undefined): Event | undefined => {
-    if (!profession) return undefined;
+  const handleMonthAdvance = () => {
+    const initialBankBalance = currentBankBalance;
+    setCurrentMonth(currentMonth + 1);
 
-    // Filter events based on profession probabilities
-    const professionEvents = events.filter((event) => {
-      const probability = event.professionProbabilities?.[profession] || 0;
-      return Math.random() * 100 < probability;
-    });
+    const salary = player?.salary || 0;
+    const totalRentalIncome = calculateTotalRentalIncome(portfolio);
+    const chosenEvent = chooseRandomEvent(events, player?.profession);
+    const eventImpact = chosenEvent ? chosenEvent.bankBalanceChange : 0;
 
-    // Choose a random event from filtered events
-    if (professionEvents.length === 0) return undefined;
+    const newBankBalance = initialBankBalance + salary + totalRentalIncome + eventImpact;
+    setCurrentBankBalance(newBankBalance);
 
-    return professionEvents[
-      Math.floor(Math.random() * professionEvents.length)
-    ];
+    toast.info(
+      `New Balance: $${newBankBalance.toLocaleString()} = $${initialBankBalance.toLocaleString()} + Salary: $${salary.toLocaleString()} + Rent: $${totalRentalIncome.toLocaleString()} + Event: $${eventImpact.toLocaleString()}`
+    );
+
+    if (chosenEvent) {
+      setCurrentEvent(chosenEvent);
+    }
   };
+
+  const handleTravel = () => {
+    const newIndex = (currentCityIndex + 1) % cities.length;
+    setCurrentCityIndex(newIndex);
+    setCurrentCity(cities[newIndex]);
+    toast.success(`Traveling to ${cities[newIndex].name}`);
+  };
+
+
 
   // Keyboard shortcuts handler
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      // Only handle key presses when not typing in input fields
-      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
-        return;
-      }
+    const cityShortcuts = getCityScreenShortcuts(
+      () => handlePlayerAction("travel"),
+      () => handlePlayerAction("rest"),
+      onViewPortfolio,
+      onFindDeals
+    );
 
-      switch (event.key.toLowerCase()) {
-        case 't':
-          event.preventDefault();
-          handlePlayerAction("travel");
-          break;
-        case 'r':
-          event.preventDefault();
-          handlePlayerAction("rest");
-          break;
-        case 'v':
-          event.preventDefault();
-          onViewPortfolio();
-          break;
-        case 'f':
-          event.preventDefault();
-          onFindDeals();
-          break;
-        default:
-          break;
-      }
-    };
+    const keyboardHandler = createKeyboardHandler(cityShortcuts);
+    const cleanup = setupKeyboardListener(keyboardHandler);
 
-    // Add event listener
-    window.addEventListener('keydown', handleKeyPress);
-
-    // Cleanup event listener
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
+    return cleanup;
   }, [currentBankBalance, currentMonth, currentCityIndex, cities, player?.profession, portfolio]);
 
   const closeEventScreen = () => {
     setCurrentEvent(null);
   };
 
-  const initialYear = 2008;
-  const currentYear = initialYear + Math.floor((currentMonth - 1) / 12);
-  const currentMonthName = months[(currentMonth % 12) - 1];
+  const { monthName, year } = formatGameDate(currentMonth);
 
   return (
     <div className="cityScreen">
       {/* City Name */}
       <h2>{currentCity.name}</h2>
       <p className="cityDate">
-        {currentMonthName} {currentYear}
+        {monthName} {year}
       </p>
       <p className="playerStats">
         Profession: {player?.profession} <br /> Bank Balance: $
@@ -199,10 +135,10 @@ const CityScreen: React.FC<Props> = ({
         <button onClick={() => handlePlayerAction("rest")}>Rest (R)</button>
         <button onClick={onViewPortfolio}>View Portfolio (V)</button>
         <button onClick={onFindDeals}>Find Deals (F)</button>
-        <button onClick={onSaveLoad} className="save-load-button">💾 Save/Load (F5)</button>
+        <button onClick={onSaveLoad} className="save-load-button">Save/Load (F5)</button>
       </div>
       <p className="keyboardHelp">
-        💡 Use keyboard shortcuts: T, R, V, F for faster navigation
+        Tip: Use keyboard shortcuts: T, R, V, F for faster navigation
       </p>
       {currentEvent && (
         <EventScreen

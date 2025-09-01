@@ -110,7 +110,7 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
             className={`tab-button ${activeTab === 'save' ? 'active' : ''}`}
             onClick={() => setActiveTab('save')}
           >
-            💾 Save Game
+                             Save Game
           </button>
           <button
             className={`tab-button ${activeTab === 'load' ? 'active' : ''}`}
