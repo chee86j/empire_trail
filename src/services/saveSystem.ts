@@ -127,6 +127,20 @@ export class SaveSystem {
   }
 
   /**
+   * Clear the auto-save data
+   */
+  static clearAutoSave(): boolean {
+    try {
+      localStorage.removeItem(STORAGE_KEYS.AUTO_SAVE);
+      logger.info('Auto-save cleared');
+      return true;
+    } catch (error) {
+      logger.errorOperation('clearing auto-save', error);
+      return false;
+    }
+  }
+
+  /**
    * Get all available save slots
    */
   static getSaveSlots(): Record<string, SaveGame> {

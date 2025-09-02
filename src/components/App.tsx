@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import GameInfoScreen from "./GameInfoScreen";
 import PlayerSelectScreen from "./PlayerSelectScreen";
 import CityScreen from "./CityScreen";
@@ -33,17 +33,11 @@ const App: React.FC = () => {
   const [currentCity, setCurrentCity] = useState<City>(cities[0]);
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [showSaveLoadModal, setShowSaveLoadModal] = useState<boolean>(false);
-  const autoSavePromptShown = useRef<boolean>(false);
 
-  // Load saved game on startup
+    // Load saved game on startup - Auto-save is now available in SaveLoadModal
   useEffect(() => {
-    if (!autoSavePromptShown.current) {
-      const autoSave = SaveSystem.loadAutoSave();
-      if (autoSave && window.confirm('Auto-save found! Would you like to continue your last game?')) {
-        loadGameFromSave(autoSave);
-      }
-      autoSavePromptShown.current = true;
-    }
+    // Auto-save functionality moved to SaveLoadModal for better UX
+    // Users can access auto-save through F5 or the save/load button
   }, []); // Empty dependency array ensures this only runs once on mount
 
   // Auto-save game state when important changes occur
@@ -248,9 +242,6 @@ const App: React.FC = () => {
           investmentProperties={investmentProperties}
           currentBankBalance={currentBankBalance}
           onPurchaseProperty={handlePurchaseProperty}
-          portfolio={portfolio}
-          setPortfolio={setPortfolio}
-          currentMonth={currentMonth}
           onClose={() => setGameState("city")}
         />
       )}

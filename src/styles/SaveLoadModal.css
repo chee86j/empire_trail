@@ -252,6 +252,66 @@
   font-size: 18px;
 }
 
+/* Auto-save section styles */
+.auto-save-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+  border: 2px solid #3498db;
+  border-radius: 10px;
+}
+
+.auto-save-section h4 {
+  margin: 0 0 15px 0;
+  color: #3498db;
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.auto-save-item {
+  background: rgba(52, 152, 219, 0.05);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.auto-save-badge {
+  background: #3498db;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7em;
+  margin-left: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.auto-save-load {
+  background: linear-gradient(45deg, #3498db, #2980b9) !important;
+  border: 1px solid #2980b9 !important;
+}
+
+.auto-save-load:hover {
+  background: linear-gradient(45deg, #2980b9, #1f5f8b) !important;
+  transform: translateY(-1px);
+}
+
+/* Manual saves section */
+.manual-saves-section {
+  margin-top: 20px;
+}
+
+.manual-saves-section h4 {
+  margin: 0 0 15px 0;
+  color: #ecf0f1;
+  font-size: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #34495e;
+  padding-bottom: 8px;
+}
+
 .no-saves {
   color: #7f8c8d;
   text-align: center;

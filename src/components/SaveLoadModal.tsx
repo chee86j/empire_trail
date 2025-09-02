@@ -41,6 +41,11 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
     setSaveSlots(slots);
   };
 
+  /* Get auto-save if it exists */
+  const getAutoSave = () => {
+    return SaveSystem.loadAutoSave();
+  };
+
   const handleSaveGame = () => {
     if (!newSaveName.trim()) {
       toast.error('Please enter a save name');
@@ -74,6 +79,17 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
     }
   };
 
+  const handleLoadAutoSave = () => {
+    const autoSave = getAutoSave();
+    if (autoSave) {
+      onLoadGame(autoSave);
+      onClose();
+      toast.success(`Auto-save loaded: ${autoSave.name}`);
+    } else {
+      toast.error('Auto-save not found');
+    }
+  };
+
   const handleDeleteSave = (slotId: string) => {
     if (window.confirm('Are you sure you want to delete this save?')) {
       const success = SaveSystem.deleteSaveSlot(slotId);
@@ -82,6 +98,19 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
         refreshSaveSlots();
       } else {
         toast.error('Failed to delete save');
+      }
+    }
+  };
+
+  const handleDeleteAutoSave = () => {
+    if (window.confirm('Are you sure you want to delete the auto-save? This will remove your last saved game state.')) {
+      const success = SaveSystem.clearAutoSave();
+      if (success) {
+        toast.success('Auto-save deleted');
+        // Force re-render to update the UI
+        setSaveSlots({ ...saveSlots });
+      } else {
+        toast.error('Failed to delete auto-save');
       }
     }
   };
@@ -182,40 +211,87 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
           <div className="load-tab">
             <div className="load-slots">
               <h3>Available Saves</h3>
-              {Object.keys(saveSlots).length === 0 ? (
-                <div className="no-saves">No saved games found</div>
-              ) : (
-                <div className="load-slots-list">
-                  {Object.entries(saveSlots).map(([slotId, saveGame]) => (
-                    <div key={slotId} className="load-slot-item">
-                      <div className="load-slot-info">
-                        <div className="load-slot-name">{saveGame.name}</div>
-                        <div className="load-slot-details">
-                          <span>Slot {slotId.replace('slot_', '')}</span>
-                          <span>•</span>
-                          <span>{formatTimestamp(saveGame.timestamp)}</span>
-                          <span>•</span>
-                          <span>Month {saveGame.currentMonth}</span>
-                          <span>•</span>
-                          <span>${saveGame.currentBankBalance.toLocaleString()}</span>
+              
+              {/* Auto-save section */}
+              {(() => {
+                const autoSave = getAutoSave();
+                if (autoSave) {
+                  return (
+                    <div className="auto-save-section">
+                      <h4>Auto-Save</h4>
+                      <div className="load-slot-item auto-save-item">
+                        <div className="load-slot-info">
+                          <div className="load-slot-name">
+                            {autoSave.name}
+                            <span className="auto-save-badge">Auto</span>
+                          </div>
+                          <div className="load-slot-details">
+                            <span>Last saved: {formatTimestamp(autoSave.timestamp)}</span>
+                            <span>•</span>
+                            <span>Month {autoSave.currentMonth}</span>
+                            <span>•</span>
+                            <span>${autoSave.currentBankBalance.toLocaleString()}</span>
+                          </div>
+                        </div>
+                        <div className="load-slot-actions">
+                          <button
+                            className="load-button auto-save-load"
+                            onClick={handleLoadAutoSave}
+                          >
+                            Load Auto-Save
+                          </button>
+                          <button
+                            className="delete-button"
+                            onClick={handleDeleteAutoSave}
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
-                      <div className="load-slot-actions">
-                        <button
-                          className="load-button"
-                          onClick={() => handleLoadGame(slotId)}
-                        >
-                          Load
-                        </button>
-                        <button
-                          className="delete-button"
-                          onClick={() => handleDeleteSave(slotId)}
-                        >
-                          Delete
-                        </button>
-                      </div>
                     </div>
-                  ))}
+                  );
+                }
+                return null;
+              })()}
+
+              {/* Manual save slots */}
+              {Object.keys(saveSlots).length === 0 ? (
+                <div className="no-saves">No manual saves found</div>
+              ) : (
+                <div className="manual-saves-section">
+                  <h4>Manual Saves</h4>
+                  <div className="load-slots-list">
+                    {Object.entries(saveSlots).map(([slotId, saveGame]) => (
+                      <div key={slotId} className="load-slot-item">
+                        <div className="load-slot-info">
+                          <div className="load-slot-name">{saveGame.name}</div>
+                          <div className="load-slot-details">
+                            <span>Slot {slotId.replace('slot_', '')}</span>
+                            <span>•</span>
+                            <span>{formatTimestamp(saveGame.timestamp)}</span>
+                            <span>•</span>
+                            <span>Month {saveGame.currentMonth}</span>
+                            <span>•</span>
+                            <span>${saveGame.currentBankBalance.toLocaleString()}</span>
+                          </div>
+                        </div>
+                        <div className="load-slot-actions">
+                          <button
+                            className="load-button"
+                            onClick={() => handleLoadGame(slotId)}
+                          >
+                            Load
+                          </button>
+                          <button
+                            className="delete-button"
+                            onClick={() => handleDeleteSave(slotId)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
