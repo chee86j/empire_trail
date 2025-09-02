@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import "../styles/DealsScreen.css";
 import { InvestmentProperty } from "../types";
 
@@ -9,20 +7,15 @@ interface Props {
   currentBankBalance: number;
   onPurchaseProperty: (property: InvestmentProperty) => void;
   onClose: () => void;
-  portfolio: InvestmentProperty[];
-  setPortfolio: React.Dispatch<React.SetStateAction<InvestmentProperty[]>>;
-  currentMonth: number;
 }
 
 const DealsScreen: React.FC<Props> = ({
   investmentProperties,
   currentBankBalance,
   onPurchaseProperty,
-  onClose,
+  onClose
 }) => {
-  const [randomProperties, setRandomProperties] = useState<
-    InvestmentProperty[]
-  >([]);
+  const [randomProperties, setRandomProperties] = useState<InvestmentProperty[]>([]);
   const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0);
 
   useEffect(() => {
@@ -94,7 +87,16 @@ const DealsScreen: React.FC<Props> = ({
       onPurchaseProperty(property);
       onClose();
     } else {
-      toast.error("Insufficient funds to purchase this property.");
+      // Show helpful error message with cost breakdown
+      const shortfall = totalCost - currentBankBalance;
+      alert(`Insufficient funds to purchase ${property.name}!\n\n` +
+            `Total Cost: $${totalCost.toLocaleString()}\n` +
+            `- Purchase: $${property.purchaseCost.toLocaleString()}\n` +
+            `- Closing: $${property.closingCost.toLocaleString()}\n` +
+            `- Renovation: $${property.renovationCost.toLocaleString()}\n\n` +
+            `Your Balance: $${currentBankBalance.toLocaleString()}\n` +
+            `Shortfall: $${shortfall.toLocaleString()}\n\n` +
+            `💡 Tip: You need to save up the combined amount of purchase price, closing costs, and renovation costs to buy this property.`);
     }
   };
 

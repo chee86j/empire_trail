@@ -4,7 +4,7 @@ import EventScreen from "./EventScreen";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/CityScreen.css";
-import { calculateTotalRentalIncome, chooseRandomEvent, formatGameDate } from "../utils/gameUtils";
+import { calculateTotalRentalIncome, chooseRandomEvent, formatGameDate, isPropertyReadyForAction } from "../utils/gameUtils";
 import { createKeyboardHandler, getCityScreenShortcuts, setupKeyboardListener } from "../utils/keyboardUtils";
 import {
   Player,

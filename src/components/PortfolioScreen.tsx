@@ -166,9 +166,25 @@ const PortfolioScreen: React.FC<Props> = ({
   return (
     <div className="screen">
       <h2>Portfolio</h2>
-             <p className="keyboardHelp">
-         Tip: Use ↑↓ arrow keys to navigate, R to rent, S to sell, ESC to close
-       </p>
+      
+      {/* Debug Information */}
+      <div style={{ 
+        backgroundColor: '#f0f0f0', 
+        padding: '10px', 
+        margin: '10px 0', 
+        borderRadius: '5px',
+        fontSize: '14px'
+      }}>
+        <strong>Debug Info:</strong><br/>
+        Total Properties: {portfolio.length}<br/>
+        Rented Properties: {portfolio.filter(p => p.isRented).length}<br/>
+        Expected Monthly Income: ${portfolio.filter(p => p.isRented).reduce((total, p) => total + p.arvRentalIncome, 0).toLocaleString()}<br/>
+        Properties Ready for Action: {portfolio.filter(p => isPropertyReadyForAction(p, currentMonth)).length}
+      </div>
+      
+      <p className="keyboardHelp">
+        Tip: Use ↑↓ arrow keys to navigate, R to rent, S to sell, ESC to close
+      </p>
       <div className="table-container">
         <table>
           <thead>
