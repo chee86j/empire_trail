@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { events } from "../assets/gameData";
 import EventScreen from "./EventScreen";
 import { toast } from "react-toastify";
@@ -27,6 +27,7 @@ interface Props {
   setCurrentCity: (city: City) => void;
   cities: City[];
   onSaveLoad: () => void;
+  onViewAchievements: () => void;
 }
 
 const CityScreen: React.FC<Props> = ({
@@ -42,31 +43,14 @@ const CityScreen: React.FC<Props> = ({
   setCurrentCity,
   cities,
   onSaveLoad,
+  onViewAchievements,
 }) => {
   const [currentCityIndex, setCurrentCityIndex] = useState(
     cities.findIndex((city) => city.name === currentCity.name)
   );
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
 
-
-
-  const handlePlayerAction = (action: PlayerAction) => {
-    switch (action) {
-      case "rest":
-      case "travel": {
-        handleMonthAdvance();
-        
-        if (action === "travel") {
-          handleTravel();
-        }
-        break;
-      }
-      default:
-        break;
-    }
-  };
-
-  const handleMonthAdvance = () => {
+  const handleMonthAdvance = useCallback(() => {
     const initialBankBalance = currentBankBalance;
     setCurrentMonth(currentMonth + 1);
 
@@ -85,14 +69,30 @@ const CityScreen: React.FC<Props> = ({
     if (chosenEvent) {
       setCurrentEvent(chosenEvent);
     }
-  };
+  }, [currentBankBalance, currentMonth, player?.salary, portfolio, player?.profession, setCurrentMonth, setCurrentBankBalance]);
 
-  const handleTravel = () => {
+  const handleTravel = useCallback(() => {
     const newIndex = (currentCityIndex + 1) % cities.length;
     setCurrentCityIndex(newIndex);
     setCurrentCity(cities[newIndex]);
     toast.success(`Traveling to ${cities[newIndex].name}`);
-  };
+  }, [currentCityIndex, cities, setCurrentCity]);
+
+  const handlePlayerAction = useCallback((action: PlayerAction) => {
+    switch (action) {
+      case "rest":
+      case "travel": {
+        handleMonthAdvance();
+        
+        if (action === "travel") {
+          handleTravel();
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  }, [handleMonthAdvance, handleTravel]);
 
 
 
@@ -109,7 +109,7 @@ const CityScreen: React.FC<Props> = ({
     const cleanup = setupKeyboardListener(keyboardHandler);
 
     return cleanup;
-  }, [currentBankBalance, currentMonth, currentCityIndex, cities, player?.profession, portfolio]);
+  }, [onViewPortfolio, onFindDeals, handlePlayerAction]);
 
   const closeEventScreen = () => {
     setCurrentEvent(null);
@@ -135,10 +135,11 @@ const CityScreen: React.FC<Props> = ({
         <button onClick={() => handlePlayerAction("rest")}>Rest (R)</button>
         <button onClick={onViewPortfolio}>View Portfolio (V)</button>
         <button onClick={onFindDeals}>Find Deals (F)</button>
+        <button onClick={onViewAchievements} className="achievement-button">🏆 Achievements (A)</button>
         <button onClick={onSaveLoad} className="save-load-button">Save/Load (F5)</button>
       </div>
       <p className="keyboardHelp">
-        Tip: Use keyboard shortcuts: T, R, V, F for faster navigation
+        Tip: Use keyboard shortcuts: T, R, V, F, A for faster navigation
       </p>
       {currentEvent && (
         <EventScreen

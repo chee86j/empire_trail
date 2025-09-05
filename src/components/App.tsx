@@ -6,8 +6,11 @@ import PortfolioScreen from "./PortfolioScreen";
 import DealsScreen from "./DealsScreen";
 import EventScreen from "./EventScreen";
 import SaveLoadModal from "./SaveLoadModal";
+import AchievementScreen from "./AchievementScreen";
+import AchievementNotification from "./AchievementNotification";
 import { investmentProperties, cities } from "../assets/gameData";
 import { SaveSystem } from "../services/saveSystem";
+import { AchievementService } from "../services/achievementService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getProfessionStats } from "../utils/gameUtils";
@@ -20,6 +23,8 @@ import {
   Profession,
   City,
   SaveGame,
+  Achievement,
+  PlayerStats,
 } from "../types";
 
 const App: React.FC = () => {
@@ -33,12 +38,29 @@ const App: React.FC = () => {
   const [currentCity, setCurrentCity] = useState<City>(cities[0]);
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [showSaveLoadModal, setShowSaveLoadModal] = useState<boolean>(false);
+  const [showAchievementScreen, setShowAchievementScreen] = useState<boolean>(false);
+  const [playerStats, setPlayerStats] = useState<PlayerStats | null>(null);
+  const [achievementService] = useState(() => AchievementService.getInstance());
+  const [newlyUnlockedAchievement, setNewlyUnlockedAchievement] = useState<Achievement | null>(null);
 
     // Load saved game on startup - Auto-save is now available in SaveLoadModal
   useEffect(() => {
     // Auto-save functionality moved to SaveLoadModal for better UX
     // Users can access auto-save through F5 or the save/load button
-  }, []); // Empty dependency array ensures this only runs once on mount
+    
+    // Initialize achievement service callback
+    achievementService.setAchievementUnlockedCallback((achievement: Achievement) => {
+      setNewlyUnlockedAchievement(achievement);
+      
+      // Apply reward if it's cash
+      if (achievement.reward?.type === 'cash') {
+        setCurrentBankBalance(prev => prev + achievement.reward!.value);
+        toast.success(`🎉 Achievement unlocked: ${achievement.name}! +$${achievement.reward.value.toLocaleString()}`);
+      } else {
+        toast.success(`🎉 Achievement unlocked: ${achievement.name}!`);
+      }
+    });
+  }, [achievementService]); // Include achievementService in dependencies
 
   // Auto-save game state when important changes occur
   useEffect(() => {
@@ -86,11 +108,21 @@ const App: React.FC = () => {
       }
     };
 
+    const handleAchievements = () => {
+      if (player && gameState !== "gameInfo" && gameState !== "playerSelect") {
+        setShowAchievementScreen(true);
+      }
+    };
+
     const globalShortcuts = getGlobalShortcuts(
       () => setShowHelp(prev => !prev),
       handleSaveLoad,
       handleEscape
     );
+
+    // Add achievement shortcut
+    (globalShortcuts as Record<string, () => void>)['a'] = handleAchievements;
+    (globalShortcuts as Record<string, () => void>)['A'] = handleAchievements;
 
     const keyboardHandler = createKeyboardHandler({}, globalShortcuts);
     const cleanup = setupKeyboardListener(keyboardHandler);
@@ -106,6 +138,11 @@ const App: React.FC = () => {
     const { bankBalance, salary } = getProfessionStats(profession);
     setPlayer({ profession, bankBalance, salary, location: currentCity });
     setCurrentBankBalance(bankBalance);
+    
+    // Initialize player stats for achievement tracking
+    const initialStats = achievementService.initializePlayerStats();
+    setPlayerStats(initialStats);
+    
     setGameState("city");
   };
 
@@ -133,8 +170,36 @@ const App: React.FC = () => {
         location: currentCity,
       };
       
+      const newPortfolio = [...portfolio, propertyWithPurchaseMonth];
+      
       setCurrentBankBalance(newBankBalance);
-      setPortfolio([...portfolio, propertyWithPurchaseMonth]);
+      setPortfolio(newPortfolio);
+      
+      // Update player stats for achievement tracking
+      if (playerStats) {
+        const updatedStats = achievementService.updateStatsOnPropertyPurchase(
+          playerStats, 
+          propertyWithPurchaseMonth, 
+          newBankBalance
+        );
+        setPlayerStats(updatedStats);
+        
+        // Check for new achievements
+        const newlyUnlocked = achievementService.checkAchievements(
+          updatedStats, 
+          newBankBalance, 
+          newPortfolio, 
+          currentCity
+        );
+        
+        // Process any newly unlocked achievements
+        newlyUnlocked.forEach(achievement => {
+          if (achievement.reward?.type === 'cash') {
+            setCurrentBankBalance(prev => prev + achievement.reward!.value);
+          }
+        });
+      }
+      
       setGameState("city");
     } else {
       toast.error("Insufficient funds to purchase this property.");
@@ -182,6 +247,7 @@ const App: React.FC = () => {
                 <h3>Global Shortcuts</h3>
                 <p><strong>F1</strong> - Show/hide this help</p>
                 <p><strong>F5</strong> - Save/Load Game</p>
+                <p><strong>A</strong> - View Achievements</p>
                 <p><strong>ESC</strong> - Go back/close</p>
               </div>
             </div>
@@ -205,6 +271,19 @@ const App: React.FC = () => {
           gameState,
         }}
       />
+
+      {/* Achievement Screen */}
+      {showAchievementScreen && (
+        <AchievementScreen onClose={() => setShowAchievementScreen(false)} />
+      )}
+
+      {/* Achievement Notification */}
+      {newlyUnlockedAchievement && (
+        <AchievementNotification
+          achievement={newlyUnlockedAchievement}
+          onClose={() => setNewlyUnlockedAchievement(null)}
+        />
+      )}
       
       {/* Conditional rendering based on game state */}
       {gameState === "gameInfo" && <GameInfoScreen onStartGame={startGame} />}
@@ -225,6 +304,7 @@ const App: React.FC = () => {
           setCurrentCity={setCurrentCity}
           cities={cities}
           onSaveLoad={() => setShowSaveLoadModal(true)}
+          onViewAchievements={() => setShowAchievementScreen(true)}
         />
       )}
       {gameState === "portfolio" && (

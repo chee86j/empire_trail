@@ -145,6 +145,131 @@ export type PlayerAction =
   | "purchaseProperty";
 
 /**
+ * Interface for Achievement class
+ * Represents an achievement that can be unlocked by the player
+ */
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  category: AchievementCategory;
+  rarity: AchievementRarity;
+  icon: string;
+  emoji: string;
+  criteria: AchievementCriteria;
+  reward?: AchievementReward;
+  unlockedAt?: number; // timestamp when unlocked
+  isUnlocked: boolean;
+  progress: number; // 0-100 percentage
+  maxProgress: number;
+}
+
+/**
+ * Interface for Achievement Criteria
+ * Defines the conditions that must be met to unlock an achievement
+ */
+export interface AchievementCriteria {
+  type: AchievementCriteriaType;
+  target: number;
+  property?: {
+    minValue?: number;
+    maxValue?: number;
+    propertyTypes?: PropertyType[];
+    cities?: string[];
+  };
+  time?: {
+    maxMonths?: number;
+    minMonths?: number;
+  };
+  financial?: {
+    minBankBalance?: number;
+    maxBankBalance?: number;
+    minNetWorth?: number;
+    minMonthlyIncome?: number;
+  };
+}
+
+/**
+ * Interface for Achievement Reward
+ * Defines what the player receives when unlocking an achievement
+ */
+export interface AchievementReward {
+  type: "cash" | "bonus" | "unlock" | "title";
+  value: number;
+  description: string;
+}
+
+/**
+ * Interface for Player Statistics
+ * Tracks player progress for achievement calculations
+ */
+export interface PlayerStats {
+  totalPropertiesPurchased: number;
+  totalPropertiesSold: number;
+  totalPropertiesRented: number;
+  totalRevenue: number;
+  totalProfit: number;
+  totalInvestment: number;
+  currentNetWorth: number;
+  currentMonthlyIncome: number;
+  citiesVisited: string[];
+  propertiesByType: { [key in PropertyType]?: number };
+  propertiesByCity: { [cityName: string]: number };
+  longestPropertyHeld: number; // in months
+  fastestFlip: number; // in months
+  highestROI: number;
+  consecutiveSuccessfulRolls: number;
+  totalDiceRolls: number;
+  successfulDiceRolls: number;
+  gameStartTime: number;
+  totalPlayTime: number; // in minutes
+}
+
+/**
+ * Type for achievement categories
+ */
+export type AchievementCategory =
+  | "financial"
+  | "property"
+  | "exploration"
+  | "skill"
+  | "collection"
+  | "milestone"
+  | "special";
+
+/**
+ * Type for achievement rarity levels
+ */
+export type AchievementRarity =
+  | "common"
+  | "uncommon"
+  | "rare"
+  | "epic"
+  | "legendary";
+
+/**
+ * Type for achievement criteria types
+ */
+export type AchievementCriteriaType =
+  | "purchase_property"
+  | "sell_property"
+  | "rent_property"
+  | "reach_bank_balance"
+  | "reach_net_worth"
+  | "visit_city"
+  | "own_property_type"
+  | "own_properties_in_city"
+  | "flip_property"
+  | "hold_property_duration"
+  | "achieve_roi"
+  | "dice_rolls"
+  | "consecutive_successes"
+  | "time_played"
+  | "properties_sold_value"
+  | "monthly_income"
+  | "portfolio_value";
+
+/**
  * Interface for SaveGame class
  * Represents a saved game with metadata and complete game state
  */
@@ -160,4 +285,6 @@ export interface SaveGame {
   currentCity: City;
   gameState: GameState;
   version: string;
+  achievements: Achievement[];
+  playerStats: PlayerStats;
 }
