@@ -91,7 +91,8 @@
   border-bottom-color: #3498db;
 }
 
-.save-tab, .load-tab {
+.save-tab,
+.load-tab {
   padding: 20px;
   max-height: 60vh;
   overflow-y: auto;
@@ -130,6 +131,35 @@
   box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
 }
 
+.form-group {
+  margin-bottom: 20px;
+}
+
+.slot-selector {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  background: #2c3e50;
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.slot-selector:focus {
+  outline: none;
+  border-color: #e74c3c;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+}
+
+.slot-selector option {
+  background: #2c3e50;
+  color: white;
+  padding: 8px;
+}
+
 .save-button {
   background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
   color: white;
@@ -149,6 +179,40 @@
 }
 
 .save-button:disabled {
+  background: #7f8c8d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.save-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.save-buttons .save-button {
+  flex: 1;
+}
+
+.quick-save-button {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex: 1;
+}
+
+.quick-save-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+}
+
+.quick-save-button:disabled {
   background: #7f8c8d;
   cursor: not-allowed;
   transform: none;
@@ -256,7 +320,11 @@
 .auto-save-section {
   margin-bottom: 30px;
   padding: 20px;
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(52, 152, 219, 0.1) 0%,
+    rgba(41, 128, 185, 0.1) 100%
+  );
   border: 2px solid #3498db;
   border-radius: 10px;
 }
@@ -435,26 +503,26 @@
     width: 95%;
     margin: 10px;
   }
-  
+
   .save-slots-grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 10px;
   }
-  
+
   .load-slot-item {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .load-slot-actions {
     justify-content: center;
   }
-  
+
   .save-load-modal-header h2 {
     font-size: 20px;
   }
-  
+
   .tab-button {
     font-size: 14px;
     padding: 12px;

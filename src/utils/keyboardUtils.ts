@@ -5,7 +5,10 @@ Centralized keyboard shortcut handling for the Empire Trail game
 
 /* Check if keyboard shortcut should be ignored */
 export const shouldIgnoreKeyboardShortcut = (event: KeyboardEvent): boolean => {
-  return event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement;
+  return (
+    event.target instanceof HTMLInputElement ||
+    event.target instanceof HTMLTextAreaElement
+  );
 };
 
 /* Create keyboard handler with shortcuts and global shortcuts */
@@ -33,32 +36,36 @@ export const getCityScreenShortcuts = (
   onViewPortfolio: () => void,
   onFindDeals: () => void
 ) => ({
-  't': onTravel,
-  'T': onTravel,
-  'r': onRest,
-  'R': onRest,
-  'v': onViewPortfolio,
-  'V': onViewPortfolio,
-  'f': onFindDeals,
-  'F': onFindDeals
+  t: onTravel,
+  T: onTravel,
+  r: onRest,
+  R: onRest,
+  v: onViewPortfolio,
+  V: onViewPortfolio,
+  f: onFindDeals,
+  F: onFindDeals,
 });
 
 /* Get global shortcuts */
 export const getGlobalShortcuts = (
   onShowHelp: () => void,
   onSaveLoad: () => void,
-  onEscape: () => void
+  onEscape: () => void,
+  onQuickSave?: () => void
 ) => ({
-  'F1': onShowHelp,
-  'F5': onSaveLoad,
-  'Escape': onEscape
+  F1: onShowHelp,
+  F5: onSaveLoad,
+  F6: onQuickSave || (() => {}),
+  Escape: onEscape,
 });
 
 /* Setup keyboard listener with cleanup */
-export const setupKeyboardListener = (handler: (event: KeyboardEvent) => void) => {
-  window.addEventListener('keydown', handler);
-  
+export const setupKeyboardListener = (
+  handler: (event: KeyboardEvent) => void
+) => {
+  window.addEventListener("keydown", handler);
+
   return () => {
-    window.removeEventListener('keydown', handler);
+    window.removeEventListener("keydown", handler);
   };
 };

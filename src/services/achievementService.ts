@@ -213,6 +213,7 @@ export class AchievementService {
     const currentAchievements = this.getCurrentAchievements();
 
     for (const achievement of currentAchievements) {
+      // Skip already unlocked achievements - they cannot be re-unlocked
       if (achievement.isUnlocked) continue;
 
       const progress = this.calculateAchievementProgress(
@@ -227,7 +228,7 @@ export class AchievementService {
       // Update progress
       achievement.progress = Math.min(progress, achievement.maxProgress);
 
-      // Check if achievement should be unlocked
+      // Check if achievement should be unlocked (only if not already unlocked)
       if (progress >= achievement.maxProgress && !wasUnlocked) {
         this.unlockAchievement(achievement);
         newlyUnlocked.push(achievement);
@@ -381,6 +382,43 @@ export class AchievementService {
     }));
   }
 
+  /* Refresh all achievement progress based on current stats */
+  public refreshAchievementProgress(
+    stats: PlayerStats,
+    currentBankBalance: number,
+    portfolio: InvestmentProperty[],
+    currentCity: City
+  ): Achievement[] {
+    // First check for any new achievements that might have been unlocked
+    this.checkAchievements(stats, currentBankBalance, portfolio, currentCity);
+    
+    const currentAchievements = this.getCurrentAchievements();
+
+    return currentAchievements.map((achievement) => {
+      const progress = this.calculateAchievementProgress(
+        achievement,
+        stats,
+        currentBankBalance,
+        portfolio,
+        currentCity
+      );
+
+      // For unlocked achievements, ensure progress is at max and status is preserved
+      if (achievement.isUnlocked) {
+        return {
+          ...achievement,
+          progress: achievement.maxProgress,
+          isUnlocked: true,
+        };
+      }
+
+      return {
+        ...achievement,
+        progress: Math.min(progress, achievement.maxProgress),
+      };
+    });
+  }
+
   /* Get unlocked achievements */
   public getUnlockedAchievements(): Achievement[] {
     return this.getCurrentAchievements().filter(
@@ -457,5 +495,36 @@ export class AchievementService {
     this.unlockedAchievements.clear();
     this.saveUnlockedAchievements();
     logger.info("🔄 Reset all achievements");
+  }
+
+  /* Check if an achievement is permanently unlocked */
+  public isAchievementPermanentlyUnlocked(achievementId: string): boolean {
+    return this.unlockedAchievements.has(achievementId);
+  }
+
+  /* Get count of permanently unlocked achievements */
+  public getPermanentlyUnlockedCount(): number {
+    return this.unlockedAchievements.size;
+  }
+
+  /* Verify achievement persistence and prevent re-unlocking */
+  public verifyAchievementPersistence(): void {
+    const currentAchievements = this.getCurrentAchievements();
+    const unlockedCount = currentAchievements.filter(a => a.isUnlocked).length;
+    const savedCount = this.unlockedAchievements.size;
+    
+    if (unlockedCount !== savedCount) {
+      logger.warn(`⚠️ Achievement count mismatch: ${unlockedCount} displayed vs ${savedCount} saved`);
+    }
+    
+    // Verify that all saved achievements are marked as unlocked
+    for (const achievementId of this.unlockedAchievements) {
+      const achievement = currentAchievements.find(a => a.id === achievementId);
+      if (achievement && !achievement.isUnlocked) {
+        logger.error(`❌ Achievement ${achievementId} is saved but not marked as unlocked`);
+      }
+    }
+    
+    logger.info(`✅ Achievement persistence verified: ${unlockedCount} unlocked achievements`);
   }
 }

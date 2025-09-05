@@ -1,17 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { Achievement, AchievementCategory } from '../types';
-import { AchievementService } from '../services/achievementService';
-import { achievementCategories, rarityColors } from '../assets/achievements';
-import '../styles/AchievementScreen.css';
+import React, { useState, useEffect } from "react";
+import {
+  Achievement,
+  AchievementCategory,
+  PlayerStats,
+  InvestmentProperty,
+  City,
+} from "../types";
+import { AchievementService } from "../services/achievementService";
+import { achievementCategories, rarityColors } from "../assets/achievements";
+import "../styles/AchievementScreen.css";
 
 interface Props {
   onClose: () => void;
+  refreshTrigger?: number; // Optional prop to trigger refresh
+  playerStats?: PlayerStats; // Player stats for progress calculation
+  currentBankBalance?: number; // Current bank balance
+  portfolio?: InvestmentProperty[]; // Current portfolio
+  currentCity?: City; // Current city
 }
 
-const AchievementScreen: React.FC<Props> = ({ onClose }) => {
+const AchievementScreen: React.FC<Props> = ({
+  onClose,
+  refreshTrigger,
+  playerStats,
+  currentBankBalance,
+  portfolio,
+  currentCity,
+}) => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<AchievementCategory | 'all'>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'rarity' | 'progress' | 'unlocked'>('progress');
+  const [selectedCategory, setSelectedCategory] = useState<
+    AchievementCategory | "all"
+  >("all");
+  const [sortBy, setSortBy] = useState<
+    "name" | "rarity" | "progress" | "unlocked"
+  >("progress");
   const [showUnlockedOnly, setShowUnlockedOnly] = useState(false);
   const [achievementService] = useState(() => AchievementService.getInstance());
 
@@ -19,35 +41,90 @@ const AchievementScreen: React.FC<Props> = ({ onClose }) => {
     loadAchievements();
   }, []);
 
+  // Refresh achievements when the screen is opened
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadAchievements();
+      }
+    };
+
+    // Refresh when the component becomes visible
+    loadAchievements();
+
+    // Also refresh when the window regains focus (in case achievements were unlocked in another tab)
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  // Refresh achievements when refreshTrigger changes
+  useEffect(() => {
+    if (refreshTrigger !== undefined) {
+      loadAchievements();
+    }
+  }, [refreshTrigger]);
+
   const loadAchievements = () => {
-    const allAchievements = achievementService.getCurrentAchievements();
-    setAchievements(allAchievements);
+    // Verify achievement persistence
+    achievementService.verifyAchievementPersistence();
+    
+    // If we have all the necessary data, refresh progress
+    if (
+      playerStats &&
+      currentBankBalance !== undefined &&
+      portfolio &&
+      currentCity
+    ) {
+      const refreshedAchievements =
+        achievementService.refreshAchievementProgress(
+          playerStats,
+          currentBankBalance,
+          portfolio,
+          currentCity
+        );
+      setAchievements(refreshedAchievements);
+    } else {
+      // Fallback to basic achievement loading
+      const allAchievements = achievementService.getCurrentAchievements();
+      setAchievements(allAchievements);
+    }
   };
 
   const getFilteredAndSortedAchievements = (): Achievement[] => {
     let filtered = achievements;
 
     // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(achievement => achievement.category === selectedCategory);
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(
+        (achievement) => achievement.category === selectedCategory
+      );
     }
 
     // Filter by unlocked status
     if (showUnlockedOnly) {
-      filtered = filtered.filter(achievement => achievement.isUnlocked);
+      filtered = filtered.filter((achievement) => achievement.isUnlocked);
     }
 
     // Sort achievements
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'name':
+        case "name":
           return a.name.localeCompare(b.name);
-        case 'rarity':
-          const rarityOrder = { common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4 };
+        case "rarity":
+          const rarityOrder = {
+            common: 0,
+            uncommon: 1,
+            rare: 2,
+            epic: 3,
+            legendary: 4,
+          };
           return rarityOrder[b.rarity] - rarityOrder[a.rarity];
-        case 'progress':
+        case "progress":
           return b.progress - a.progress;
-        case 'unlocked':
+        case "unlocked":
           if (a.isUnlocked === b.isUnlocked) {
             return b.progress - a.progress;
           }
@@ -66,18 +143,24 @@ const AchievementScreen: React.FC<Props> = ({ onClose }) => {
 
   const getRarityIcon = (rarity: string): string => {
     switch (rarity) {
-      case 'common': return '⚪';
-      case 'uncommon': return '🟢';
-      case 'rare': return '🔵';
-      case 'epic': return '🟣';
-      case 'legendary': return '🟡';
-      default: return '⚪';
+      case "common":
+        return "⚪";
+      case "uncommon":
+        return "🟢";
+      case "rare":
+        return "🔵";
+      case "epic":
+        return "🟣";
+      case "legendary":
+        return "🟡";
+      default:
+        return "⚪";
     }
   };
 
   const getProgressSummary = () => {
     const total = achievements.length;
-    const unlocked = achievements.filter(a => a.isUnlocked).length;
+    const unlocked = achievements.filter((a) => a.isUnlocked).length;
     const percentage = total > 0 ? Math.round((unlocked / total) * 100) : 0;
     return { total, unlocked, percentage };
   };
@@ -91,32 +174,37 @@ const AchievementScreen: React.FC<Props> = ({ onClose }) => {
         <h2>🏆 Achievements</h2>
         <div className="progress-summary">
           <div className="progress-bar">
-            <div 
-              className="progress-fill" 
+            <div
+              className="progress-fill"
               style={{ width: `${progressSummary.percentage}%` }}
             ></div>
           </div>
           <span className="progress-text">
-            {progressSummary.unlocked} / {progressSummary.total} ({progressSummary.percentage}%)
+            {progressSummary.unlocked} / {progressSummary.total} (
+            {progressSummary.percentage}%)
           </span>
         </div>
       </div>
 
       <div className="achievement-controls">
         <div className="filter-controls">
-          <select 
-            value={selectedCategory} 
-            onChange={(e) => setSelectedCategory(e.target.value as AchievementCategory | 'all')}
+          <select
+            value={selectedCategory}
+            onChange={(e) =>
+              setSelectedCategory(e.target.value as AchievementCategory | "all")
+            }
             className="category-filter"
           >
             <option value="all">All Categories</option>
             {Object.entries(achievementCategories).map(([key, category]) => (
-              <option key={key} value={key}>{category.name}</option>
+              <option key={key} value={key}>
+                {category.name}
+              </option>
             ))}
           </select>
 
-          <select 
-            value={sortBy} 
+          <select
+            value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
             className="sort-filter"
           >
@@ -127,8 +215,8 @@ const AchievementScreen: React.FC<Props> = ({ onClose }) => {
           </select>
 
           <label className="checkbox-label">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={showUnlockedOnly}
               onChange={(e) => setShowUnlockedOnly(e.target.checked)}
             />
@@ -141,26 +229,30 @@ const AchievementScreen: React.FC<Props> = ({ onClose }) => {
         {filteredAchievements.map((achievement) => {
           const progressPercentage = getProgressPercentage(achievement);
           const categoryInfo = achievementCategories[achievement.category];
-          
+
           return (
-            <div 
-              key={achievement.id} 
-              className={`achievement-card ${achievement.isUnlocked ? 'unlocked' : 'locked'} ${achievement.rarity}`}
+            <div
+              key={achievement.id}
+              className={`achievement-card ${
+                achievement.isUnlocked ? "unlocked" : "locked"
+              } ${achievement.rarity}`}
             >
               <div className="achievement-header-card">
                 <div className="achievement-icon">
-                  {achievement.isUnlocked ? achievement.emoji : '🔒'}
+                  {achievement.isUnlocked ? achievement.emoji : "🔒"}
                 </div>
                 <div className="achievement-info">
                   <h3 className="achievement-name">{achievement.name}</h3>
                   <div className="achievement-meta">
-                    <span 
-                      className="rarity-badge" 
-                      style={{ backgroundColor: rarityColors[achievement.rarity] }}
+                    <span
+                      className="rarity-badge"
+                      style={{
+                        backgroundColor: rarityColors[achievement.rarity],
+                      }}
                     >
                       {getRarityIcon(achievement.rarity)} {achievement.rarity}
                     </span>
-                    <span 
+                    <span
                       className="category-badge"
                       style={{ backgroundColor: categoryInfo.color }}
                     >
@@ -170,17 +262,20 @@ const AchievementScreen: React.FC<Props> = ({ onClose }) => {
                 </div>
               </div>
 
-              <p className="achievement-description">{achievement.description}</p>
+              <p className="achievement-description">
+                {achievement.description}
+              </p>
 
               <div className="achievement-progress">
                 <div className="progress-bar-small">
-                  <div 
-                    className="progress-fill-small" 
+                  <div
+                    className="progress-fill-small"
                     style={{ width: `${progressPercentage}%` }}
                   ></div>
                 </div>
                 <span className="progress-text-small">
-                  {achievement.progress.toLocaleString()} / {achievement.maxProgress.toLocaleString()}
+                  {achievement.progress.toLocaleString()} /{" "}
+                  {achievement.maxProgress.toLocaleString()}
                   {progressPercentage < 100 && ` (${progressPercentage}%)`}
                 </span>
               </div>
@@ -189,16 +284,22 @@ const AchievementScreen: React.FC<Props> = ({ onClose }) => {
                 <div className="achievement-reward">
                   <span className="reward-label">Reward:</span>
                   <span className="reward-value">
-                    {achievement.reward.type === 'cash' && '$'}
+                    {achievement.reward.type === "cash" && "$"}
                     {achievement.reward.value.toLocaleString()}
-                    {achievement.reward.type === 'cash' && ' bonus'}
+                    {achievement.reward.type === "cash" && " bonus"}
                   </span>
                 </div>
               )}
 
               {achievement.isUnlocked && achievement.unlockedAt && (
-                <div className="achievement-unlocked-date">
-                  Unlocked: {new Date(achievement.unlockedAt).toLocaleDateString()}
+                <div className="achievement-unlocked-info">
+                  <div className="achievement-unlocked-date">
+                    Unlocked:{" "}
+                    {new Date(achievement.unlockedAt).toLocaleDateString()}
+                  </div>
+                  <div className="permanently-unlocked-badge">
+                    ✅ Permanently Unlocked
+                  </div>
                 </div>
               )}
             </div>
