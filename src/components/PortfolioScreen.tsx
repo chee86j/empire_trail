@@ -182,7 +182,7 @@ const PortfolioScreen: React.FC<Props> = ({
         Properties Ready for Action: {portfolio.filter(p => isPropertyReadyForAction(p, currentMonth)).length}
       </div>
       
-      <p className="keyboardHelp">
+      <p className="keyboard-help">
         Tip: Use ↑↓ arrow keys to navigate, R to rent, S to sell, ESC to close
       </p>
       <div className="table-container">
@@ -227,7 +227,8 @@ const PortfolioScreen: React.FC<Props> = ({
                            e.stopPropagation();
                            handleActionClick(property, "Rent");
                          }}
-                         className={index === selectedRowIndex ? 'selected-button' : ''}
+                         className={`btn btn-primary ${index === selectedRowIndex ? 'selected-button' : ''}`}
+                         aria-label={`Rent out ${property.name}`}
                        >
                          Rent (R)
                        </button>
@@ -238,7 +239,8 @@ const PortfolioScreen: React.FC<Props> = ({
                            e.stopPropagation();
                            handleActionClick(property, "Sale");
                          }}
-                         className={index === selectedRowIndex ? 'selected-button' : ''}
+                         className={`btn btn-danger ${index === selectedRowIndex ? 'selected-button' : ''}`}
+                         aria-label={`Sell ${property.name} for $${property.arvSalePrice.toLocaleString()}`}
                        >
                          Sale (S)
                        </button>
@@ -250,7 +252,13 @@ const PortfolioScreen: React.FC<Props> = ({
           </tbody>
         </table>
       </div>
-      <button onClick={onClose}>Close (ESC)</button>
+      <button 
+        onClick={onClose}
+        className="btn btn-secondary"
+        aria-label="Close portfolio screen"
+      >
+        Close (ESC)
+      </button>
       {showDiceModal && selectedProperty && (
         <DiceRollModal
           onClose={handleCloseModal}

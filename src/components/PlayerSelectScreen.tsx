@@ -91,7 +91,7 @@ const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
   return (
     <div className="playerSelectScreen">
       <h2>Select Your Profession</h2>
-             <p className="keyboardHelp">
+             <p className="keyboard-help">
          Tip: Use ↑↓ arrow keys to navigate, 1-6 for quick selection, Enter/Space to confirm
        </p>
       <ul className="professionList">
@@ -104,6 +104,10 @@ const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
               setSelectedIndex(index);
             }}
             className={`professionItem ${index === selectedIndex ? 'selected-profession' : ''}`}
+            role="button"
+            tabIndex={0}
+            aria-label={`Select ${profession} profession`}
+            aria-pressed={index === selectedIndex}
           >
             {index + 1}. {profession}
           </li>
@@ -126,7 +130,8 @@ const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
           </p>
           <button 
             onClick={() => onSelectProfession(selectedProfession)}
-            className="confirmButton"
+            className="btn btn-success btn-lg"
+            aria-label={`Confirm selection of ${selectedProfession} profession`}
           >
             Confirm Selection (Enter/Space)
           </button>

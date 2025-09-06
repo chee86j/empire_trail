@@ -3,9 +3,10 @@ import "../styles/GameInfoScreen.css";
 
 interface Props {
   onStartGame: () => void;
+  onResetOnboarding?: () => void;
 }
 
-const GameInfoScreen: React.FC<Props> = ({ onStartGame }) => {
+const GameInfoScreen: React.FC<Props> = ({ onStartGame, onResetOnboarding }) => {
   // Keyboard shortcuts handler
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -20,6 +21,12 @@ const GameInfoScreen: React.FC<Props> = ({ onStartGame }) => {
           event.preventDefault();
           onStartGame();
           break;
+        case 'F2':
+          event.preventDefault();
+          if (onResetOnboarding) {
+            onResetOnboarding();
+          }
+          break;
         default:
           break;
       }
@@ -32,21 +39,36 @@ const GameInfoScreen: React.FC<Props> = ({ onStartGame }) => {
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, [onStartGame]);
+  }, [onStartGame, onResetOnboarding]);
 
   return (
     <div className="gameInfoScreen">
       <h2>Welcome to Empire Trail</h2>
-             <p className="keyboardHelp">
-         Tip: Press Space or Enter to start the game
+             <p className="keyboard-help">
+         Tip: Press Space or Enter to start the game, F2 for tutorial
        </p>
       <p>
         Embark on a journey across America, make strategic real estate
         investments, and build your wealth!
       </p>
-      <button onClick={onStartGame} className="startGameButton">
+      <button 
+        onClick={onStartGame} 
+        className="btn btn-primary btn-lg"
+        aria-label="Start the Empire Trail game"
+      >
         Start Game (Space/Enter)
       </button>
+      
+      {onResetOnboarding && (
+        <button 
+          onClick={onResetOnboarding} 
+          className="btn btn-secondary"
+          aria-label="Show game tutorial"
+          style={{ marginTop: '10px' }}
+        >
+          Show Tutorial
+        </button>
+      )}
     </div>
   );
 };

@@ -51,11 +51,13 @@ export const getGlobalShortcuts = (
   onShowHelp: () => void,
   onSaveLoad: () => void,
   onEscape: () => void,
-  onQuickSave?: () => void
+  onQuickSave?: () => void,
+  onShowTutorial?: () => void
 ) => ({
   F1: onShowHelp,
   F5: onSaveLoad,
   F6: onQuickSave || (() => {}),
+  F2: onShowTutorial || (() => {}),
   Escape: onEscape,
 });
 

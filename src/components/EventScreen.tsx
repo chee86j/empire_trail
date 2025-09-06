@@ -65,7 +65,7 @@ const EventScreen: React.FC<Props> = ({
   return (
     <div className="eventScreen">
       <h2>Event</h2>
-             <p className="keyboardHelp">
+             <p className="keyboard-help">
          Tip: Press Space, Enter, or ESC to continue
        </p>
       <p>
@@ -74,7 +74,13 @@ const EventScreen: React.FC<Props> = ({
       <p>
         Bank Balance Change: ${calculateBankBalanceChange().toLocaleString()}
       </p>
-      <button onClick={handleEventClose}>OK (Space/Enter/ESC)</button>
+      <button 
+        onClick={handleEventClose}
+        className="btn btn-primary"
+        aria-label="Continue after event"
+      >
+        OK (Space/Enter/ESC)
+      </button>
     </div>
   );
 };

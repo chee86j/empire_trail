@@ -87,16 +87,43 @@ const DealsScreen: React.FC<Props> = ({
       onPurchaseProperty(property);
       onClose();
     } else {
-      // Show helpful error message with cost breakdown
+      // Show helpful error message with cost breakdown using toast
       const shortfall = totalCost - currentBankBalance;
-      alert(`Insufficient funds to purchase ${property.name}!\n\n` +
-            `Total Cost: $${totalCost.toLocaleString()}\n` +
-            `- Purchase: $${property.purchaseCost.toLocaleString()}\n` +
-            `- Closing: $${property.closingCost.toLocaleString()}\n` +
-            `- Renovation: $${property.renovationCost.toLocaleString()}\n\n` +
-            `Your Balance: $${currentBankBalance.toLocaleString()}\n` +
-            `Shortfall: $${shortfall.toLocaleString()}\n\n` +
-            `💡 Tip: You need to save up the combined amount of purchase price, closing costs, and renovation costs to buy this property.`);
+      toast.error(
+        `Insufficient funds to purchase ${property.name}! You need $${shortfall.toLocaleString()} more.`,
+        {
+          autoClose: 8000,
+          style: {
+            background: '#dc3545',
+            color: 'white',
+            fontSize: '14px',
+            maxWidth: '400px'
+          }
+        }
+      );
+      
+      // Show detailed breakdown in a second toast
+      setTimeout(() => {
+        toast.info(
+          `Cost Breakdown for ${property.name}:\n` +
+          `• Purchase: $${property.purchaseCost.toLocaleString()}\n` +
+          `• Closing: $${property.closingCost.toLocaleString()}\n` +
+          `• Renovation: $${property.renovationCost.toLocaleString()}\n` +
+          `• Total: $${totalCost.toLocaleString()}\n` +
+          `• Your Balance: $${currentBankBalance.toLocaleString()}\n` +
+          `• Shortfall: $${shortfall.toLocaleString()}`,
+          {
+            autoClose: 10000,
+            style: {
+              background: '#17a2b8',
+              color: 'white',
+              fontSize: '12px',
+              maxWidth: '350px',
+              whiteSpace: 'pre-line'
+            }
+          }
+        );
+      }, 1000);
     }
   };
 
@@ -116,7 +143,7 @@ const DealsScreen: React.FC<Props> = ({
     <div className="deals-screen">
       <p>Bank Balance: ${currentBankBalance.toLocaleString()}</p>
       <h2>Available Investment Properties</h2>
-             <p className="keyboardHelp">
+             <p className="keyboard-help">
          Tip: Use ↑↓ arrow keys to navigate, P to purchase, ESC to close
        </p>
       <div className="table-container">
@@ -157,7 +184,8 @@ const DealsScreen: React.FC<Props> = ({
                       e.stopPropagation();
                       handlePurchase(property);
                     }}
-                    className={index === selectedRowIndex ? 'selected-button' : ''}
+                    className={`btn btn-success ${index === selectedRowIndex ? 'selected-button' : ''}`}
+                    aria-label={`Purchase ${property.name} for $${(property.purchaseCost + property.closingCost + property.renovationCost).toLocaleString()}`}
                   >
                     Purchase (P)
                   </button>
@@ -167,7 +195,13 @@ const DealsScreen: React.FC<Props> = ({
           </tbody>
         </table>
       </div>
-      <button onClick={onClose}>Close (ESC)</button>
+      <button 
+        onClick={onClose}
+        className="btn btn-secondary"
+        aria-label="Close deals screen"
+      >
+        Close (ESC)
+      </button>
     </div>
   );
 };

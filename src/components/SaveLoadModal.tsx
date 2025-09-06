@@ -36,6 +36,7 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
   const [saveSlots, setSaveSlots] = useState<Record<string, any>>({});
   const [newSaveName, setNewSaveName] = useState("");
   const [selectedSlot, setSelectedSlot] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -53,7 +54,7 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
     return SaveSystem.loadAutoSave();
   };
 
-  const handleSaveGame = () => {
+  const handleSaveGame = async () => {
     if (!newSaveName.trim()) {
       toast.error("Please enter a save name");
       return;
@@ -64,54 +65,81 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
       return;
     }
 
-    // Check if save name already exists in a different slot
-    const nameCheck = SaveSystem.isSaveNameExists(newSaveName.trim());
-    if (nameCheck.exists && nameCheck.slotId !== selectedSlot) {
-      const confirmMessage = `A save named "${newSaveName.trim()}" already exists in slot ${nameCheck.slotId?.replace(
-        "slot_",
-        ""
-      )}. Do you want to create another save with the same name?`;
-      if (!window.confirm(confirmMessage)) {
-        return;
-      }
-    }
+    setIsLoading(true);
 
-    // Check if slot is occupied
-    const existingSave = SaveSystem.getSaveSlotInfo(selectedSlot);
-    if (existingSave) {
-      const confirmMessage = `Slot ${selectedSlot.replace(
-        "slot_",
-        ""
-      )} already contains "${existingSave.name}". Do you want to overwrite it?`;
-      if (!window.confirm(confirmMessage)) {
-        return;
+    try {
+      // Check if save name already exists in a different slot
+      const nameCheck = SaveSystem.isSaveNameExists(newSaveName.trim());
+      if (nameCheck.exists && nameCheck.slotId !== selectedSlot) {
+        const confirmMessage = `A save named "${newSaveName.trim()}" already exists in slot ${nameCheck.slotId?.replace(
+          "slot_",
+          ""
+        )}. Do you want to create another save with the same name?`;
+        if (!window.confirm(confirmMessage)) {
+          setIsLoading(false);
+          return;
+        }
       }
-    }
 
-    const success = SaveSystem.saveGame(
-      selectedSlot,
-      newSaveName.trim(),
-      currentGameState
-    );
-    if (success) {
-      const slotNumber = selectedSlot.replace("slot_", "");
-      toast.success(`Game saved to slot ${slotNumber}`);
-      setNewSaveName("");
-      setSelectedSlot("");
-      refreshSaveSlots();
-    } else {
-      toast.error("Failed to save game");
+      // Check if slot is occupied
+      const existingSave = SaveSystem.getSaveSlotInfo(selectedSlot);
+      if (existingSave) {
+        const confirmMessage = `Slot ${selectedSlot.replace(
+          "slot_",
+          ""
+        )} already contains "${existingSave.name}". Do you want to overwrite it?`;
+        if (!window.confirm(confirmMessage)) {
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // Simulate save delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const success = SaveSystem.saveGame(
+        selectedSlot,
+        newSaveName.trim(),
+        currentGameState
+      );
+      
+      if (success) {
+        const slotNumber = selectedSlot.replace("slot_", "");
+        toast.success(`Game saved to slot ${slotNumber}`);
+        setNewSaveName("");
+        setSelectedSlot("");
+        refreshSaveSlots();
+      } else {
+        toast.error("Failed to save game");
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving the game");
+      console.error("Save error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleLoadGame = (slotId: string) => {
-    const saveGame = SaveSystem.loadGame(slotId);
-    if (saveGame) {
-      onLoadGame(saveGame);
-      onClose();
-      toast.success(`Game loaded: ${saveGame.name}`);
-    } else {
-      toast.error("Failed to load game");
+  const handleLoadGame = async (slotId: string) => {
+    setIsLoading(true);
+    
+    try {
+      // Simulate load delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      const saveGame = SaveSystem.loadGame(slotId);
+      if (saveGame) {
+        onLoadGame(saveGame);
+        onClose();
+        toast.success(`Game loaded: ${saveGame.name}`);
+      } else {
+        toast.error("Failed to load game");
+      }
+    } catch (error) {
+      toast.error("An error occurred while loading the game");
+      console.error("Load error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -184,21 +212,29 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
       <div className="save-load-modal">
         <div className="save-load-modal-header">
           <h2>Save & Load Game</h2>
-          <button className="close-button" onClick={onClose}>
+          <button 
+            className="btn btn-secondary close-button" 
+            onClick={onClose}
+            aria-label="Close save/load modal"
+          >
             ×
           </button>
         </div>
 
         <div className="save-load-modal-tabs">
           <button
-            className={`tab-button ${activeTab === "save" ? "active" : ""}`}
+            className={`btn ${activeTab === "save" ? "btn-primary" : "btn-secondary"} tab-button`}
             onClick={() => setActiveTab("save")}
+            aria-label="Switch to save game tab"
+            aria-pressed={activeTab === "save"}
           >
             Save Game
           </button>
           <button
-            className={`tab-button ${activeTab === "load" ? "active" : ""}`}
+            className={`btn ${activeTab === "load" ? "btn-primary" : "btn-secondary"} tab-button`}
             onClick={() => setActiveTab("load")}
+            aria-label="Switch to load game tab"
+            aria-pressed={activeTab === "load"}
           >
             Load Game
           </button>
@@ -212,10 +248,12 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                 <input
                   type="text"
                   id="saveName"
+                  className="form-input"
                   value={newSaveName}
                   onChange={(e) => setNewSaveName(e.target.value)}
                   placeholder="Enter save name..."
                   maxLength={30}
+                  aria-describedby="saveName-help"
                 />
               </div>
 
@@ -223,9 +261,10 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                 <label htmlFor="saveSlot">Save Slot:</label>
                 <select
                   id="saveSlot"
+                  className="form-input"
                   value={selectedSlot}
                   onChange={(e) => setSelectedSlot(e.target.value)}
-                  className="slot-selector"
+                  aria-label="Select save slot"
                 >
                   <option value="">Select a slot...</option>
                   {Array.from({ length: 5 }, (_, i) => {
@@ -243,19 +282,23 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
 
               <div className="save-buttons">
                 <button
-                  className="save-button"
+                  className={`btn btn-success ${isLoading ? 'btn-loading' : ''}`}
                   onClick={handleSaveGame}
-                  disabled={!newSaveName.trim() || !selectedSlot}
+                  disabled={!newSaveName.trim() || !selectedSlot || isLoading}
+                  aria-label={selectedSlot && SaveSystem.getSaveSlotInfo(selectedSlot)
+                    ? "Overwrite existing save"
+                    : "Save game to selected slot"}
                 >
-                  {selectedSlot && SaveSystem.getSaveSlotInfo(selectedSlot)
+                  {isLoading ? 'Saving...' : (selectedSlot && SaveSystem.getSaveSlotInfo(selectedSlot)
                     ? "Overwrite Save"
-                    : "Save Game"}
+                    : "Save Game")}
                 </button>
 
                 <button
-                  className="quick-save-button"
+                  className="btn btn-primary"
                   onClick={handleQuickSave}
                   disabled={!newSaveName.trim()}
+                  aria-label="Quick save to next available slot"
                 >
                   Quick Save
                 </button>
@@ -382,14 +425,16 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                         </div>
                         <div className="load-slot-actions">
                           <button
-                            className="load-button"
+                            className="btn btn-primary"
                             onClick={() => handleLoadGame(slotId)}
+                            aria-label={`Load save: ${saveGame.name}`}
                           >
                             Load
                           </button>
                           <button
-                            className="delete-button"
+                            className="btn btn-danger"
                             onClick={() => handleDeleteSave(slotId)}
+                            aria-label={`Delete save: ${saveGame.name}`}
                           >
                             Delete
                           </button>
@@ -404,7 +449,11 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
         )}
 
         <div className="save-load-modal-footer">
-          <button className="cancel-button" onClick={onClose}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={onClose}
+            aria-label="Cancel and close modal"
+          >
             Cancel
           </button>
         </div>
