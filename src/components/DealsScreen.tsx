@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../styles/DealsScreen.css";
 import { InvestmentProperty } from "../types";
+import PropertySearchFilter from "./PropertySearchFilter";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Props {
   investmentProperties: InvestmentProperty[];
@@ -13,56 +16,112 @@ const DealsScreen: React.FC<Props> = ({
   investmentProperties,
   currentBankBalance,
   onPurchaseProperty,
-  onClose
+  onClose,
 }) => {
-  const [randomProperties, setRandomProperties] = useState<InvestmentProperty[]>([]);
+  const [filteredProperties, setFilteredProperties] = useState<
+    InvestmentProperty[]
+  >([]);
   const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0);
+  const [showAllProperties, setShowAllProperties] = useState<boolean>(false);
+
+  const handlePurchase = useCallback(
+    (property: InvestmentProperty) => {
+      const totalCost =
+        property.purchaseCost + property.closingCost + property.renovationCost;
+      if (totalCost <= currentBankBalance) {
+        onPurchaseProperty(property);
+        onClose();
+      } else {
+        // Show helpful error message with cost breakdown using toast
+        const shortfall = totalCost - currentBankBalance;
+        toast.error(
+          `Insufficient funds to purchase ${
+            property.name
+          }! You need $${shortfall.toLocaleString()} more.`,
+          {
+            autoClose: 8000,
+            style: {
+              background: "#dc3545",
+              color: "white",
+              fontSize: "14px",
+              maxWidth: "400px",
+            },
+          }
+        );
+
+        // Show detailed breakdown in a second toast
+        setTimeout(() => {
+          toast.info(
+            `Cost Breakdown for ${property.name}:\n` +
+              `• Purchase: $${property.purchaseCost.toLocaleString()}\n` +
+              `• Closing: $${property.closingCost.toLocaleString()}\n` +
+              `• Renovation: $${property.renovationCost.toLocaleString()}\n` +
+              `• Total: $${totalCost.toLocaleString()}\n` +
+              `• Your Balance: $${currentBankBalance.toLocaleString()}\n` +
+              `• Shortfall: $${shortfall.toLocaleString()}`,
+            {
+              autoClose: 10000,
+              style: {
+                background: "#17a2b8",
+                color: "white",
+                fontSize: "12px",
+                maxWidth: "350px",
+                whiteSpace: "pre-line",
+              },
+            }
+          );
+        }, 1000);
+      }
+    },
+    [currentBankBalance, onPurchaseProperty, onClose]
+  );
 
   useEffect(() => {
-    const generateRandomProperties = () => {
-      const randomProps = investmentProperties
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 5);
-      setRandomProperties(randomProps);
-      setSelectedRowIndex(0); // Reset selection when properties change
-    };
+    if (!showAllProperties) {
+      const generateRandomProperties = () => {
+        const randomProps = investmentProperties
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 5);
+        setFilteredProperties(randomProps);
+        setSelectedRowIndex(0); // Reset selection when properties change
+      };
 
-    generateRandomProperties();
-
-    return () => {
-      // Cleanup logic if needed
-    };
-  }, [investmentProperties]);
+      generateRandomProperties();
+    }
+  }, [investmentProperties, showAllProperties]);
 
   // Keyboard navigation handler
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Only handle key presses when not typing in input fields
-      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      ) {
         return;
       }
 
       switch (event.key) {
-        case 'ArrowUp':
+        case "ArrowUp":
           event.preventDefault();
-          setSelectedRowIndex(prev => 
-            prev > 0 ? prev - 1 : randomProperties.length - 1
+          setSelectedRowIndex((prev) =>
+            prev > 0 ? prev - 1 : filteredProperties.length - 1
           );
           break;
-        case 'ArrowDown':
+        case "ArrowDown":
           event.preventDefault();
-          setSelectedRowIndex(prev => 
-            prev < randomProperties.length - 1 ? prev + 1 : 0
+          setSelectedRowIndex((prev) =>
+            prev < filteredProperties.length - 1 ? prev + 1 : 0
           );
           break;
-        case 'p':
-        case 'P':
+        case "p":
+        case "P":
           event.preventDefault();
-          if (randomProperties[selectedRowIndex]) {
-            handlePurchase(randomProperties[selectedRowIndex]);
+          if (filteredProperties[selectedRowIndex]) {
+            handlePurchase(filteredProperties[selectedRowIndex]);
           }
           break;
-        case 'Escape':
+        case "Escape":
           event.preventDefault();
           onClose();
           break;
@@ -72,60 +131,13 @@ const DealsScreen: React.FC<Props> = ({
     };
 
     // Add event listener
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
 
     // Cleanup event listener
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [selectedRowIndex, randomProperties, onClose]);
-
-  const handlePurchase = (property: InvestmentProperty) => {
-    const totalCost =
-      property.purchaseCost + property.closingCost + property.renovationCost;
-    if (totalCost <= currentBankBalance) {
-      onPurchaseProperty(property);
-      onClose();
-    } else {
-      // Show helpful error message with cost breakdown using toast
-      const shortfall = totalCost - currentBankBalance;
-      toast.error(
-        `Insufficient funds to purchase ${property.name}! You need $${shortfall.toLocaleString()} more.`,
-        {
-          autoClose: 8000,
-          style: {
-            background: '#dc3545',
-            color: 'white',
-            fontSize: '14px',
-            maxWidth: '400px'
-          }
-        }
-      );
-      
-      // Show detailed breakdown in a second toast
-      setTimeout(() => {
-        toast.info(
-          `Cost Breakdown for ${property.name}:\n` +
-          `• Purchase: $${property.purchaseCost.toLocaleString()}\n` +
-          `• Closing: $${property.closingCost.toLocaleString()}\n` +
-          `• Renovation: $${property.renovationCost.toLocaleString()}\n` +
-          `• Total: $${totalCost.toLocaleString()}\n` +
-          `• Your Balance: $${currentBankBalance.toLocaleString()}\n` +
-          `• Shortfall: $${shortfall.toLocaleString()}`,
-          {
-            autoClose: 10000,
-            style: {
-              background: '#17a2b8',
-              color: 'white',
-              fontSize: '12px',
-              maxWidth: '350px',
-              whiteSpace: 'pre-line'
-            }
-          }
-        );
-      }, 1000);
-    }
-  };
+  }, [selectedRowIndex, filteredProperties, onClose, handlePurchase]);
 
   const calculateROI = (property: InvestmentProperty): string => {
     const totalInvestment =
@@ -139,13 +151,44 @@ const DealsScreen: React.FC<Props> = ({
     setSelectedRowIndex(index);
   };
 
+  const handleFilteredPropertiesChange = (properties: InvestmentProperty[]) => {
+    setFilteredProperties(properties);
+    setSelectedRowIndex(0); // Reset selection when filtered results change
+  };
+
+  const toggleShowAllProperties = () => {
+    setShowAllProperties(!showAllProperties);
+    setSelectedRowIndex(0);
+  };
+
   return (
     <div className="deals-screen">
       <p>Bank Balance: ${currentBankBalance.toLocaleString()}</p>
       <h2>Available Investment Properties</h2>
-             <p className="keyboard-help">
-         Tip: Use ↑↓ arrow keys to navigate, P to purchase, ESC to close
-       </p>
+
+      <div className="deals-controls">
+        <button
+          onClick={toggleShowAllProperties}
+          className={`btn ${showAllProperties ? "btn-primary" : "btn-outline"}`}
+          aria-label={
+            showAllProperties
+              ? "Show random properties"
+              : "Show all properties with search"
+          }
+        >
+          {showAllProperties ? "Show Random 5" : "Search All Properties"}
+        </button>
+        <p className="keyboard-help">
+          Tip: Use ↑↓ arrow keys to navigate, P to purchase, ESC to close
+        </p>
+      </div>
+
+      {showAllProperties && (
+        <PropertySearchFilter
+          properties={investmentProperties}
+          onFilteredPropertiesChange={handleFilteredPropertiesChange}
+        />
+      )}
       <div className="table-container">
         <table>
           <thead>
@@ -163,10 +206,10 @@ const DealsScreen: React.FC<Props> = ({
             </tr>
           </thead>
           <tbody>
-            {randomProperties.map((property, index) => (
-              <tr 
+            {filteredProperties.map((property, index) => (
+              <tr
                 key={property.id}
-                className={index === selectedRowIndex ? 'selected-row' : ''}
+                className={index === selectedRowIndex ? "selected-row" : ""}
                 onClick={() => handleRowClick(index)}
               >
                 <td>{property.name}</td>
@@ -179,13 +222,19 @@ const DealsScreen: React.FC<Props> = ({
                 <td>${property.arvSalePrice.toLocaleString()}</td>
                 <td>{calculateROI(property)}</td>
                 <td>
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handlePurchase(property);
                     }}
-                    className={`btn btn-success ${index === selectedRowIndex ? 'selected-button' : ''}`}
-                    aria-label={`Purchase ${property.name} for $${(property.purchaseCost + property.closingCost + property.renovationCost).toLocaleString()}`}
+                    className={`btn btn-success ${
+                      index === selectedRowIndex ? "selected-button" : ""
+                    }`}
+                    aria-label={`Purchase ${property.name} for $${(
+                      property.purchaseCost +
+                      property.closingCost +
+                      property.renovationCost
+                    ).toLocaleString()}`}
                   >
                     Purchase (P)
                   </button>
@@ -195,7 +244,7 @@ const DealsScreen: React.FC<Props> = ({
           </tbody>
         </table>
       </div>
-      <button 
+      <button
         onClick={onClose}
         className="btn btn-secondary"
         aria-label="Close deals screen"

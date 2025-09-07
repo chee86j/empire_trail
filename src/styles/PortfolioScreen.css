@@ -5,6 +5,23 @@
   box-sizing: border-box;
 }
 
+.portfolio-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.portfolio-controls .keyboard-help {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
 .table-container {
   width: 100%;
   overflow-x: auto;
@@ -135,6 +152,12 @@ tbody tr:hover {
 
 /* Mobile optimization for buttons */
 @media screen and (max-width: 768px) {
+  .portfolio-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
   .button-container {
     flex-direction: column;
     width: 100%;

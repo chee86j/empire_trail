@@ -5,6 +5,23 @@
   margin: 0 auto;
 }
 
+.deals-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.deals-controls .keyboard-help {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
 .deals-screen h2 {
   font-size: 1.5rem;
   margin-bottom: 20px;
@@ -100,6 +117,12 @@ tbody tr:hover {
 @media (max-width: 768px) {
   .deals-screen {
     padding: 10px;
+  }
+
+  .deals-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
   }
 
   .deals-screen h2 {
