@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { InvestmentProperty, PropertyType } from "../types";
 import {
   PropertySearchService,
@@ -39,6 +39,7 @@ const PropertySearchFilter: React.FC<Props> = ({
   const [statistics, setStatistics] = useState(
     PropertySearchService.getPropertyStatistics(properties)
   );
+  const filtersInitialized = useRef(false);
 
   // Update available options when properties change
   useEffect(() => {
@@ -47,6 +48,29 @@ const PropertySearchFilter: React.FC<Props> = ({
     );
     setAvailableCities(PropertySearchService.getAvailableCities(properties));
     setStatistics(PropertySearchService.getPropertyStatistics(properties));
+  }, [properties]);
+
+  // Initialize filter ranges only once when component mounts
+  useEffect(() => {
+    if (properties.length > 0 && !filtersInitialized.current) {
+      const stats = PropertySearchService.getPropertyStatistics(properties);
+      setFilters((prev) => ({
+        ...prev,
+        minPurchaseCost: stats.minPurchaseCost,
+        maxPurchaseCost: stats.maxPurchaseCost,
+        minRenovationCost: stats.minRenovationCost,
+        maxRenovationCost: stats.maxRenovationCost,
+        minRenovationTime: stats.minRenovationTime,
+        maxRenovationTime: stats.maxRenovationTime,
+        minRentalIncome: stats.minRentalIncome,
+        maxRentalIncome: stats.maxRentalIncome,
+        minSalePrice: stats.minSalePrice,
+        maxSalePrice: stats.maxSalePrice,
+        minROI: stats.minROI,
+        maxROI: stats.maxROI,
+      }));
+      filtersInitialized.current = true;
+    }
   }, [properties]);
 
   // Apply filters and sorting when they change
@@ -81,8 +105,26 @@ const PropertySearchFilter: React.FC<Props> = ({
   };
 
   const resetFilters = () => {
-    setFilters(PropertySearchService.getDefaultFilters());
+    const defaultFilters = PropertySearchService.getDefaultFilters();
+    const stats = PropertySearchService.getPropertyStatistics(properties);
+
+    setFilters({
+      ...defaultFilters,
+      minPurchaseCost: stats.minPurchaseCost,
+      maxPurchaseCost: stats.maxPurchaseCost,
+      minRenovationCost: stats.minRenovationCost,
+      maxRenovationCost: stats.maxRenovationCost,
+      minRenovationTime: stats.minRenovationTime,
+      maxRenovationTime: stats.maxRenovationTime,
+      minRentalIncome: stats.minRentalIncome,
+      maxRentalIncome: stats.maxRentalIncome,
+      minSalePrice: stats.minSalePrice,
+      maxSalePrice: stats.maxSalePrice,
+      minROI: stats.minROI,
+      maxROI: stats.maxROI,
+    });
     setSortOptions({ field: "name", direction: "asc" });
+    filtersInitialized.current = true; // Mark as initialized after reset
   };
 
   const formatCurrency = (value: number) => {

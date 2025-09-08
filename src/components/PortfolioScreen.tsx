@@ -203,15 +203,27 @@ const PortfolioScreen: React.FC<Props> = ({
     setShowDiceModal(false);
   };
 
-  const handleFilteredPropertiesChange = (properties: InvestmentProperty[]) => {
-    setFilteredPortfolio(properties);
-    setSelectedRowIndex(0); // Reset selection when filtered results change
-  };
+  const handleFilteredPropertiesChange = useCallback(
+    (properties: InvestmentProperty[]) => {
+      setFilteredPortfolio(properties);
+      setSelectedRowIndex(0); // Reset selection when filtered results change
+    },
+    []
+  );
 
-  // Update filtered portfolio when portfolio changes
+  // Update filtered portfolio when portfolio changes (only if search filter is not active)
   useEffect(() => {
-    setFilteredPortfolio(portfolio);
-  }, [portfolio]);
+    if (!showSearchFilter) {
+      setFilteredPortfolio(portfolio);
+    }
+  }, [portfolio, showSearchFilter]);
+
+  // Initialize filtered portfolio when search filter is first shown
+  useEffect(() => {
+    if (showSearchFilter) {
+      setFilteredPortfolio(portfolio);
+    }
+  }, [showSearchFilter, portfolio]);
 
   return (
     <div className="screen">
@@ -259,6 +271,8 @@ const PortfolioScreen: React.FC<Props> = ({
         Total Properties: {portfolio.length}
         <br />
         Filtered Properties: {filteredPortfolio.length}
+        <br />
+        Search Filter Active: {showSearchFilter ? "Yes" : "No"}
         <br />
         Rented Properties: {portfolio.filter((p) => p.isRented).length}
         <br />
