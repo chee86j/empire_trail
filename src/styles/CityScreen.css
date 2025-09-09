@@ -1,9 +1,9 @@
 /* Base styles */
 .cityScreen {
   color: #fff;
-  background: url("../assets/la.jpeg") no-repeat;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   height: 100vh;
   text-align: center;
   padding: 50px;

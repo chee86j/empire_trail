@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { events } from "../assets/gameData";
 import EventScreen from "./EventScreen";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/CityScreen.css";
-import { calculateTotalRentalIncome, chooseRandomEvent, formatGameDate } from "../utils/gameUtils";
-import { createKeyboardHandler, getCityScreenShortcuts, setupKeyboardListener } from "../utils/keyboardUtils";
+import {
+  calculateTotalRentalIncome,
+  chooseRandomEvent,
+  formatGameDate,
+} from "../utils/gameUtils";
+import {
+  createKeyboardHandler,
+  getCityScreenShortcuts,
+  setupKeyboardListener,
+} from "../utils/keyboardUtils";
+import { getCityImagePath } from "../utils/cityImageUtils";
 import {
   Player,
   InvestmentProperty,
@@ -48,25 +57,7 @@ const CityScreen: React.FC<Props> = ({
   );
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
 
-
-
-  const handlePlayerAction = (action: PlayerAction) => {
-    switch (action) {
-      case "rest":
-      case "travel": {
-        handleMonthAdvance();
-        
-        if (action === "travel") {
-          handleTravel();
-        }
-        break;
-      }
-      default:
-        break;
-    }
-  };
-
-  const handleMonthAdvance = () => {
+  const handleMonthAdvance = useCallback(() => {
     const initialBankBalance = currentBankBalance;
     setCurrentMonth(currentMonth + 1);
 
@@ -75,7 +66,8 @@ const CityScreen: React.FC<Props> = ({
     const chosenEvent = chooseRandomEvent(events, player?.profession);
     const eventImpact = chosenEvent ? chosenEvent.bankBalanceChange : 0;
 
-    const newBankBalance = initialBankBalance + salary + totalRentalIncome + eventImpact;
+    const newBankBalance =
+      initialBankBalance + salary + totalRentalIncome + eventImpact;
     setCurrentBankBalance(newBankBalance);
 
     toast.info(
@@ -85,16 +77,41 @@ const CityScreen: React.FC<Props> = ({
     if (chosenEvent) {
       setCurrentEvent(chosenEvent);
     }
-  };
+  }, [
+    currentBankBalance,
+    currentMonth,
+    portfolio,
+    player?.salary,
+    player?.profession,
+    setCurrentMonth,
+    setCurrentBankBalance,
+  ]);
 
-  const handleTravel = () => {
+  const handleTravel = useCallback(() => {
     const newIndex = (currentCityIndex + 1) % cities.length;
     setCurrentCityIndex(newIndex);
     setCurrentCity(cities[newIndex]);
     toast.success(`Traveling to ${cities[newIndex].name}`);
-  };
+  }, [currentCityIndex, cities, setCurrentCity]);
 
+  const handlePlayerAction = useCallback(
+    (action: PlayerAction) => {
+      switch (action) {
+        case "rest":
+        case "travel": {
+          handleMonthAdvance();
 
+          if (action === "travel") {
+            handleTravel();
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    },
+    [handleMonthAdvance, handleTravel]
+  );
 
   // Keyboard shortcuts handler
   useEffect(() => {
@@ -109,7 +126,7 @@ const CityScreen: React.FC<Props> = ({
     const cleanup = setupKeyboardListener(keyboardHandler);
 
     return cleanup;
-  }, [currentBankBalance, currentMonth, currentCityIndex, cities, player?.profession, portfolio]);
+  }, [handlePlayerAction, onViewPortfolio, onFindDeals]);
 
   const closeEventScreen = () => {
     setCurrentEvent(null);
@@ -118,7 +135,12 @@ const CityScreen: React.FC<Props> = ({
   const { monthName, year } = formatGameDate(currentMonth);
 
   return (
-    <div className="cityScreen">
+    <div
+      className="cityScreen"
+      style={{
+        backgroundImage: `url(${getCityImagePath(currentCity.name)})`,
+      }}
+    >
       {/* City Name */}
       <h2>{currentCity.name}</h2>
       <p className="cityDate">
@@ -131,36 +153,36 @@ const CityScreen: React.FC<Props> = ({
       </p>
       <h3>Actions</h3>
       <div className="cityActions">
-        <button 
+        <button
           onClick={() => handlePlayerAction("travel")}
           className="btn btn-primary"
           aria-label="Travel to next city"
         >
           Travel (T)
         </button>
-        <button 
+        <button
           onClick={() => handlePlayerAction("rest")}
           className="btn btn-primary"
           aria-label="Rest and advance to next month"
         >
           Rest (R)
         </button>
-        <button 
+        <button
           onClick={onViewPortfolio}
           className="btn btn-primary"
           aria-label="View your property portfolio"
         >
           View Portfolio (V)
         </button>
-        <button 
+        <button
           onClick={onFindDeals}
           className="btn btn-primary"
           aria-label="Find investment deals"
         >
           Find Deals (F)
         </button>
-        <button 
-          onClick={onSaveLoad} 
+        <button
+          onClick={onSaveLoad}
           className="btn btn-special"
           aria-label="Save or load game"
         >
