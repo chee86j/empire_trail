@@ -57,24 +57,22 @@ npm run preview – preview the production build
 
 npm run lint – run ESLint
 
-Project Structure
 src/
   assets/
-    gameData.ts         # Events and property data
+    gameData.ts              # events, InvestmentProperty seed data & types
   components/
-    App.tsx
-    CityScreen.tsx
-    DealsScreen.tsx
-    EventScreen.tsx
-    PortfolioScreen.tsx
-    DiceRollModal.tsx
-    PlayerSelectScreen.tsx
-    GameInfoScreen.tsx
+    App.tsx                  # top-level state & navigation
+    GameInfoScreen.tsx       # intro screen
+    PlayerSelectScreen.tsx   # choose profession
+    CityScreen.tsx           # travel/rest/events & stats
+    DealsScreen.tsx          # property marketplace
+    PortfolioScreen.tsx      # manage holdings, rent/sell actions
+    DiceRollModal.tsx        # dice modal for outcomes
+    EventScreen.tsx          # shows event details
   styles/
-    CityScreen.css
-    DealsScreen.css
-    PortfolioScreen.css
-    ...
+    *.css                    # component CSS (responsive)
+
+
 
 Gameplay Notes
 
