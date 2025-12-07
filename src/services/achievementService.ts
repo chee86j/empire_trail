@@ -2,9 +2,7 @@ import {
   Achievement,
   PlayerStats,
   InvestmentProperty,
-  Player,
   City,
-  AchievementCriteriaType,
   PropertyType,
 } from "../types";
 import { achievements } from "../assets/achievements";
@@ -204,8 +202,7 @@ export class AchievementService {
   public checkAchievements(
     stats: PlayerStats,
     currentBankBalance: number,
-    portfolio: InvestmentProperty[],
-    currentCity: City
+    portfolio: InvestmentProperty[]
   ): Achievement[] {
     logger.info("🔍 Checking achievements for potential unlocks");
 
@@ -220,8 +217,7 @@ export class AchievementService {
         achievement,
         stats,
         currentBankBalance,
-        portfolio,
-        currentCity
+        portfolio
       );
       const wasUnlocked = achievement.isUnlocked;
 
@@ -244,8 +240,7 @@ export class AchievementService {
     achievement: Achievement,
     stats: PlayerStats,
     currentBankBalance: number,
-    portfolio: InvestmentProperty[],
-    currentCity: City
+    portfolio: InvestmentProperty[]
   ): number {
     const criteria = achievement.criteria;
 
@@ -386,11 +381,10 @@ export class AchievementService {
   public refreshAchievementProgress(
     stats: PlayerStats,
     currentBankBalance: number,
-    portfolio: InvestmentProperty[],
-    currentCity: City
+    portfolio: InvestmentProperty[]
   ): Achievement[] {
     // First check for any new achievements that might have been unlocked
-    this.checkAchievements(stats, currentBankBalance, portfolio, currentCity);
+    this.checkAchievements(stats, currentBankBalance, portfolio);
     
     const currentAchievements = this.getCurrentAchievements();
 
@@ -399,8 +393,7 @@ export class AchievementService {
         achievement,
         stats,
         currentBankBalance,
-        portfolio,
-        currentCity
+        portfolio
       );
 
       // For unlocked achievements, ensure progress is at max and status is preserved

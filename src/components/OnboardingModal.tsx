@@ -23,7 +23,6 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({
   onComplete 
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
 
   const onboardingSteps: OnboardingStep[] = [
     {
@@ -80,7 +79,6 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({
   useEffect(() => {
     if (!isOpen) {
       setCurrentStep(0);
-      setIsCompleted(false);
     }
   }, [isOpen]);
 
@@ -132,7 +130,6 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({
   };
 
   const handleComplete = () => {
-    setIsCompleted(true);
     onComplete();
     onClose();
   };

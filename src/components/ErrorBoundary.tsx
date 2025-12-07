@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { toast } from 'react-toastify';
 import '../styles/design-system.css';
 
@@ -30,7 +30,7 @@ class ErrorBoundary extends Component<Props, State> {
     });
 
     // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
@@ -58,7 +58,7 @@ class ErrorBoundary extends Component<Props, State> {
               <p>
                 We're sorry, but something unexpected happened. This might be a temporary issue.
               </p>
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <details className="error-details">
                   <summary>Error Details (Development Only)</summary>
                   <pre className="error-stack">

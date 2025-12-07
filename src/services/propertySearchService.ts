@@ -1,4 +1,5 @@
 import { InvestmentProperty, PropertyType } from "../types";
+import { isPropertyReadyForAction } from "../utils/gameUtils";
 
 /**
  * Property Search and Filter Service
@@ -142,7 +143,8 @@ export class PropertySearchService {
    */
   static filterProperties(
     properties: InvestmentProperty[],
-    filters: PropertySearchFilters
+    filters: PropertySearchFilters,
+    currentMonth?: number
   ): InvestmentProperty[] {
     let filteredProperties = [...properties];
 
@@ -218,6 +220,18 @@ export class PropertySearchService {
     if (filters.isRented !== undefined) {
       filteredProperties = filteredProperties.filter(
         (property) => property.isRented === filters.isRented
+      );
+    }
+
+    // Filter by action-ready status (requires current month context)
+    if (
+      filters.isReadyForAction !== undefined &&
+      typeof currentMonth === "number"
+    ) {
+      filteredProperties = filteredProperties.filter(
+        (property) =>
+          isPropertyReadyForAction(property, currentMonth) ===
+          filters.isReadyForAction
       );
     }
 
@@ -301,6 +315,8 @@ export class PropertySearchService {
       maxROI: 1000,
       propertyTypes: [],
       cities: [],
+      isRented: undefined,
+      isReadyForAction: undefined,
     };
   }
 

@@ -285,6 +285,6 @@ export interface SaveGame {
   currentCity: City;
   gameState: GameState;
   version: string;
-  achievements: Achievement[];
-  playerStats: PlayerStats;
+  achievements?: Achievement[];
+  playerStats?: PlayerStats;
 }

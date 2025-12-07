@@ -4,7 +4,6 @@ import {
   AchievementCategory,
   PlayerStats,
   InvestmentProperty,
-  City,
 } from "../types";
 import { AchievementService } from "../services/achievementService";
 import { achievementCategories, rarityColors } from "../assets/achievements";
@@ -16,7 +15,6 @@ interface Props {
   playerStats?: PlayerStats; // Player stats for progress calculation
   currentBankBalance?: number; // Current bank balance
   portfolio?: InvestmentProperty[]; // Current portfolio
-  currentCity?: City; // Current city
 }
 
 const AchievementScreen: React.FC<Props> = ({
@@ -25,7 +23,6 @@ const AchievementScreen: React.FC<Props> = ({
   playerStats,
   currentBankBalance,
   portfolio,
-  currentCity,
 }) => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<
@@ -72,18 +69,12 @@ const AchievementScreen: React.FC<Props> = ({
     achievementService.verifyAchievementPersistence();
     
     // If we have all the necessary data, refresh progress
-    if (
-      playerStats &&
-      currentBankBalance !== undefined &&
-      portfolio &&
-      currentCity
-    ) {
+    if (playerStats && currentBankBalance !== undefined && portfolio) {
       const refreshedAchievements =
         achievementService.refreshAchievementProgress(
           playerStats,
           currentBankBalance,
-          portfolio,
-          currentCity
+          portfolio
         );
       setAchievements(refreshedAchievements);
     } else {

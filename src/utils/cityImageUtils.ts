@@ -8,16 +8,25 @@ This utility ensures consistent image loading across the application.
 /**
  * Maps city names to their corresponding image filenames
  */
+import laImage from "../assets/la.jpeg";
+import phoenixImage from "../assets/phoenix.jpeg";
+import stLouisImage from "../assets/stlouis.jpeg";
+import chicagoImage from "../assets/chicago.jpeg";
+import clevelandImage from "../assets/cleveland.jpeg";
+import pittsburghImage from "../assets/pittsburgh.jpeg";
+import philadelphiaImage from "../assets/philadelphia.jpeg";
+import nycImage from "../assets/nyc.jpeg";
+
 const CITY_IMAGE_MAP: Record<string, string> = {
-  "Los Angeles": "la.jpeg",
-  Phoenix: "phoenix.jpeg",
-  Dallas: "dallas.jpeg",
-  "St.Louis": "stlouis.jpeg",
-  Chicago: "chicago.jpeg",
-  Cleveland: "cleveland.jpeg",
-  Pittsburgh: "pittsburgh.jpeg",
-  Philadelphia: "philadelphia.jpeg",
-  "New York City": "nyc.jpeg",
+  "Los Angeles": laImage,
+  Phoenix: phoenixImage,
+  Dallas: laImage, // Placeholder until a Dallas-specific image is available
+  "St.Louis": stLouisImage,
+  Chicago: chicagoImage,
+  Cleveland: clevelandImage,
+  Pittsburgh: pittsburghImage,
+  Philadelphia: philadelphiaImage,
+  "New York City": nycImage,
 };
 
 /**
@@ -26,7 +35,7 @@ const CITY_IMAGE_MAP: Record<string, string> = {
  * @returns The filename of the city's background image
  */
 export const getCityImageFilename = (cityName: string): string => {
-  return CITY_IMAGE_MAP[cityName] || "la.jpeg"; // Default to LA if city not found
+  return CITY_IMAGE_MAP[cityName] || laImage; // Default to LA if city not found
 };
 
 /**
@@ -35,8 +44,7 @@ export const getCityImageFilename = (cityName: string): string => {
  * @returns The full path to the city's background image
  */
 export const getCityImagePath = (cityName: string): string => {
-  const filename = getCityImageFilename(cityName);
-  return `/src/assets/${filename}`;
+  return CITY_IMAGE_MAP[cityName] || laImage;
 };
 
 /**

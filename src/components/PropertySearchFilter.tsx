@@ -77,14 +77,15 @@ const PropertySearchFilter: React.FC<Props> = ({
   useEffect(() => {
     let filteredProperties = PropertySearchService.filterProperties(
       properties,
-      filters
+      filters,
+      currentMonth
     );
     filteredProperties = PropertySearchService.sortProperties(
       filteredProperties,
       sortOptions
     );
     onFilteredPropertiesChange(filteredProperties);
-  }, [filters, sortOptions, properties, onFilteredPropertiesChange]);
+  }, [filters, sortOptions, properties, onFilteredPropertiesChange, currentMonth]);
 
   const handleFilterChange = (
     field: keyof PropertySearchFilters,
@@ -446,6 +447,47 @@ const PropertySearchFilter: React.FC<Props> = ({
                       onChange={() => handleFilterChange("isRented", false)}
                     />
                     Vacant
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {showReadyForActionFilter && (
+              <div className="filter-group">
+                <label>Action Status:</label>
+                <div className="radio-group">
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="actionStatus"
+                      checked={filters.isReadyForAction === undefined}
+                      onChange={() =>
+                        handleFilterChange("isReadyForAction", undefined)
+                      }
+                    />
+                    All
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="actionStatus"
+                      checked={filters.isReadyForAction === true}
+                      onChange={() =>
+                        handleFilterChange("isReadyForAction", true)
+                      }
+                    />
+                    Ready to Act
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="actionStatus"
+                      checked={filters.isReadyForAction === false}
+                      onChange={() =>
+                        handleFilterChange("isReadyForAction", false)
+                      }
+                    />
+                    In Progress
                   </label>
                 </div>
               </div>
