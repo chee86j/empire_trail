@@ -45,6 +45,26 @@ npm run preview
 - `npm run preview` – preview the production build
 - `npm run lint` – run ESLint
 
+## Docker
+### Build the production image
+```bash
+docker build -t empire-trail .
+```
+This multi-stage image runs `npm ci`, builds the Vite app, and serves the static `/dist` assets from `nginx`.
+
+### Run the container
+```bash
+docker run --rm -p 4173:80 empire-trail
+```
+Browse to `http://localhost:4173`. Adjust the host port as needed; Nginx continues to listen on port `80` inside the container.
+
+### Dev container (optional)
+The `docker-compose.dev.yml` file runs the Vite dev server inside `node:20-alpine` with hot reloads:
+```bash
+docker compose -f docker-compose.dev.yml up
+```
+The project folder is bind-mounted, so editor changes on the host instantly reflect inside the container. Use `Ctrl+C` (or `docker compose ... down`) to stop the dev container.
+
 ## Project Structure
 ```
 src/
