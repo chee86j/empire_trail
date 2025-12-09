@@ -1,6 +1,6 @@
 # Empire Trail
 
-Empire Trail is a lightweight, turn-based real-estate strategy game built with React, TypeScript, and Vite. Travel from city to city, evaluate property deals, manage your portfolio, and adapt to random events as you grow your bank balance.
+Empire Trail is a nostalgia-charged, turn-based real-estate odyssey built with React, TypeScript, and Vite. Channeling the adventurous spirit of Oregon Trail with a modern real estate twist, you’ll trek from city to city, negotiate high-stakes property offers, hire the right crew, and manage risk like a savvy pioneer-turned-broker. Every roll of the dice can turn a sleepy town into a boom market, every event card tests your instincts, and every decision shapes the legend of your empire-sized portfolio.
 
 ## Features
 - **City progression:** Advance the month as you loop through major U.S. cities.
