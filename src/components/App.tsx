@@ -28,7 +28,12 @@ import {
   createOverlayFadeVariants,
 } from "../animations/motionPresets";
 import LottieOverlay from "./LottieOverlay";
-import { Home, WhiteCapeHome } from "../assets/lottieAnimations";
+import {
+  Home,
+  WhiteCapeHome,
+  GrowingHouse,
+  Houselottie,
+} from "../assets/lottieAnimations";
 import {
   Player,
   Event,
@@ -60,9 +65,20 @@ const App: React.FC = () => {
   const helpModalVariants = createModalPopVariants(reduceMotion);
   const [purchaseLottieOpen, setPurchaseLottieOpen] = useState(false);
   const [purchaseLottieVariant, setPurchaseLottieVariant] = useState<
-    "home" | "whiteCapeHome"
+    "home" | "whiteCapeHome" | "growingHouse" | "houseLottie"
   >("home");
-  const purchaseLottieToggleRef = useRef(false);
+  const purchaseLottieIndexRef = useRef(0);
+
+  const purchaseLottieOrder: Array<
+    "home" | "whiteCapeHome" | "growingHouse" | "houseLottie"
+  > = ["home", "whiteCapeHome", "growingHouse", "houseLottie"];
+
+  const purchaseLottieData = {
+    home: Home,
+    whiteCapeHome: WhiteCapeHome,
+    growingHouse: GrowingHouse,
+    houseLottie: Houselottie,
+  } as const;
 
   // Check if user has completed onboarding
   useEffect(() => {
@@ -221,10 +237,9 @@ const App: React.FC = () => {
         setGameState("city");
         toast.success(`Successfully purchased ${property.name}!`);
 
-        purchaseLottieToggleRef.current = !purchaseLottieToggleRef.current;
-        setPurchaseLottieVariant(
-          purchaseLottieToggleRef.current ? "whiteCapeHome" : "home"
-        );
+        purchaseLottieIndexRef.current =
+          (purchaseLottieIndexRef.current + 1) % purchaseLottieOrder.length;
+        setPurchaseLottieVariant(purchaseLottieOrder[purchaseLottieIndexRef.current]);
         setPurchaseLottieOpen(true);
       } else {
         toast.error("Insufficient funds to purchase this property.");
@@ -317,14 +332,12 @@ const App: React.FC = () => {
           </div>
         )}
 
-        <LottieOverlay
-          isOpen={purchaseLottieOpen}
-          animationData={
-            purchaseLottieVariant === "whiteCapeHome" ? WhiteCapeHome : Home
-          }
-          onClose={() => setPurchaseLottieOpen(false)}
-          sizePx={280}
-        />
+	        <LottieOverlay
+	          isOpen={purchaseLottieOpen}
+	          animationData={purchaseLottieData[purchaseLottieVariant]}
+	          onClose={() => setPurchaseLottieOpen(false)}
+	          sizePx={280}
+	        />
 
         {/* Help Modal */}
         <AnimatePresence>
@@ -343,85 +356,85 @@ const App: React.FC = () => {
                 animate="animate"
                 exit="exit"
               >
-              <h2>Keyboard Shortcuts</h2>
-              <div className="help-sections">
-                <div className="help-section">
-                  <h3>City Screen</h3>
-                  <p>
-                    <strong>T</strong> - Travel to next city
-                  </p>
-                  <p>
-                    <strong>R</strong> - Rest (advance month)
-                  </p>
-                  <p>
-                    <strong>V</strong> - View Portfolio
-                  </p>
-                  <p>
-                    <strong>F</strong> - Find Deals
-                  </p>
+                <h2>Keyboard Shortcuts</h2>
+                <div className="help-sections">
+                  <div className="help-section">
+                    <h3>City Screen</h3>
+                    <p>
+                      <strong>T</strong> - Travel to next city
+                    </p>
+                    <p>
+                      <strong>R</strong> - Rest (advance month)
+                    </p>
+                    <p>
+                      <strong>V</strong> - View Portfolio
+                    </p>
+                    <p>
+                      <strong>F</strong> - Find Deals
+                    </p>
+                  </div>
+                  <div className="help-section">
+                    <h3>Deals Screen</h3>
+                    <p>
+                      <strong>↑/↓</strong> - Navigate properties
+                    </p>
+                    <p>
+                      <strong>P</strong> - Purchase selected property
+                    </p>
+                    <p>
+                      <strong>ESC</strong> - Close deals screen
+                    </p>
+                  </div>
+                  <div className="help-section">
+                    <h3>Portfolio Screen</h3>
+                    <p>
+                      <strong>↑/↓</strong> - Navigate properties
+                    </p>
+                    <p>
+                      <strong>R</strong> - Rent selected property
+                    </p>
+                    <p>
+                      <strong>S</strong> - Sell selected property
+                    </p>
+                    <p>
+                      <strong>ESC</strong> - Close portfolio
+                    </p>
+                  </div>
+                  <div className="help-section">
+                    <h3>Dice Rolling</h3>
+                    <p>
+                      <strong>Space/Enter/R</strong> - Roll dice
+                    </p>
+                    <p>
+                      <strong>ESC</strong> - Close modal
+                    </p>
+                  </div>
+                  <div className="help-section">
+                    <h3>Global Shortcuts</h3>
+                    <p>
+                      <strong>F1</strong> - Show/hide this help
+                    </p>
+                    <p>
+                      <strong>F2</strong> - Show game tutorial (on main screen)
+                    </p>
+                    <p>
+                      <strong>F5</strong> - Save/Load Game
+                    </p>
+                    <p>
+                      <strong>ESC</strong> - Go back/close
+                    </p>
+                  </div>
                 </div>
-                <div className="help-section">
-                  <h3>Deals Screen</h3>
-                  <p>
-                    <strong>↑/↓</strong> - Navigate properties
-                  </p>
-                  <p>
-                    <strong>P</strong> - Purchase selected property
-                  </p>
-                  <p>
-                    <strong>ESC</strong> - Close deals screen
-                  </p>
-                </div>
-                <div className="help-section">
-                  <h3>Portfolio Screen</h3>
-                  <p>
-                    <strong>↑/↓</strong> - Navigate properties
-                  </p>
-                  <p>
-                    <strong>R</strong> - Rent selected property
-                  </p>
-                  <p>
-                    <strong>S</strong> - Sell selected property
-                  </p>
-                  <p>
-                    <strong>ESC</strong> - Close portfolio
-                  </p>
-                </div>
-                <div className="help-section">
-                  <h3>Dice Rolling</h3>
-                  <p>
-                    <strong>Space/Enter/R</strong> - Roll dice
-                  </p>
-                  <p>
-                    <strong>ESC</strong> - Close modal
-                  </p>
-                </div>
-                <div className="help-section">
-                  <h3>Global Shortcuts</h3>
-                  <p>
-                    <strong>F1</strong> - Show/hide this help
-                  </p>
-                  <p>
-                    <strong>F2</strong> - Show game tutorial (on main screen)
-                  </p>
-                  <p>
-                    <strong>F5</strong> - Save/Load Game
-                  </p>
-                  <p>
-                    <strong>ESC</strong> - Go back/close
-                  </p>
-                </div>
-              </div>
-              <motion.button
-                onClick={() => setShowHelp(false)}
-                className="btn btn-primary"
-                aria-label="Close help modal"
-                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                transition={createButtonTransition(reduceMotion)}
-              >
-                Close Help (ESC)
-              </motion.button>
+                <motion.button
+                  onClick={() => setShowHelp(false)}
+                  className="btn btn-primary"
+                  aria-label="Close help modal"
+                  whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                  transition={createButtonTransition(reduceMotion)}
+                >
+                  Close Help (ESC)
+                </motion.button>
               </motion.div>
             </motion.div>
           )}
