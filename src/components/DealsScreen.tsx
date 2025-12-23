@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import "../styles/DealsScreen.css";
 import { InvestmentProperty } from "../types";
 import PropertySearchFilter from "./PropertySearchFilter";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  createButtonTransition,
+  createListItemVariants,
+} from "../animations/motionPresets";
 
 interface Props {
   investmentProperties: InvestmentProperty[];
@@ -23,6 +28,9 @@ const DealsScreen: React.FC<Props> = ({
   >([]);
   const [selectedRowIndex, setSelectedRowIndex] = useState<number>(0);
   const [showAllProperties, setShowAllProperties] = useState<boolean>(false);
+  const reduceMotion = useReducedMotion();
+  const buttonTransition = createButtonTransition(reduceMotion);
+  const rowVariants = createListItemVariants(reduceMotion);
 
   const handlePurchase = useCallback(
     (property: InvestmentProperty) => {
@@ -167,7 +175,7 @@ const DealsScreen: React.FC<Props> = ({
       <h2>Available Investment Properties</h2>
 
       <div className="deals-controls">
-        <button
+        <motion.button
           onClick={toggleShowAllProperties}
           className={`btn ${showAllProperties ? "btn-primary" : "btn-outline"}`}
           aria-label={
@@ -175,9 +183,12 @@ const DealsScreen: React.FC<Props> = ({
               ? "Show random properties"
               : "Show all properties with search"
           }
+          whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+          transition={buttonTransition}
         >
           {showAllProperties ? "Show Random 5" : "Search All Properties"}
-        </button>
+        </motion.button>
         <p className="keyboard-help">
           Tip: Use ↑↓ arrow keys to navigate, P to purchase, ESC to close
         </p>
@@ -206,51 +217,64 @@ const DealsScreen: React.FC<Props> = ({
             </tr>
           </thead>
           <tbody>
-            {filteredProperties.map((property, index) => (
-              <tr
-                key={property.id}
-                className={index === selectedRowIndex ? "selected-row" : ""}
-                onClick={() => handleRowClick(index)}
-              >
-                <td>{property.name}</td>
-                <td>${property.purchaseCost.toLocaleString()}</td>
-                <td>${property.closingCost.toLocaleString()}</td>
-                <td>${property.renovationCost.toLocaleString()}</td>
-                <td>{property.renovationTime} mo</td>
-                <td>${property.arvRentalIncome.toLocaleString()}</td>
-                <td>${property.monthlyExpenses.toLocaleString()}</td>
-                <td>${property.arvSalePrice.toLocaleString()}</td>
-                <td>{calculateROI(property)}</td>
-                <td>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePurchase(property);
-                    }}
-                    className={`btn btn-success ${
-                      index === selectedRowIndex ? "selected-button" : ""
-                    }`}
-                    aria-label={`Purchase ${property.name} for $${(
-                      property.purchaseCost +
-                      property.closingCost +
-                      property.renovationCost
-                    ).toLocaleString()}`}
-                  >
-                    Purchase (P)
-                  </button>
-                </td>
-              </tr>
-            ))}
+            <AnimatePresence mode="popLayout" initial={false}>
+              {filteredProperties.map((property, index) => (
+                <motion.tr
+                  key={property.id}
+                  className={index === selectedRowIndex ? "selected-row" : ""}
+                  onClick={() => handleRowClick(index)}
+                  variants={rowVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  layout
+                >
+                  <td>{property.name}</td>
+                  <td>${property.purchaseCost.toLocaleString()}</td>
+                  <td>${property.closingCost.toLocaleString()}</td>
+                  <td>${property.renovationCost.toLocaleString()}</td>
+                  <td>{property.renovationTime} mo</td>
+                  <td>${property.arvRentalIncome.toLocaleString()}</td>
+                  <td>${property.monthlyExpenses.toLocaleString()}</td>
+                  <td>${property.arvSalePrice.toLocaleString()}</td>
+                  <td>{calculateROI(property)}</td>
+                  <td>
+                    <motion.button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePurchase(property);
+                      }}
+                      className={`btn btn-success ${
+                        index === selectedRowIndex ? "selected-button" : ""
+                      }`}
+                      aria-label={`Purchase ${property.name} for $${(
+                        property.purchaseCost +
+                        property.closingCost +
+                        property.renovationCost
+                      ).toLocaleString()}`}
+                      whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                      whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                      transition={buttonTransition}
+                    >
+                      Purchase (P)
+                    </motion.button>
+                  </td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </tbody>
         </table>
       </div>
-      <button
+      <motion.button
         onClick={onClose}
         className="btn btn-secondary"
         aria-label="Close deals screen"
+        whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+        transition={buttonTransition}
       >
         Close (ESC)
-      </button>
+      </motion.button>
     </div>
   );
 };

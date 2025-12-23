@@ -1,7 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import ReactDice, { ReactDiceRef } from "react-dice-complete";
+import { motion, useReducedMotion } from "framer-motion";
 import "../styles/DiceRollModal.css";
 import { logger } from "../services/logger";
+import { createButtonTransition } from "../animations/motionPresets";
 
 interface Props {
   onClose: () => void;
@@ -19,6 +21,8 @@ const DiceRollModal: React.FC<Props> = ({
   const reactDice = useRef<ReactDiceRef>(null);
   const [currentRollCount, setCurrentRollCount] = useState(0);
   const [isFirstRoll, setIsFirstRoll] = useState(true); // state for ignoring the first roll
+  const reduceMotion = useReducedMotion();
+  const buttonTransition = createButtonTransition(reduceMotion);
 
   // Keyboard shortcuts handler
   useEffect(() => {
@@ -98,8 +102,22 @@ const DiceRollModal: React.FC<Props> = ({
           defaultRoll={6}
           rollTime={2}
         />
-        <button onClick={rollAll}>Roll (Space/Enter/R)</button>
-        <button onClick={onClose}>Close (ESC)</button>
+        <motion.button
+          onClick={rollAll}
+          whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+          transition={buttonTransition}
+        >
+          Roll (Space/Enter/R)
+        </motion.button>
+        <motion.button
+          onClick={onClose}
+          whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+          transition={buttonTransition}
+        >
+          Close (ESC)
+        </motion.button>
       </div>
     </div>
   );

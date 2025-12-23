@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { InvestmentProperty, PropertyType } from "../types";
 import {
   PropertySearchService,
@@ -6,6 +7,7 @@ import {
   PropertySortOptions,
 } from "../services/propertySearchService";
 import "../styles/PropertySearchFilter.css";
+import { createButtonTransition } from "../animations/motionPresets";
 
 interface Props {
   properties: InvestmentProperty[];
@@ -24,6 +26,8 @@ const PropertySearchFilter: React.FC<Props> = ({
   showReadyForActionFilter = false,
   currentMonth = 0,
 }) => {
+  const reduceMotion = useReducedMotion();
+  const buttonTransition = createButtonTransition(reduceMotion);
   const [filters, setFilters] = useState<PropertySearchFilters>(
     PropertySearchService.getDefaultFilters()
   );
@@ -149,20 +153,26 @@ const PropertySearchFilter: React.FC<Props> = ({
             className="search-input"
             aria-label="Search properties"
           />
-          <button
+          <motion.button
             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
             className="btn btn-outline"
             aria-label="Toggle advanced filters"
+            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            transition={buttonTransition}
           >
             {showAdvancedFilters ? "Hide Filters" : "Show Filters"}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             onClick={resetFilters}
             className="btn btn-secondary"
             aria-label="Reset all filters"
+            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            transition={buttonTransition}
           >
             Reset
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -510,13 +520,16 @@ const PropertySearchFilter: React.FC<Props> = ({
               "roi",
             ] as const
           ).map((field) => (
-            <button
+            <motion.button
               key={field}
               onClick={() => handleSortChange(field)}
               className={`btn btn-sm ${
                 sortOptions.field === field ? "btn-primary" : "btn-outline"
               }`}
               aria-label={`Sort by ${field}`}
+              whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              transition={buttonTransition}
             >
               {field === "arvRentalIncome"
                 ? "Rental Income"
@@ -534,7 +547,7 @@ const PropertySearchFilter: React.FC<Props> = ({
                   {sortOptions.direction === "asc" ? "↑" : "↓"}
                 </span>
               )}
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>

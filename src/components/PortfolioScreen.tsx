@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import DiceRollModal from "./DiceRollModal";
 import PropertySearchFilter from "./PropertySearchFilter";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/PortfolioScreen.css";
 import { InvestmentProperty } from "../types";
+import LottieOverlay from "./LottieOverlay";
+import { DiceRoll, Success, SuccessTick } from "../assets/lottieAnimations";
 import {
   DICE_ROLL_SUCCESS_VALUES,
   DICE_ROLL_FAILURE_VALUES,
@@ -12,6 +15,12 @@ import {
 } from "../constants/gameConstants";
 import { isPropertyReadyForAction } from "../utils/gameUtils";
 import { logger } from "../services/logger";
+import {
+  createButtonTransition,
+  createListItemVariants,
+  createModalPopVariants,
+  createOverlayFadeVariants,
+} from "../animations/motionPresets";
 
 interface Props {
   portfolio: InvestmentProperty[];
@@ -19,7 +28,7 @@ interface Props {
   currentMonth: number;
   onClose: () => void;
   setPortfolio: (portfolio: InvestmentProperty[]) => void;
-  setCurrentBankBalance: (balance: number) => void;
+  setCurrentBankBalance: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const PortfolioScreen: React.FC<Props> = ({
@@ -40,6 +49,17 @@ const PortfolioScreen: React.FC<Props> = ({
   const [filteredPortfolio, setFilteredPortfolio] =
     useState<InvestmentProperty[]>(portfolio);
   const [showSearchFilter, setShowSearchFilter] = useState<boolean>(false);
+  const reduceMotion = useReducedMotion();
+  const buttonTransition = createButtonTransition(reduceMotion);
+  const rowVariants = createListItemVariants(reduceMotion);
+  const diceOverlayVariants = createOverlayFadeVariants(reduceMotion);
+  const diceModalVariants = createModalPopVariants(reduceMotion);
+  const [activeLottie, setActiveLottie] = useState<
+    "dice" | "rent" | "sale" | null
+  >(null);
+  const [lottieQueue, setLottieQueue] = useState<Array<"dice" | "rent" | "sale">>(
+    []
+  );
 
   // Keyboard shortcuts handler
   useEffect(() => {
@@ -117,9 +137,6 @@ const PortfolioScreen: React.FC<Props> = ({
         p.id === property.id ? updatedProperty : p
       );
       setPortfolio(updatedPortfolio);
-
-      // No immediate bank balance change on renting
-      toast.success(`${property.name} has been successfully rented out!`);
     },
     [portfolio, setPortfolio]
   );
@@ -128,22 +145,14 @@ const PortfolioScreen: React.FC<Props> = ({
     (property: InvestmentProperty) => {
       const updatedPortfolio = portfolio.filter((p) => p.id !== property.id);
       setPortfolio(updatedPortfolio);
-
-      const newBankBalance = currentBankBalance + property.arvSalePrice;
-      setCurrentBankBalance(newBankBalance);
+      setCurrentBankBalance((prev) => prev + property.arvSalePrice);
 
       logger.gameAction(
         `Property sold: ${property.name}`,
         `for $${property.arvSalePrice.toLocaleString()}`
       );
-      toast.success(
-        `${
-          property.name
-        } was sold for $${property.arvSalePrice.toLocaleString()}!`
-      );
-      toast.success(`New bank balance: $${newBankBalance.toLocaleString()}`);
     },
-    [portfolio, setPortfolio, currentBankBalance, setCurrentBankBalance]
+    [portfolio, setPortfolio, setCurrentBankBalance]
   );
 
   useEffect(() => {
@@ -154,16 +163,31 @@ const PortfolioScreen: React.FC<Props> = ({
       DICE_ROLL_SUCCESS_VALUES.includes(lastRoll) &&
       selectedProperty
     ) {
+      setLottieQueue((prev) => [
+        ...prev,
+        "dice",
+        action === "Sale" ? "sale" : "rent",
+      ]);
+
       // Successful roll
       if (action === "Sale") {
-        toast.success("Property Sold Successfully!");
+        const salePrice = selectedProperty.arvSalePrice;
+        const newBankBalance = currentBankBalance + salePrice;
+        toast.success(
+          `${selectedProperty.name} sold for $${salePrice.toLocaleString()}. New bank balance: $${newBankBalance.toLocaleString()}.`
+        );
         handlePropertySale(selectedProperty);
-        setShowDiceModal(false);
       } else if (action === "Rent") {
-        toast.success("Property Rented Successfully!");
+        toast.success(`${selectedProperty.name} rented out!`);
         handlePropertyRent(selectedProperty);
-        setShowDiceModal(false);
       }
+
+      // Prevent duplicate runs of this effect (and duplicate toasts) by clearing
+      // the selected property once the action resolves.
+      setSelectedProperty(null);
+      setShowDiceModal(false);
+      setLastRoll(0);
+      setRollCount(0);
     } else if (rollCount === MAX_DICE_ROLLS) {
       // Reached maximum rolls without success, just close the modal
       toast.info("Maximum rolls reached");
@@ -176,7 +200,17 @@ const PortfolioScreen: React.FC<Props> = ({
     action,
     handlePropertyRent,
     handlePropertySale,
+    currentBankBalance,
   ]);
+
+  useEffect(() => {
+    if (activeLottie) return;
+    if (lottieQueue.length === 0) return;
+
+    const [next, ...rest] = lottieQueue;
+    setActiveLottie(next);
+    setLottieQueue(rest);
+  }, [activeLottie, lottieQueue]);
 
   const handleActionClick = (
     property: InvestmentProperty,
@@ -227,10 +261,28 @@ const PortfolioScreen: React.FC<Props> = ({
 
   return (
     <div className="screen">
+      <LottieOverlay
+        isOpen={activeLottie === "dice"}
+        animationData={DiceRoll}
+        onClose={() => setActiveLottie(null)}
+        sizePx={260}
+      />
+      <LottieOverlay
+        isOpen={activeLottie === "rent"}
+        animationData={Success}
+        onClose={() => setActiveLottie(null)}
+        sizePx={280}
+      />
+      <LottieOverlay
+        isOpen={activeLottie === "sale"}
+        animationData={SuccessTick}
+        onClose={() => setActiveLottie(null)}
+        sizePx={280}
+      />
       <h2>Portfolio</h2>
 
       <div className="portfolio-controls">
-        <button
+        <motion.button
           onClick={() => setShowSearchFilter(!showSearchFilter)}
           className={`btn ${showSearchFilter ? "btn-primary" : "btn-outline"}`}
           aria-label={
@@ -238,9 +290,12 @@ const PortfolioScreen: React.FC<Props> = ({
               ? "Hide search and filters"
               : "Show search and filters"
           }
+          whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+          transition={buttonTransition}
         >
           {showSearchFilter ? "Hide Search" : "Search & Filter"}
-        </button>
+        </motion.button>
         <p className="keyboard-help">
           Tip: Use ↑↓ arrow keys to navigate, R to rent, S to sell, ESC to close
         </p>
@@ -306,77 +361,116 @@ const PortfolioScreen: React.FC<Props> = ({
             </tr>
           </thead>
           <tbody>
-            {filteredPortfolio.map((property, index) => (
-              <tr
-                key={index}
-                className={index === selectedRowIndex ? "selected-row" : ""}
-                onClick={() => handleRowClick(index)}
-              >
-                <td>{property.name}</td>
-                <td>{property.purchaseMonth || "N/A"}</td>
-                <td>${property.purchaseCost.toLocaleString()}</td>
-                <td>${property.closingCost.toLocaleString()}</td>
-                <td>${property.renovationCost.toLocaleString()}</td>
-                <td>{property.renovationTime} months</td>
-                <td>${property.arvRentalIncome.toLocaleString()}</td>
-                <td>${property.monthlyExpenses.toLocaleString()}</td>
-                <td>${property.arvSalePrice.toLocaleString()}</td>
-                <td>{property.isRented ? "Rented" : "Vacant"}</td>
-                <td>
-                  <div className="button-container">
-                    {isPropertyReadyForAction(property, currentMonth) &&
-                      !property.isRented && (
-                        <button
+            <AnimatePresence mode="popLayout" initial={false}>
+              {filteredPortfolio.map((property, index) => (
+                <motion.tr
+                  key={property.id}
+                  className={index === selectedRowIndex ? "selected-row" : ""}
+                  onClick={() => handleRowClick(index)}
+                  variants={rowVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  layout
+                >
+                  <td>{property.name}</td>
+                  <td>{property.purchaseMonth || "N/A"}</td>
+                  <td>${property.purchaseCost.toLocaleString()}</td>
+                  <td>${property.closingCost.toLocaleString()}</td>
+                  <td>${property.renovationCost.toLocaleString()}</td>
+                  <td>{property.renovationTime} months</td>
+                  <td>${property.arvRentalIncome.toLocaleString()}</td>
+                  <td>${property.monthlyExpenses.toLocaleString()}</td>
+                  <td>${property.arvSalePrice.toLocaleString()}</td>
+                  <td>{property.isRented ? "Rented" : "Vacant"}</td>
+                  <td>
+                    <div className="button-container">
+                      {isPropertyReadyForAction(property, currentMonth) &&
+                        !property.isRented && (
+                          <motion.button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleActionClick(property, "Rent");
+                            }}
+                            className={`btn btn-primary ${
+                              index === selectedRowIndex
+                                ? "selected-button"
+                                : ""
+                            }`}
+                            aria-label={`Rent out ${property.name}`}
+                            whileHover={
+                              reduceMotion ? undefined : { scale: 1.02 }
+                            }
+                            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                            transition={buttonTransition}
+                          >
+                            Rent (R)
+                          </motion.button>
+                        )}
+                      {isPropertyReadyForAction(property, currentMonth) && (
+                        <motion.button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleActionClick(property, "Rent");
+                            handleActionClick(property, "Sale");
                           }}
-                          className={`btn btn-primary ${
-                            index === selectedRowIndex ? "selected-button" : ""
+                          className={`btn btn-danger ${
+                            index === selectedRowIndex
+                              ? "selected-button"
+                              : ""
                           }`}
-                          aria-label={`Rent out ${property.name}`}
+                          aria-label={`Sell ${
+                            property.name
+                          } for $${property.arvSalePrice.toLocaleString()}`}
+                          whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                          whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                          transition={buttonTransition}
                         >
-                          Rent (R)
-                        </button>
+                          Sale (S)
+                        </motion.button>
                       )}
-                    {isPropertyReadyForAction(property, currentMonth) && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleActionClick(property, "Sale");
-                        }}
-                        className={`btn btn-danger ${
-                          index === selectedRowIndex ? "selected-button" : ""
-                        }`}
-                        aria-label={`Sell ${
-                          property.name
-                        } for $${property.arvSalePrice.toLocaleString()}`}
-                      >
-                        Sale (S)
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    </div>
+                  </td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </tbody>
         </table>
       </div>
-      <button
+      <motion.button
         onClick={onClose}
         className="btn btn-secondary"
         aria-label="Close portfolio screen"
+        whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+        transition={buttonTransition}
       >
         Close (ESC)
-      </button>
-      {showDiceModal && selectedProperty && (
-        <DiceRollModal
-          onClose={handleCloseModal}
-          action={action}
-          onRoll={handleDiceRoll}
-          maxRolls={3}
-        />
-      )}
+      </motion.button>
+      <AnimatePresence>
+        {showDiceModal && selectedProperty && (
+          <motion.div
+            key="dice-modal"
+            variants={diceOverlayVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <motion.div
+              variants={diceModalVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <DiceRollModal
+                onClose={handleCloseModal}
+                action={action}
+                onRoll={handleDiceRoll}
+                maxRolls={3}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

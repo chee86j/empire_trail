@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import "../styles/PlayerSelectScreen.css";
 import { Profession } from "../types";
+import { createButtonTransition } from "../animations/motionPresets";
 
 interface Props {
   onSelectProfession: (profession: Profession) => void;
@@ -11,6 +13,8 @@ const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
     ""
   );
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const reduceMotion = useReducedMotion();
+  const buttonTransition = createButtonTransition(reduceMotion);
 
   const professionDetails: Record<
     Profession,
@@ -128,13 +132,16 @@ const PlayerSelectScreen: React.FC<Props> = ({ onSelectProfession }) => {
             ].salary.toLocaleString()}{" "}
             per month
           </p>
-          <button 
+          <motion.button 
             onClick={() => onSelectProfession(selectedProfession)}
             className="btn btn-success btn-lg"
             aria-label={`Confirm selection of ${selectedProfession} profession`}
+            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            transition={buttonTransition}
           >
             Confirm Selection (Enter/Space)
-          </button>
+          </motion.button>
         </div>
       )}
     </div>

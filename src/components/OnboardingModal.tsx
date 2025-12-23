@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import '../styles/design-system.css';
 import '../styles/OnboardingModal.css';
+import {
+  createButtonTransition,
+  createModalPopVariants,
+  createOverlayFadeVariants,
+} from "../animations/motionPresets";
 
 interface OnboardingStep {
   id: string;
@@ -23,6 +29,10 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({
   onComplete 
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const reduceMotion = useReducedMotion();
+  const overlayVariants = createOverlayFadeVariants(reduceMotion);
+  const modalVariants = createModalPopVariants(reduceMotion);
+  const buttonTransition = createButtonTransition(reduceMotion);
 
   const onboardingSteps: OnboardingStep[] = [
     {
@@ -138,95 +148,132 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({
     onClose();
   };
 
-  if (!isOpen) return null;
-
   const currentStepData = onboardingSteps[currentStep];
   const progress = ((currentStep + 1) / onboardingSteps.length) * 100;
 
   return (
-    <div 
-      className="onboarding-overlay" 
-      role="dialog" 
-      aria-modal="true"
-      aria-labelledby="onboarding-title"
-    >
-      <div className="onboarding-modal">
-        <div className="onboarding-header">
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${progress}%` }}
-              aria-label={`Progress: ${Math.round(progress)}%`}
-            />
-          </div>
-          <button 
-            className="onboarding-close" 
-            onClick={handleClose}
-            aria-label="Close onboarding"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="onboarding-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="onboarding-title"
+          variants={overlayVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          <motion.div
+            className="onboarding-modal"
+            variants={modalVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
           >
-            ×
-          </button>
-        </div>
-
-        <div className="onboarding-content">
-          <h2 id="onboarding-title" className="onboarding-title">
-            {currentStepData.title}
-          </h2>
-          
-          <div className="onboarding-body">
-            <p className="onboarding-text">
-              {currentStepData.content}
-            </p>
-            
-            {currentStepData.image && (
-              <div className="onboarding-image">
-                <img 
-                  src={currentStepData.image} 
-                  alt={currentStepData.title}
-                  loading="lazy"
+            <div className="onboarding-header">
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${progress}%` }}
+                  aria-label={`Progress: ${Math.round(progress)}%`}
                 />
               </div>
-            )}
-          </div>
-
-          <div className="onboarding-navigation">
-            <button 
-              className="btn btn-secondary"
-              onClick={handlePrevious}
-              disabled={currentStep === 0}
-              aria-label="Previous step"
-            >
-              Previous
-            </button>
-            
-            <div className="step-indicators">
-              {onboardingSteps.map((_, index) => (
-                <button
-                  key={index}
-                  className={`step-dot ${index === currentStep ? 'active' : ''}`}
-                  onClick={() => setCurrentStep(index)}
-                  aria-label={`Go to step ${index + 1}`}
-                />
-              ))}
+              <motion.button
+                className="onboarding-close"
+                onClick={handleClose}
+                aria-label="Close onboarding"
+                whileHover={reduceMotion ? undefined : { scale: 1.05 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+                transition={buttonTransition}
+              >
+                ×
+              </motion.button>
             </div>
-            
-            <button 
-              className="btn btn-primary"
-              onClick={handleNext}
-              aria-label={currentStep === onboardingSteps.length - 1 ? 'Complete onboarding' : 'Next step'}
-            >
-              {currentStepData.action}
-            </button>
-          </div>
 
-          <div className="onboarding-help">
-            <p className="keyboard-help">
-              Tip: {currentStepData.actionKey} to continue, ESC to skip, ← → to navigate
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div className="onboarding-content">
+              <h2 id="onboarding-title" className="onboarding-title">
+                {currentStepData.title}
+              </h2>
+
+              <div className="onboarding-body">
+                <p className="onboarding-text">{currentStepData.content}</p>
+
+                {currentStepData.image && (
+                  <div className="onboarding-image">
+                    <img
+                      src={currentStepData.image}
+                      alt={currentStepData.title}
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="onboarding-navigation">
+                <motion.button
+                  className="btn btn-secondary"
+                  onClick={handlePrevious}
+                  disabled={currentStep === 0}
+                  aria-label="Previous step"
+                  whileHover={
+                    reduceMotion || currentStep === 0
+                      ? undefined
+                      : { scale: 1.02 }
+                  }
+                  whileTap={
+                    reduceMotion || currentStep === 0
+                      ? undefined
+                      : { scale: 0.98 }
+                  }
+                  transition={buttonTransition}
+                >
+                  Previous
+                </motion.button>
+
+                <div className="step-indicators">
+                  {onboardingSteps.map((_, index) => (
+                    <motion.button
+                      key={index}
+                      className={`step-dot ${
+                        index === currentStep ? "active" : ""
+                      }`}
+                      onClick={() => setCurrentStep(index)}
+                      aria-label={`Go to step ${index + 1}`}
+                      whileHover={reduceMotion ? undefined : { scale: 1.1 }}
+                      whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+                      transition={buttonTransition}
+                    />
+                  ))}
+                </div>
+
+                <motion.button
+                  className="btn btn-primary"
+                  onClick={handleNext}
+                  aria-label={
+                    currentStep === onboardingSteps.length - 1
+                      ? "Complete onboarding"
+                      : "Next step"
+                  }
+                  whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                  transition={buttonTransition}
+                >
+                  {currentStepData.action}
+                </motion.button>
+              </div>
+
+              <div className="onboarding-help">
+                <p className="keyboard-help">
+                  Tip: {currentStepData.actionKey} to continue, ESC to skip, ← →
+                  to navigate
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

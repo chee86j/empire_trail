@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { SaveSystem } from "../services/saveSystem";
 import {
   SaveGame,
@@ -10,6 +11,11 @@ import {
 } from "../types";
 import { toast } from "react-toastify";
 import "../styles/SaveLoadModal.css";
+import {
+  createButtonTransition,
+  createModalPopVariants,
+  createOverlayFadeVariants,
+} from "../animations/motionPresets";
 
 interface SaveLoadModalProps {
   isOpen: boolean;
@@ -32,6 +38,11 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
   onLoadGame,
   currentGameState,
 }) => {
+  const reduceMotion = useReducedMotion();
+  const overlayVariants = createOverlayFadeVariants(reduceMotion);
+  const modalVariants = createModalPopVariants(reduceMotion);
+  const buttonTransition = createButtonTransition(reduceMotion);
+
   const [activeTab, setActiveTab] = useState<"save" | "load">("save");
   const [saveSlots, setSaveSlots] = useState<Record<string, any>>({});
   const [newSaveName, setNewSaveName] = useState("");
@@ -205,40 +216,65 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
     return date.toLocaleString();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="save-load-modal-overlay">
-      <div className="save-load-modal">
-        <div className="save-load-modal-header">
-          <h2>Save & Load Game</h2>
-          <button 
-            className="btn btn-secondary close-button" 
-            onClick={onClose}
-            aria-label="Close save/load modal"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="save-load-modal-overlay"
+          variants={overlayVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          <motion.div
+            className="save-load-modal"
+            variants={modalVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
           >
-            ×
-          </button>
-        </div>
+            <div className="save-load-modal-header">
+              <h2>Save & Load Game</h2>
+              <motion.button
+                className="btn btn-secondary close-button"
+                onClick={onClose}
+                aria-label="Close save/load modal"
+                whileHover={reduceMotion ? undefined : { scale: 1.05 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+                transition={buttonTransition}
+              >
+                ×
+              </motion.button>
+            </div>
 
-        <div className="save-load-modal-tabs">
-          <button
-            className={`btn ${activeTab === "save" ? "btn-primary" : "btn-secondary"} tab-button`}
-            onClick={() => setActiveTab("save")}
-            aria-label="Switch to save game tab"
-            aria-pressed={activeTab === "save"}
-          >
-            Save Game
-          </button>
-          <button
-            className={`btn ${activeTab === "load" ? "btn-primary" : "btn-secondary"} tab-button`}
-            onClick={() => setActiveTab("load")}
-            aria-label="Switch to load game tab"
-            aria-pressed={activeTab === "load"}
-          >
-            Load Game
-          </button>
-        </div>
+            <div className="save-load-modal-tabs">
+              <motion.button
+                className={`btn ${
+                  activeTab === "save" ? "btn-primary" : "btn-secondary"
+                } tab-button`}
+                onClick={() => setActiveTab("save")}
+                aria-label="Switch to save game tab"
+                aria-pressed={activeTab === "save"}
+                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                transition={buttonTransition}
+              >
+                Save Game
+              </motion.button>
+              <motion.button
+                className={`btn ${
+                  activeTab === "load" ? "btn-primary" : "btn-secondary"
+                } tab-button`}
+                onClick={() => setActiveTab("load")}
+                aria-label="Switch to load game tab"
+                aria-pressed={activeTab === "load"}
+                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                transition={buttonTransition}
+              >
+                Load Game
+              </motion.button>
+            </div>
 
         {activeTab === "save" && (
           <div className="save-tab">
@@ -281,27 +317,55 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
               </div>
 
               <div className="save-buttons">
-                <button
+                <motion.button
                   className={`btn btn-success ${isLoading ? 'btn-loading' : ''}`}
                   onClick={handleSaveGame}
                   disabled={!newSaveName.trim() || !selectedSlot || isLoading}
                   aria-label={selectedSlot && SaveSystem.getSaveSlotInfo(selectedSlot)
                     ? "Overwrite existing save"
                     : "Save game to selected slot"}
+                  whileHover={
+                    reduceMotion ||
+                    !newSaveName.trim() ||
+                    !selectedSlot ||
+                    isLoading
+                      ? undefined
+                      : { scale: 1.02 }
+                  }
+                  whileTap={
+                    reduceMotion ||
+                    !newSaveName.trim() ||
+                    !selectedSlot ||
+                    isLoading
+                      ? undefined
+                      : { scale: 0.98 }
+                  }
+                  transition={buttonTransition}
                 >
                   {isLoading ? 'Saving...' : (selectedSlot && SaveSystem.getSaveSlotInfo(selectedSlot)
                     ? "Overwrite Save"
                     : "Save Game")}
-                </button>
+                </motion.button>
 
-                <button
+                <motion.button
                   className="btn btn-primary"
                   onClick={handleQuickSave}
                   disabled={!newSaveName.trim()}
                   aria-label="Quick save to next available slot"
+                  whileHover={
+                    reduceMotion || !newSaveName.trim()
+                      ? undefined
+                      : { scale: 1.02 }
+                  }
+                  whileTap={
+                    reduceMotion || !newSaveName.trim()
+                      ? undefined
+                      : { scale: 0.98 }
+                  }
+                  transition={buttonTransition}
                 >
                   Quick Save
-                </button>
+                </motion.button>
               </div>
             </div>
 
@@ -320,13 +384,17 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                       <div className="slot-header">
                         <span className="slot-number">{i + 1}</span>
                         {slotInfo && (
-                          <button
+                          <motion.button
                             className="delete-slot-button"
                             onClick={() => handleDeleteSave(slotId)}
                             title="Delete save"
+                            aria-label={`Delete save in slot ${i + 1}`}
+                            whileHover={reduceMotion ? undefined : { scale: 1.1 }}
+                            whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+                            transition={buttonTransition}
                           >
                             ×
-                          </button>
+                          </motion.button>
                         )}
                       </div>
                       <div className="slot-content">
@@ -380,18 +448,24 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                           </div>
                         </div>
                         <div className="load-slot-actions">
-                          <button
+                          <motion.button
                             className="load-button auto-save-load"
                             onClick={handleLoadAutoSave}
+                            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                            transition={buttonTransition}
                           >
                             Load Auto-Save
-                          </button>
-                          <button
+                          </motion.button>
+                          <motion.button
                             className="delete-button"
                             onClick={handleDeleteAutoSave}
+                            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                            transition={buttonTransition}
                           >
                             Delete
-                          </button>
+                          </motion.button>
                         </div>
                       </div>
                     </div>
@@ -424,20 +498,26 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                           </div>
                         </div>
                         <div className="load-slot-actions">
-                          <button
+                          <motion.button
                             className="btn btn-primary"
                             onClick={() => handleLoadGame(slotId)}
                             aria-label={`Load save: ${saveGame.name}`}
+                            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                            transition={buttonTransition}
                           >
                             Load
-                          </button>
-                          <button
+                          </motion.button>
+                          <motion.button
                             className="btn btn-danger"
                             onClick={() => handleDeleteSave(slotId)}
                             aria-label={`Delete save: ${saveGame.name}`}
+                            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                            transition={buttonTransition}
                           >
                             Delete
-                          </button>
+                          </motion.button>
                         </div>
                       </div>
                     ))}
@@ -449,16 +529,21 @@ const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
         )}
 
         <div className="save-load-modal-footer">
-          <button 
-            className="btn btn-secondary" 
+          <motion.button 
+            className="btn btn-secondary"
             onClick={onClose}
             aria-label="Cancel and close modal"
+            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            transition={buttonTransition}
           >
             Cancel
-          </button>
+          </motion.button>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

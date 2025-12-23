@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Achievement } from "../types";
 import { rarityColors } from "../assets/achievements";
 import "../styles/AchievementNotification.css";
+import { createButtonTransition } from "../animations/motionPresets";
 
 interface Props {
   achievement: Achievement;
@@ -14,6 +16,8 @@ const AchievementNotification: React.FC<Props> = ({
   onClose,
   duration = 5000,
 }) => {
+  const reduceMotion = useReducedMotion();
+  const buttonTransition = createButtonTransition(reduceMotion);
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -108,9 +112,16 @@ const AchievementNotification: React.FC<Props> = ({
             <h3 className="achievement-title">Achievement Unlocked!</h3>
             <h4 className="achievement-name">{achievement.name}</h4>
           </div>
-          <button className="close-button" onClick={handleClose}>
+          <motion.button
+            className="close-button"
+            onClick={handleClose}
+            aria-label="Close achievement notification"
+            whileHover={reduceMotion ? undefined : { scale: 1.1 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+            transition={buttonTransition}
+          >
             ✕
-          </button>
+          </motion.button>
         </div>
 
         <div className="notification-body">

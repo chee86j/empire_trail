@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Achievement,
   AchievementCategory,
@@ -8,6 +9,7 @@ import {
 import { AchievementService } from "../services/achievementService";
 import { achievementCategories, rarityColors } from "../assets/achievements";
 import "../styles/AchievementScreen.css";
+import { createButtonTransition } from "../animations/motionPresets";
 
 interface Props {
   onClose: () => void;
@@ -24,6 +26,9 @@ const AchievementScreen: React.FC<Props> = ({
   currentBankBalance,
   portfolio,
 }) => {
+  const reduceMotion = useReducedMotion();
+  const buttonTransition = createButtonTransition(reduceMotion);
+
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<
     AchievementCategory | "all"
@@ -305,9 +310,15 @@ const AchievementScreen: React.FC<Props> = ({
       )}
 
       <div className="achievement-footer">
-        <button onClick={onClose} className="close-button">
+        <motion.button
+          onClick={onClose}
+          className="close-button"
+          whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+          transition={buttonTransition}
+        >
           Close (ESC)
-        </button>
+        </motion.button>
       </div>
     </div>
   );

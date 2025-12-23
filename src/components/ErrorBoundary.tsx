@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { motion } from "framer-motion";
 import { toast } from 'react-toastify';
 import '../styles/design-system.css';
 
@@ -68,20 +69,24 @@ class ErrorBoundary extends Component<Props, State> {
                 </details>
               )}
               <div className="error-actions">
-                <button 
+                <motion.button 
                   className="btn btn-primary" 
                   onClick={this.handleRetry}
                   aria-label="Try again"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   Try Again
-                </button>
-                <button 
+                </motion.button>
+                <motion.button 
                   className="btn btn-secondary" 
                   onClick={() => window.location.reload()}
                   aria-label="Refresh page"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   Refresh Page
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>

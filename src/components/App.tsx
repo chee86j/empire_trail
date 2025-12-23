@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import GameInfoScreen from "./GameInfoScreen";
 import PlayerSelectScreen from "./PlayerSelectScreen";
@@ -15,12 +15,20 @@ import { SaveSystem } from "../services/saveSystem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/design-system.css";
+import "../styles/style.css";
 import { getProfessionStats } from "../utils/gameUtils";
 import {
   createKeyboardHandler,
   getGlobalShortcuts,
   setupKeyboardListener,
 } from "../utils/keyboardUtils";
+import {
+  createButtonTransition,
+  createModalPopVariants,
+  createOverlayFadeVariants,
+} from "../animations/motionPresets";
+import LottieOverlay from "./LottieOverlay";
+import { Home, WhiteCapeHome } from "../assets/lottieAnimations";
 import {
   Player,
   Event,
@@ -48,6 +56,13 @@ const App: React.FC = () => {
     useState<boolean>(false);
 
   const reduceMotion = useReducedMotion();
+  const helpOverlayVariants = createOverlayFadeVariants(reduceMotion);
+  const helpModalVariants = createModalPopVariants(reduceMotion);
+  const [purchaseLottieOpen, setPurchaseLottieOpen] = useState(false);
+  const [purchaseLottieVariant, setPurchaseLottieVariant] = useState<
+    "home" | "whiteCapeHome"
+  >("home");
+  const purchaseLottieToggleRef = useRef(false);
 
   // Check if user has completed onboarding
   useEffect(() => {
@@ -205,6 +220,12 @@ const App: React.FC = () => {
         setPortfolio([...portfolio, propertyWithPurchaseMonth]);
         setGameState("city");
         toast.success(`Successfully purchased ${property.name}!`);
+
+        purchaseLottieToggleRef.current = !purchaseLottieToggleRef.current;
+        setPurchaseLottieVariant(
+          purchaseLottieToggleRef.current ? "whiteCapeHome" : "home"
+        );
+        setPurchaseLottieOpen(true);
       } else {
         toast.error("Insufficient funds to purchase this property.");
       }
@@ -296,10 +317,32 @@ const App: React.FC = () => {
           </div>
         )}
 
+        <LottieOverlay
+          isOpen={purchaseLottieOpen}
+          animationData={
+            purchaseLottieVariant === "whiteCapeHome" ? WhiteCapeHome : Home
+          }
+          onClose={() => setPurchaseLottieOpen(false)}
+          sizePx={280}
+        />
+
         {/* Help Modal */}
-        {showHelp && (
-          <div className="help-modal">
-            <div className="help-modal-content">
+        <AnimatePresence>
+          {showHelp && (
+            <motion.div
+              className="help-modal"
+              variants={helpOverlayVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <motion.div
+                className="help-modal-content"
+                variants={helpModalVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
               <h2>Keyboard Shortcuts</h2>
               <div className="help-sections">
                 <div className="help-section">
@@ -369,16 +412,20 @@ const App: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <button
+              <motion.button
                 onClick={() => setShowHelp(false)}
                 className="btn btn-primary"
                 aria-label="Close help modal"
+                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                transition={createButtonTransition(reduceMotion)}
               >
                 Close Help (ESC)
-              </button>
-            </div>
-          </div>
-        )}
+              </motion.button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Onboarding Modal */}
         <OnboardingModal

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/EventScreen.css";
@@ -74,13 +75,15 @@ const EventScreen: React.FC<Props> = ({
       <p>
         Bank Balance Change: ${calculateBankBalanceChange().toLocaleString()}
       </p>
-      <button 
+      <motion.button 
         onClick={handleEventClose}
         className="btn btn-primary"
         aria-label="Continue after event"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
       >
         OK (Space/Enter/ESC)
-      </button>
+      </motion.button>
     </div>
   );
 };
