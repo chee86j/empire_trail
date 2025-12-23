@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import GameInfoScreen from "./GameInfoScreen";
 import PlayerSelectScreen from "./PlayerSelectScreen";
 import CityScreen from "./CityScreen";
@@ -15,7 +16,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/design-system.css";
 import { getProfessionStats } from "../utils/gameUtils";
-import { createKeyboardHandler, getGlobalShortcuts, setupKeyboardListener } from "../utils/keyboardUtils";
+import {
+  createKeyboardHandler,
+  getGlobalShortcuts,
+  setupKeyboardListener,
+} from "../utils/keyboardUtils";
 import {
   Player,
   Event,
@@ -39,13 +44,16 @@ const App: React.FC = () => {
   const [showSaveLoadModal, setShowSaveLoadModal] = useState<boolean>(false);
   const [showOnboarding, setShowOnboarding] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(false);
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] =
+    useState<boolean>(false);
+
+  const reduceMotion = useReducedMotion();
 
   // Check if user has completed onboarding
   useEffect(() => {
-    const completed = localStorage.getItem('empire_trail_onboarding_completed');
-    const isCompleted = completed === 'true';
-    console.log('Onboarding completed status:', isCompleted);
+    const completed = localStorage.getItem("empire_trail_onboarding_completed");
+    const isCompleted = completed === "true";
+    console.log("Onboarding completed status:", isCompleted);
     setHasCompletedOnboarding(isCompleted);
   }, []);
 
@@ -68,7 +76,15 @@ const App: React.FC = () => {
         gameState,
       });
     }
-  }, [player, currentMonth, portfolio, currentEvent, currentBankBalance, currentCity, gameState]);
+  }, [
+    player,
+    currentMonth,
+    portfolio,
+    currentEvent,
+    currentBankBalance,
+    currentCity,
+    gameState,
+  ]);
 
   // Function to load game from save data
   const loadGameFromSave = (saveGame: SaveGame) => {
@@ -79,7 +95,7 @@ const App: React.FC = () => {
     setCurrentBankBalance(saveGame.currentBankBalance);
     setCurrentCity(saveGame.currentCity);
     setGameState(saveGame.gameState);
-    
+
     toast.success(`Game loaded: ${saveGame.name}`);
   };
 
@@ -108,7 +124,7 @@ const App: React.FC = () => {
     };
 
     const globalShortcuts = getGlobalShortcuts(
-      () => setShowHelp(prev => !prev),
+      () => setShowHelp((prev) => !prev),
       handleSaveLoad,
       handleEscape,
       undefined,
@@ -123,20 +139,20 @@ const App: React.FC = () => {
 
   // Function to start the game
   const startGame = () => {
-    console.log('Starting game, onboarding completed:', hasCompletedOnboarding);
+    console.log("Starting game, onboarding completed:", hasCompletedOnboarding);
     if (!hasCompletedOnboarding) {
-      console.log('Showing onboarding modal');
+      console.log("Showing onboarding modal");
       setShowOnboarding(true);
     } else {
-      console.log('Going directly to player select');
+      console.log("Going directly to player select");
       setGameState("playerSelect");
     }
   };
 
   // Function to reset onboarding (for testing)
   const resetOnboarding = () => {
-    console.log('Resetting onboarding...');
-    localStorage.removeItem('empire_trail_onboarding_completed');
+    console.log("Resetting onboarding...");
+    localStorage.removeItem("empire_trail_onboarding_completed");
     setHasCompletedOnboarding(false);
     setShowOnboarding(true);
   };
@@ -144,7 +160,7 @@ const App: React.FC = () => {
   // Function to complete onboarding
   const handleOnboardingComplete = () => {
     setHasCompletedOnboarding(true);
-    localStorage.setItem('empire_trail_onboarding_completed', 'true');
+    localStorage.setItem("empire_trail_onboarding_completed", "true");
     setGameState("playerSelect");
   };
 
@@ -171,11 +187,12 @@ const App: React.FC = () => {
   // Function to handle property purchase
   const handlePurchaseProperty = (property: InvestmentProperty) => {
     setIsLoading(true);
-    
+
     // Simulate processing time for better UX
     setTimeout(() => {
-      const totalCost = property.purchaseCost + property.closingCost + property.renovationCost;
-      
+      const totalCost =
+        property.purchaseCost + property.closingCost + property.renovationCost;
+
       if (totalCost <= currentBankBalance) {
         const newBankBalance = currentBankBalance - totalCost;
         const propertyWithPurchaseMonth = {
@@ -183,7 +200,7 @@ const App: React.FC = () => {
           purchaseMonth: currentMonth,
           location: currentCity,
         };
-        
+
         setCurrentBankBalance(newBankBalance);
         setPortfolio([...portfolio, propertyWithPurchaseMonth]);
         setGameState("city");
@@ -191,9 +208,78 @@ const App: React.FC = () => {
       } else {
         toast.error("Insufficient funds to purchase this property.");
       }
-      
+
       setIsLoading(false);
     }, 500);
+  };
+
+  // Framer Motion screen variants that animate the screens in and out when they change from one game state to another
+  const screenVariants = {
+    initial: { opacity: 0, y: reduceMotion ? 0 : 12 },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: reduceMotion ? 0 : 0.25, ease: "easeOut" },
+    },
+    exit: {
+      opacity: 0,
+      y: reduceMotion ? 0 : -12,
+      transition: { duration: reduceMotion ? 0 : 0.2, ease: "easeIn" },
+    },
+  } as const;
+
+  // Function to render the current screen based on the game state between the different screens
+  const renderScreen = () => {
+    switch (gameState) {
+      case "gameInfo":
+        return (
+          <GameInfoScreen
+            onStartGame={startGame}
+            onResetOnboarding={resetOnboarding}
+          />
+        );
+      case "playerSelect":
+        return <PlayerSelectScreen onSelectProfession={selectProfession} />;
+      case "city":
+        return (
+          <CityScreen
+            player={player}
+            currentMonth={currentMonth}
+            setCurrentMonth={setCurrentMonth}
+            onViewPortfolio={handleViewPortfolio}
+            portfolio={portfolio}
+            onFindDeals={handleFindDeals}
+            currentBankBalance={currentBankBalance}
+            setCurrentBankBalance={setCurrentBankBalance}
+            currentCity={currentCity}
+            setCurrentCity={setCurrentCity}
+            cities={cities}
+            onSaveLoad={() => setShowSaveLoadModal(true)}
+          />
+        );
+      case "portfolio":
+        return (
+          <PortfolioScreen
+            portfolio={portfolio}
+            currentMonth={currentMonth}
+            onClose={() => setGameState("city")}
+            setPortfolio={setPortfolio}
+            currentBankBalance={currentBankBalance}
+            setCurrentBankBalance={setCurrentBankBalance}
+          />
+        );
+      case "deals":
+        return (
+          <DealsScreen
+            investmentProperties={investmentProperties}
+            currentBankBalance={currentBankBalance}
+            onPurchaseProperty={handlePurchaseProperty}
+            onClose={() => setGameState("city")}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   // Return JSX for the App component
@@ -202,63 +288,97 @@ const App: React.FC = () => {
       <div className="game-container">
         {/* Render ToastContainer for displaying notifications */}
         <ToastContainer position="top-left" autoClose={5000} />
-        
+
         {/* Loading overlay */}
         {isLoading && (
           <div className="loading-overlay">
             <LoadingSpinner size="lg" message="Processing..." />
           </div>
         )}
-      
-      {/* Help Modal */}
-      {showHelp && (
-        <div className="help-modal">
-          <div className="help-modal-content">
-            <h2>Keyboard Shortcuts</h2>
-            <div className="help-sections">
-              <div className="help-section">
-                <h3>City Screen</h3>
-                <p><strong>T</strong> - Travel to next city</p>
-                <p><strong>R</strong> - Rest (advance month)</p>
-                <p><strong>V</strong> - View Portfolio</p>
-                <p><strong>F</strong> - Find Deals</p>
+
+        {/* Help Modal */}
+        {showHelp && (
+          <div className="help-modal">
+            <div className="help-modal-content">
+              <h2>Keyboard Shortcuts</h2>
+              <div className="help-sections">
+                <div className="help-section">
+                  <h3>City Screen</h3>
+                  <p>
+                    <strong>T</strong> - Travel to next city
+                  </p>
+                  <p>
+                    <strong>R</strong> - Rest (advance month)
+                  </p>
+                  <p>
+                    <strong>V</strong> - View Portfolio
+                  </p>
+                  <p>
+                    <strong>F</strong> - Find Deals
+                  </p>
+                </div>
+                <div className="help-section">
+                  <h3>Deals Screen</h3>
+                  <p>
+                    <strong>↑/↓</strong> - Navigate properties
+                  </p>
+                  <p>
+                    <strong>P</strong> - Purchase selected property
+                  </p>
+                  <p>
+                    <strong>ESC</strong> - Close deals screen
+                  </p>
+                </div>
+                <div className="help-section">
+                  <h3>Portfolio Screen</h3>
+                  <p>
+                    <strong>↑/↓</strong> - Navigate properties
+                  </p>
+                  <p>
+                    <strong>R</strong> - Rent selected property
+                  </p>
+                  <p>
+                    <strong>S</strong> - Sell selected property
+                  </p>
+                  <p>
+                    <strong>ESC</strong> - Close portfolio
+                  </p>
+                </div>
+                <div className="help-section">
+                  <h3>Dice Rolling</h3>
+                  <p>
+                    <strong>Space/Enter/R</strong> - Roll dice
+                  </p>
+                  <p>
+                    <strong>ESC</strong> - Close modal
+                  </p>
+                </div>
+                <div className="help-section">
+                  <h3>Global Shortcuts</h3>
+                  <p>
+                    <strong>F1</strong> - Show/hide this help
+                  </p>
+                  <p>
+                    <strong>F2</strong> - Show game tutorial (on main screen)
+                  </p>
+                  <p>
+                    <strong>F5</strong> - Save/Load Game
+                  </p>
+                  <p>
+                    <strong>ESC</strong> - Go back/close
+                  </p>
+                </div>
               </div>
-              <div className="help-section">
-                <h3>Deals Screen</h3>
-                <p><strong>↑/↓</strong> - Navigate properties</p>
-                <p><strong>P</strong> - Purchase selected property</p>
-                <p><strong>ESC</strong> - Close deals screen</p>
-              </div>
-              <div className="help-section">
-                <h3>Portfolio Screen</h3>
-                <p><strong>↑/↓</strong> - Navigate properties</p>
-                <p><strong>R</strong> - Rent selected property</p>
-                <p><strong>S</strong> - Sell selected property</p>
-                <p><strong>ESC</strong> - Close portfolio</p>
-              </div>
-              <div className="help-section">
-                <h3>Dice Rolling</h3>
-                <p><strong>Space/Enter/R</strong> - Roll dice</p>
-                <p><strong>ESC</strong> - Close modal</p>
-              </div>
-              <div className="help-section">
-                <h3>Global Shortcuts</h3>
-                <p><strong>F1</strong> - Show/hide this help</p>
-                <p><strong>F2</strong> - Show game tutorial (on main screen)</p>
-                <p><strong>F5</strong> - Save/Load Game</p>
-                <p><strong>ESC</strong> - Go back/close</p>
-              </div>
+              <button
+                onClick={() => setShowHelp(false)}
+                className="btn btn-primary"
+                aria-label="Close help modal"
+              >
+                Close Help (ESC)
+              </button>
             </div>
-            <button 
-              onClick={() => setShowHelp(false)}
-              className="btn btn-primary"
-              aria-label="Close help modal"
-            >
-              Close Help (ESC)
-            </button>
           </div>
-        </div>
-      )}
+        )}
 
         {/* Onboarding Modal */}
         <OnboardingModal
@@ -282,59 +402,27 @@ const App: React.FC = () => {
             gameState,
           }}
         />
-      
-      {/* Conditional rendering based on game state */}
-      {gameState === "gameInfo" && (
-        <GameInfoScreen 
-          onStartGame={startGame} 
-          onResetOnboarding={resetOnboarding}
-        />
-      )}
-      {gameState === "playerSelect" && (
-        <PlayerSelectScreen onSelectProfession={selectProfession} />
-      )}
-      {gameState === "city" && (
-        <CityScreen
-          player={player}
-          currentMonth={currentMonth}
-          setCurrentMonth={setCurrentMonth}
-          onViewPortfolio={handleViewPortfolio}
-          portfolio={portfolio}
-          onFindDeals={handleFindDeals}
-          currentBankBalance={currentBankBalance}
-          setCurrentBankBalance={setCurrentBankBalance}
-          currentCity={currentCity}
-          setCurrentCity={setCurrentCity}
-          cities={cities}
-          onSaveLoad={() => setShowSaveLoadModal(true)}
-        />
-      )}
-      {gameState === "portfolio" && (
-        <PortfolioScreen
-          portfolio={portfolio}
-          currentMonth={currentMonth}
-          onClose={() => setGameState("city")}
-          setPortfolio={setPortfolio}
-          currentBankBalance={currentBankBalance}
-          setCurrentBankBalance={setCurrentBankBalance}
-        />
-      )}
-      {gameState === "deals" && (
-        <DealsScreen
-          investmentProperties={investmentProperties}
-          currentBankBalance={currentBankBalance}
-          onPurchaseProperty={handlePurchaseProperty}
-          onClose={() => setGameState("city")}
-        />
-      )}
-      {/* Conditional rendering for current event */}
-      {currentEvent && (
-        <EventScreen
-          event={currentEvent}
-          onClose={closeEventScreen}
-          playerBankBalance={currentBankBalance}
-        />
-      )}
+
+        {/* Screen transitions based on game state using Framer Motion */}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={gameState}
+            variants={screenVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            {renderScreen()}
+          </motion.div>
+        </AnimatePresence>
+        {/* Conditional rendering for current event */}
+        {currentEvent && (
+          <EventScreen
+            event={currentEvent}
+            onClose={closeEventScreen}
+            playerBankBalance={currentBankBalance}
+          />
+        )}
       </div>
     </ErrorBoundary>
   );
