@@ -9,11 +9,13 @@ Empire Trail is a nostalgia-charged, turn-based real-estate odyssey built with R
 - **Dice-driven outcomes:** Use a simple modal dice mechanic for rent and sale results.
 - **Event system:** Profession-weighted random events that affect your bank balance.
 - **Actionable feedback:** Non-blocking toast notifications for actions and outcomes.
+- **Polished animations:** Smooth transitions, responsive UI motion, and celebratory moments that make each action feel satisfying.
 
 ## Tech Stack
 - **Framework:** React 18 + TypeScript powered by Vite.
 - **UI/UX:** Plain CSS modules in `src/styles`; React-Toastify for notifications.
 - **Dice:** `react-dice-complete` for the dice modal.
+- **Animations:** Framer Motion + Lottie.
 
 ## Getting Started
 ### Requirements
@@ -68,17 +70,21 @@ The project folder is bind-mounted, so editor changes on the host instantly refl
 ## Project Structure
 ```
 src/
+  animations/
+    motionPresets.ts
   assets/
-    gameData.ts              # events, InvestmentProperty seed data & types
+    gameData.ts
+    lottieAnimations/
   components/
-    App.tsx                  # top-level state & navigation
-    GameInfoScreen.tsx       # intro screen
-    PlayerSelectScreen.tsx   # choose profession
-    CityScreen.tsx           # travel/rest/events & stats
-    DealsScreen.tsx          # property marketplace
-    PortfolioScreen.tsx      # manage holdings, rent/sell actions
-    DiceRollModal.tsx        # dice modal for outcomes
-    EventScreen.tsx          # shows event details
+    App.tsx
+    LottieOverlay.tsx
+    GameInfoScreen.tsx
+    PlayerSelectScreen.tsx
+    CityScreen.tsx
+    DealsScreen.tsx
+    PortfolioScreen.tsx
+    DiceRollModal.tsx
+    EventScreen.tsx
   styles/
     *.css                    # component CSS (responsive)
 ```
@@ -88,6 +94,18 @@ src/
 - Rehab gating: rent/sell actions unlock after `purchaseMonth + renovationTime`.
 - Events add or subtract from the bank balance, influenced by the chosen profession.
 - A single `<ToastContainer />` is mounted in `App.tsx` for global notifications.
+
+## Animations
+Empire Trail uses a lightweight animation system to add “game feel” without turning the project into a full game engine.
+
+- **UI motion:** Screen transitions, modals, button feedback, and list reveals keep navigation feeling fast and modern.
+- **Action moments:** Full-screen, non-blocking Lottie overlays highlight key moments (travel, deal closure, income, and other wins).
+- **Accessibility:** Animations respect `prefers-reduced-motion` so players who prefer less motion get a calmer experience.
+
+### Adding your own Lottie animations
+- Drop exported `.json` files into `src/assets/lottieAnimations/`.
+- Re-export them from `src/assets/lottieAnimations/index.ts`.
+- Trigger them via the shared overlay component in `src/components/LottieOverlay.tsx`.
 
 ## Deploying to Railway
 1. Create a new Railway project and link your GitHub repo.
@@ -105,11 +123,12 @@ If you prefer a Node static server, you can serve `/dist` with Express, but `npm
   currentMonth >= (property.purchaseMonth ?? 0) + property.renovationTime
   ```
 - **Toast errors:** Ensure only one `<ToastContainer />` is rendered (kept in `App.tsx`).
+- **Lottie build warnings:** Bundlers may warn about `lottie-web` and larger JS chunks; this is expected when adding richer animations.
 - **Vite/Port issues on Railway:** Use `npm run preview -- --host 0.0.0.0 --port $PORT`.
 
 ## Roadmap
 - Mobile-first and medium-breakpoint refinements across screens
 - Currency compaction (e.g., $20,000 → $20K) and number formatting utilities
-- Animations for month advances, dice rolls, and success states
+- More contextual animations (new events, achievements, and UI polish)
 - Deeper event variety and profession balancing
 - Save/Load game state
