@@ -7,7 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "../styles/CityScreen.css";
 import {
   createButtonTransition,
-  createModalPopVariants,
   createOverlayFadeVariants,
 } from "../animations/motionPresets";
 import LottieOverlay from "./LottieOverlay";
@@ -70,7 +69,22 @@ const CityScreen: React.FC<Props> = ({
   const reduceMotion = useReducedMotion();
   const buttonTransition = createButtonTransition(reduceMotion);
   const eventOverlayVariants = createOverlayFadeVariants(reduceMotion);
-  const eventModalVariants = createModalPopVariants(reduceMotion);
+
+  const eventCardVariants = {
+    initial: { opacity: 0, y: reduceMotion ? 0 : 24, scale: reduceMotion ? 1 : 0.98 },
+    animate: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: reduceMotion ? 0 : 0.2, ease: "easeOut" },
+    },
+    exit: {
+      opacity: 0,
+      y: reduceMotion ? 0 : 24,
+      scale: reduceMotion ? 1 : 0.98,
+      transition: { duration: reduceMotion ? 0 : 0.15, ease: "easeIn" },
+    },
+  } as const;
 
   const handleMonthAdvance = useCallback(() => {
     const initialBankBalance = currentBankBalance;
@@ -165,10 +179,23 @@ const CityScreen: React.FC<Props> = ({
       }}
     >
       {/* City Name */}
-      <h2>{currentCity.name}</h2>
-      <p className="cityDate">
+      <motion.h2
+        key={currentCity.name}
+        initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: reduceMotion ? 0 : 0.18, ease: "easeOut" }}
+      >
+        {currentCity.name}
+      </motion.h2>
+      <motion.p
+        key={currentMonth}
+        className="cityDate"
+        initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.18, ease: "easeOut" }}
+      >
         {monthName} {year}
-      </p>
+      </motion.p>
 
       <LottieOverlay
         isOpen={travelLottieOpen}
@@ -247,16 +274,20 @@ const CityScreen: React.FC<Props> = ({
         {currentEvent && (
           <motion.div
             key="city-event"
+            className="event-overlay"
             variants={eventOverlayVariants}
             initial="initial"
             animate="animate"
             exit="exit"
+            onClick={closeEventScreen}
           >
             <motion.div
-              variants={eventModalVariants}
+              className="event-card"
+              variants={eventCardVariants}
               initial="initial"
               animate="animate"
               exit="exit"
+              onClick={(e) => e.stopPropagation()}
             >
               <EventScreen
                 event={currentEvent}

@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import "../styles/EventScreen.css";
 import { Event } from "../types";
 
@@ -16,26 +14,18 @@ const EventScreen: React.FC<Props> = ({
   playerBankBalance,
   onClose,
 }) => {
-  if (!event) {
-    return null;
-  }
+  const bankBalanceChange = event?.bankBalanceChange ?? 0;
 
-  // Calculate the change in bank balance based on the event's bankBalanceChange
-  const calculateBankBalanceChange = (): number => {
-    const bankBalanceChange = event.bankBalanceChange;
-    return bankBalanceChange;
-  };
-
-  // Handle event close
-  const handleEventClose = () => {
-    const bankBalanceChange = calculateBankBalanceChange();
-    const newBankBalance = playerBankBalance + bankBalanceChange;
-    toast.info(`New bank balance: $${newBankBalance.toLocaleString()}`);
+  const handleEventClose = useCallback(() => {
+    if (!event) return;
+    const newBankBalance = playerBankBalance + event.bankBalanceChange;
     onClose(newBankBalance);
-  };
+  }, [event, onClose, playerBankBalance]);
 
   // Keyboard shortcuts handler
   useEffect(() => {
+    if (!event) return;
+
     const handleKeyPress = (event: KeyboardEvent) => {
       // Only handle key presses when not typing in input fields
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
@@ -61,7 +51,11 @@ const EventScreen: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, [handleEventClose]);
+  }, [event, handleEventClose]);
+
+  if (!event) {
+    return null;
+  }
 
   return (
     <div className="eventScreen">
@@ -73,7 +67,7 @@ const EventScreen: React.FC<Props> = ({
         {event.type}: {event.description}
       </p>
       <p>
-        Bank Balance Change: ${calculateBankBalanceChange().toLocaleString()}
+        Bank Balance Change: ${bankBalanceChange.toLocaleString()}
       </p>
       <motion.button 
         onClick={handleEventClose}

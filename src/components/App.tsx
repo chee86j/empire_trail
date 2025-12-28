@@ -12,7 +12,7 @@ import ErrorBoundary from "./ErrorBoundary";
 import LoadingSpinner from "./LoadingSpinner";
 import { investmentProperties, cities } from "../assets/gameData";
 import { SaveSystem } from "../services/saveSystem";
-import { ToastContainer, toast } from "react-toastify";
+import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/design-system.css";
 import "../styles/style.css";
@@ -323,7 +323,7 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <div className="game-container">
         {/* Render ToastContainer for displaying notifications */}
-        <ToastContainer position="top-left" autoClose={5000} />
+        <ToastContainer position="top-left" autoClose={5000} transition={Slide} />
 
         {/* Loading overlay */}
         {isLoading && (
