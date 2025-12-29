@@ -17,6 +17,10 @@ Empire Trail is a nostalgia-charged, turn-based real-estate odyssey built with R
 - **Dice:** `react-dice-complete` for the dice modal.
 - **Animations:** Framer Motion + Lottie.
 
+## Documentation
+- Implementation docs: [docs/README.md](docs/README.md)
+- Product + stack context (for editor/AI sessions): [Instructions/PRD.md](Instructions/PRD.md), [Instructions/TechStack.md](Instructions/TechStack.md)
+
 ## Getting Started
 ### Requirements
 - Node.js 18+ (20+ recommended)
