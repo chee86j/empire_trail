@@ -1,128 +1,94 @@
-Empire Trail
+# Empire Trail
 
-A lightweight, turn-based real-estate strategy game built with React + TypeScript + Vite. Travel city to city, evaluate deals, manage your portfolio, and react to random events—then try to grow your bank balance over time.
+Empire Trail is a turn-based, single-player real-estate strategy game built with React, TypeScript, and Vite. Move from city to city, evaluate property deals, and balance cash flow against renovation timelines and random events. The experience is intentionally lightweight for fast play sessions, yet structured enough to model real-world trade-offs.
 
-Features
+## Why Empire Trail?
+- **Focused gameplay loop:** Travel, review deals, buy/sell, and advance the month with clear feedback at every step.
+- **Investor-minded mechanics:** Rehab gating, ARV-driven rent/sale outcomes, and profession-weighted events influence your bankroll.
+- **Built for iteration:** Simple components, typed game data, and CSS modules keep the codebase easy to extend.
 
-City loop: Advance the month as you travel through major US cities.
+## Feature Highlights
+- **City progression:** Cycle through major U.S. cities and advance time month by month.
+- **Deals marketplace:** Surface randomized property opportunities with purchase, closing, and renovation costs.
+- **Portfolio management:** Track holdings, complete rehabs, and choose to rent or sell based on ARV.
+- **Dice-driven outcomes:** A modal dice roll powers rent and sale results for quick risk/reward decisions.
+- **Event system:** Profession-weighted events add or remove cash, encouraging adaptive play.
+- **Toast feedback:** Non-blocking notifications summarize actions and results.
 
-Deals marketplace: Browse randomly surfaced properties and purchase when funds allow.
+## Tech Stack
+- **Framework:** React 18 + TypeScript on Vite.
+- **UI/UX:** CSS modules in `src/styles`; React-Toastify for notifications.
+- **Dice:** `react-dice-complete` for the dice modal experience.
 
-Portfolio management: Rent out properties (post-rehab) or sell to realize gains.
+## Quickstart
+1. **Requirements:** Node.js 18+ (20+ recommended) and npm 9+.
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Run the dev server:**
+   ```bash
+   npm run dev
+   ```
+   Vite prints both local and network URLs when ready.
+4. **Production build and preview:**
+   ```bash
+   npm run build
+   npm run preview
+   ```
+   The `preview` command serves the production build from `/dist`.
 
-Dice-based actions: Simple modal dice mechanic for rent/sale outcomes.
+### Available Scripts
+- `npm run dev` – start the Vite dev server.
+- `npm run build` – typecheck and build the production bundle.
+- `npm run preview` – serve the production build locally.
+- `npm run lint` – run ESLint checks.
 
-Event system: Profession-weighted random events that affect your bank balance.
+## Gameplay Overview
+- **Property lifecycle:** Each property defines purchase, closing, and renovation costs, plus ARV-based rent/sale values. Rent or sell actions unlock after `purchaseMonth + renovationTime`.
+- **Events:** Weighted by chosen profession and can add or subtract from the bank balance.
+- **Notifications:** A single `<ToastContainer />` in `App.tsx` handles global toasts.
 
-Toasts for feedback: Non-blocking notifications for actions and outcomes.
-
-Tech Stack
-
-Frontend: React 18, TypeScript, Vite
-
-UI/UX: Plain CSS modules in /src/styles, React-Toastify for notifications
-
-Dice: react-dice-complete
-
-Getting Started
-Requirements
-
-Node.js 18+ (20+ recommended)
-
-npm 9+
-
-Install
-npm install
-
-Development
-npm run dev
-
-
-Vite will print a local URL (and a network URL if available).
-
-Production Build & Preview
-npm run build
-npm run preview
-
-
-preview serves the production build in /dist.
-
-Scripts
-
-npm run dev – start Vite dev server
-
-npm run build – typecheck then build
-
-npm run preview – preview the production build
-
-npm run lint – run ESLint
-
+## Project Structure
+```
 src/
   assets/
-    gameData.ts              # events, InvestmentProperty seed data & types
+    gameData.ts              # typed events, InvestmentProperty seeds, and helpers
   components/
     App.tsx                  # top-level state & navigation
-    GameInfoScreen.tsx       # intro screen
-    PlayerSelectScreen.tsx   # choose profession
-    CityScreen.tsx           # travel/rest/events & stats
+    GameInfoScreen.tsx       # intro and onboarding screen
+    PlayerSelectScreen.tsx   # profession selection
+    CityScreen.tsx           # travel/rest/events & player stats
     DealsScreen.tsx          # property marketplace
     PortfolioScreen.tsx      # manage holdings, rent/sell actions
-    DiceRollModal.tsx        # dice modal for outcomes
-    EventScreen.tsx          # shows event details
+    DiceRollModal.tsx        # dice modal for rent/sale outcomes
+    EventScreen.tsx          # renders event details
   styles/
-    *.css                    # component CSS (responsive)
+    *.css                    # component-scoped styling
+```
 
+## Deployment
+Deploy on any platform that can run a Node server.
 
+### Railway
+1. Create a Railway project and link your GitHub repo.
+2. Configure service commands:
+   - **Build:** `npm run build`
+   - **Start:** `npm run preview -- --host 0.0.0.0 --port $PORT`
+3. Railway supplies `$PORT`; the start command binds to it automatically. Push to your default branch to deploy.
 
-Gameplay Notes
+## Troubleshooting
+- **TypeScript additions:** When extending `InvestmentProperty` in `gameData.ts`, keep optional fields (`purchaseMonth`, `purchaseYear`) nullable and gate rent/sell actions with:
+  ```ts
+  currentMonth >= (property.purchaseMonth ?? 0) + property.renovationTime
+  ```
+- **Toast duplication:** Ensure only one `<ToastContainer />` is rendered (kept in `App.tsx`).
+- **Preview port binding:** On hosts that inject `PORT`, use `npm run preview -- --host 0.0.0.0 --port $PORT`.
 
-Properties include purchase/closing/renovation costs, rehab time, ARV rent/sale, and rental status.
+## Roadmap
+- Mobile-first and mid-breakpoint layout refinements.
+- Currency formatting utilities (e.g., `$20,000 → $20K`).
+- Animations for month advances, dice rolls, and win states.
+- Broader event variety and profession balancing.
+- Save/Load game state.
 
-Rehab gating: Rent/Sell actions unlock after purchaseMonth + renovationTime.
-
-Events add or subtract from bank balance, influenced by the chosen profession.
-
-Toasts: A single <ToastContainer /> is mounted in App.tsx for global notifications.
-
-Deploying to Railway
-
-Create a new Railway project and link your GitHub repo.
-
-Set the build & start commands in the Railway service:
-
-Build: npm run build
-
-Start: npm run preview -- --host 0.0.0.0 --port $PORT
-
-Environment: Railway sets $PORT automatically; the command above binds to it.
-
-Deploy: Push to your default branch; Railway will build and deploy.
-
-If you prefer a Node static server, you can serve /dist with Express. The Vite preview command above is usually simpler for this project.
-
-Troubleshooting
-
-TypeScript: missing fields on InvestmentProperty
-
-If you define properties in gameData.ts without purchaseMonth/purchaseYear, keep them optional (e.g., purchaseMonth?: number | null;) and default to safe checks in UI:
-currentMonth >= (property.purchaseMonth ?? 0) + property.renovationTime
-
-Toast errors
-
-Ensure only one <ToastContainer /> is rendered (we keep it in App.tsx).
-
-Vite/Port issues on Railway
-
-Use: npm run preview -- --host 0.0.0.0 --port $PORT
-
-Roadmap
-
-Mobile-first and medium-breakpoint refinements across screens
-
-Currency compaction (e.g., $20,000 → $20K) and number formatting utils
-
-Animations for month advances, dice rolls, and success states
-
-Deeper event variety and profession balancing
-
-Save/Load game state
