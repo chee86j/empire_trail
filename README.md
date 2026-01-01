@@ -8,6 +8,8 @@ Empire Trail is a nostalgia-charged, turn-based real-estate odyssey built with R
 - **Portfolio management:** Rent out properties (post-rehab) or sell to realize gains.
 - **Dice-driven outcomes:** Use a simple modal dice mechanic for rent and sale results.
 - **Event system:** Profession-weighted random events that affect your bank balance.
+- **Save/load + auto-save:** Persist game state to browser `localStorage` with manual slots and an auto-save.
+- **Keyboard shortcuts + help:** Press `F1` to toggle the in-game shortcut/help overlay; `F5` opens Save/Load during gameplay.
 - **Actionable feedback:** Non-blocking toast notifications for actions and outcomes.
 - **Polished animations:** Smooth transitions, responsive UI motion, and celebratory moments that make each action feel satisfying.
 
@@ -18,7 +20,13 @@ Empire Trail is a nostalgia-charged, turn-based real-estate odyssey built with R
 - **Animations:** Framer Motion + Lottie.
 
 ## Documentation
-- Implementation docs: [docs/README.md](docs/README.md)
+- Docs index: [docs/README.md](docs/README.md)
+- Development: [docs/development.md](docs/development.md)
+- Architecture: [docs/architecture.md](docs/architecture.md)
+- Gameplay rules: [docs/gameplay.md](docs/gameplay.md)
+- Keyboard shortcuts: [docs/keyboard-shortcuts.md](docs/keyboard-shortcuts.md)
+- Accessibility: [docs/accessibility.md](docs/accessibility.md)
+- Save system: [docs/features/save-system.md](docs/features/save-system.md) (legacy notes: [SAVE_SYSTEM_README.md](SAVE_SYSTEM_README.md))
 - Product + stack context (for editor/AI sessions): [Instructions/PRD.md](Instructions/PRD.md), [Instructions/TechStack.md](Instructions/TechStack.md)
 
 ## Getting Started
@@ -89,7 +97,18 @@ src/
     PortfolioScreen.tsx
     DiceRollModal.tsx
     EventScreen.tsx
+    SaveLoadModal.tsx
+    OnboardingModal.tsx
+  constants/
+    gameConstants.ts
+  services/
+    saveSystem.ts
+    logger.ts
+  utils/
+    keyboardUtils.ts
+    accessibilityUtils.ts
   styles/
+    design-system.css
     *.css                    # component CSS (responsive)
 ```
 
@@ -97,6 +116,7 @@ src/
 - Properties include purchase/closing/renovation costs, rehab time, ARV rent/sale, and rental status.
 - Rehab gating: rent/sell actions unlock after `purchaseMonth + renovationTime`.
 - Events add or subtract from the bank balance, influenced by the chosen profession.
+- The game auto-saves during gameplay and supports manual Save/Load via the modal (`F5`).
 - A single `<ToastContainer />` is mounted in `App.tsx` for global notifications.
 
 ## Animations
@@ -135,4 +155,4 @@ If you prefer a Node static server, you can serve `/dist` with Express, but `npm
 - Currency compaction (e.g., $20,000 → $20K) and number formatting utilities
 - More contextual animations (new events, achievements, and UI polish)
 - Deeper event variety and profession balancing
-- Save/Load game state
+- Wire achievements into the main game flow (screen/state + tracking hooks)
